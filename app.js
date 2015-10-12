@@ -92,7 +92,6 @@ function loadCommitUserDetails() {
             "Authorization": auth
         }
     }, parseRepoCommitUserDetails);
-    requestsIndex++;
 }
 
 function parseRepoCommitUserDetails(error, response, body) {
@@ -118,26 +117,27 @@ function parseRepoCommitUserDetails(error, response, body) {
 
         if (body.next && lastCommitIsWithinDateRange == true) {
             allSlugs.push(body.next);
-            loadCommitUserDetails();
         } else {
-            if (requestsIndex = allSlugs.length) {
+            if (requestsIndex == allSlugs.length) {
                 console.log("- User Counts: " + JSON.stringify(allUserCommitCounts));
+
+                var outputObject = {
+                    total_count: repoCount,
+                    hg_count: hgCount,
+                    git_count: gitCount,
+                    active_count: activeCount,
+                    languages: languages,
+                    user_counts: allUserCommitCounts
+                };
+
+                jsonfile.writeFile(outputFilename, outputObject, function (err) {
+                    console.error(err)
+                })
             }
-
-            var outputObject = {
-                total_count: repoCount,
-                hg_count: hgCount,
-                git_count: gitCount,
-                active_count: activeCount,
-                languages: languages,
-                user_counts: allUserCommitCounts
-            };
-
-            jsonfile.writeFile(outputFilename, outputObject, function (err) {
-                console.error(err)
-            })
         }
+        loadCommitUserDetails();
     }
+    requestsIndex++;
 }
 
 loadRepoInfoPage(url);
