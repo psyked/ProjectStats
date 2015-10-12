@@ -3,10 +3,20 @@ var request = require("request"),
     moment = require("moment"),
     jsonfile = require('jsonfile');
 
-var owner = "mmtdigital";
+var argv = require('minimist')(process.argv.slice(2), {
+    alias: {
+        'owner': 'o',
+        'username': 'u',
+        'password': 'p'
+    }
+});
+//console.dir(argv);
+
+var owner = argv.owner,
+    username = argv.username,
+    password = argv.password;
+
 var url = "https://bitbucket.org/api/2.0/repositories/" + owner,
-    username = "xxxxxxxx",
-    password = "xxxxxxxx",
     auth = "Basic " + new Buffer(username + ":" + password).toString("base64"),
     outputFilename = 'output.json';
 
