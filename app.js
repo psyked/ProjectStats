@@ -20,6 +20,8 @@ var url = "https://bitbucket.org/api/2.0/repositories/" + owner,
     auth = "Basic " + new Buffer(username + ":" + password).toString("base64"),
     outputFilename = 'output.json';
 
+var startDate = Date.parse(moment().subtract(1, 'week').startOf('week').toString());
+
 var gitCount = 0,
     hgCount = 0,
     activeCount = 0,
@@ -46,7 +48,7 @@ function loadRepoInfoPage(url) {
                 }
                 languages[repo.language]++;
 
-                if (Date.parse(repo.updated_on) > Date.parse(moment().subtract(1, 'week').startOf('week').toString())) {
+                if (Date.parse(repo.updated_on) > startDate) {
                     activeCount++;
                     allSlugs.push(repo.links.commits.href);
                 }
@@ -95,20 +97,26 @@ function loadCommitUserDetails() {
 
 function parseRepoCommitUserDetails(error, response, body) {
     if (!error && response.statusCode === 200) {
+
+        var lastCommitIsWithinDateRange = false;
+
         for (var i = 0, l = body.values.length; i < l; i++) {
             var commit = body.values[i];
             if (commit.author.user) {
                 var username = commit.author.user.display_name;
-                if (Date.parse(commit.date) > Date.parse(moment().subtract(1, 'week').startOf('week').toString())) {
+                if (Date.parse(commit.date) > startDate) {
                     if (!allUserCommitCounts[username]) {
                         allUserCommitCounts[username] = 0;
                     }
                     allUserCommitCounts[username]++;
                 }
             }
+            if (Date.parse(commit.date) > startDate) {
+                lastCommitIsWithinDateRange = true;
+            }
         }
 
-        if (body.next) {
+        if (body.next && lastCommitIsWithinDateRange == true) {
             allSlugs.push(body.next);
             loadCommitUserDetails();
         } else {
