@@ -28,6 +28,7 @@ var gitCount = 0,
     allSlugs = [],
     languages = {},
     repoCount = 0,
+    commitCount = 0,
     allUserCommitCounts = {},
     requestsIndex = 0;
 
@@ -57,7 +58,6 @@ function loadRepoInfoPage(url) {
             }
 
             if (body.next) {
-                console.log(".");
                 loadRepoInfoPage(body.next);
             } else {
                 finishedLoadingRepos();
@@ -94,6 +94,23 @@ function loadCommitUserDetails() {
     }, parseRepoCommitUserDetails);
 }
 
+function finishedLoadingAllData() {
+    console.log("- User Counts: " + JSON.stringify(allUserCommitCounts));
+
+    var outputObject = {
+        total_count: repoCount,
+        hg_count: hgCount,
+        git_count: gitCount,
+        active_count: activeCount,
+        languages: languages,
+        commit_count: commitCount,
+        user_counts: allUserCommitCounts
+    };
+
+    jsonfile.writeFile(outputFilename, outputObject, function (err) {
+        console.error(err)
+    });
+}
 function parseRepoCommitUserDetails(error, response, body) {
     if (!error && response.statusCode === 200) {
 
@@ -111,6 +128,7 @@ function parseRepoCommitUserDetails(error, response, body) {
                 }
             }
             if (Date.parse(commit.date) > startDate) {
+                commitCount++;
                 lastCommitIsWithinDateRange = true;
             }
         }
@@ -119,20 +137,7 @@ function parseRepoCommitUserDetails(error, response, body) {
             allSlugs.push(body.next);
         } else {
             if (requestsIndex == allSlugs.length) {
-                console.log("- User Counts: " + JSON.stringify(allUserCommitCounts));
-
-                var outputObject = {
-                    total_count: repoCount,
-                    hg_count: hgCount,
-                    git_count: gitCount,
-                    active_count: activeCount,
-                    languages: languages,
-                    user_counts: allUserCommitCounts
-                };
-
-                jsonfile.writeFile(outputFilename, outputObject, function (err) {
-                    console.error(err)
-                })
+                finishedLoadingAllData();
             }
         }
         loadCommitUserDetails();
