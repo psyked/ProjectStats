@@ -1,3 +1,45 @@
+/**
+ * @typedef {Object} Commit
+ * @property {string} hash
+ * @property {Object} repository
+ * @property {Object} repository.links
+ * @property {Object} repository.links.self
+ * @property {Object} repository.links.html
+ * @property {Object} repository.links.avatar
+ * @property {string} repository.type
+ * @property {string} repository.name
+ * @property {string} repository.full_name
+ * @property {string} repository.uuid
+ * @property {Object} links
+ * @property {Object} links.self
+ * @property {string} links.self.href
+ * @property {Object} links.comments
+ * @property {string} links.comments.href
+ * @property {Object} links.patch
+ * @property {string} links.patch.href
+ * @property {Object} links.html
+ * @property {string} links.html.href
+ * @property {Object} links.diff
+ * @property {string} links.diff.href
+ * @property {Object} links.approve
+ * @property {string} links.approve.href
+ * @property {Object} author
+ * @property {string} author.raw
+ * @property {Object} author.user
+ * @property {string} author.user.username
+ * @property {string} author.user.display_name
+ * @property {string} author.user.type
+ * @property {string} author.user.uuid
+ * @property {Object} author.user.links
+ * @property {Object[]} parents
+ * @property {string} parents[].hash
+ * @property {string} parents[].type
+ * @property {Object} parents[].links
+ * @property {Date} date
+ * @property {string} message
+ * @property {string} type
+ */
+
 var request = require("request"),
     cachedRequest = require('cached-request')(request),
     moment = require("moment"),
@@ -117,6 +159,7 @@ function parseRepoCommitUserDetails(error, response, body) {
         var lastCommitIsWithinDateRange = false;
 
         for (var i = 0, l = body.values.length; i < l; i++) {
+            /** @type {Commit} */
             var commit = body.values[i];
             if (commit.author.user) {
                 var username = commit.author.user.display_name;
