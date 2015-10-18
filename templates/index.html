@@ -58,7 +58,7 @@
     </div>
 </section>
 <section>
-    <div class="container">
+    <div class="container calendar">
 <link rel="stylesheet" href="styles/morris.css">
 <script src="scripts/jquery-2.1.4.min.js"></script>
 <script src="scripts/raphael-min.js"></script>
@@ -152,10 +152,11 @@
             .domain([0, 1])
             .range(d3.range(11).map(function(d) { return "q" + d + "-11"; }));
 
-    var svg = d3.select("body").selectAll("svg")
-            .data(d3.range(2010, 2016))
+    var svg = d3.select(".container.calendar").selectAll("svg")
+            .data(d3.range(2015, 2016))
             .enter().append("svg")
-            .attr("width", width)
+            .attr("width", "100%")
+            .attr("viewBox", "0 0 " + width + " " + height)
             .attr("height", height)
             .attr("class", "RdYlGn")
             .append("g")
