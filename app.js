@@ -43,7 +43,8 @@
 var request = require("request"),
     cachedRequest = require('cached-request')(request),
     moment = require("moment"),
-    jsonfile = require('jsonfile');
+    jsonFile = require('jsonfile'),
+    calendarStats = require("./parsers/calendarStats");
 
 var argv = require('minimist')(process.argv.slice(2), {
     alias: {
@@ -146,13 +147,15 @@ function finishedLoadingAllData() {
         active_count: activeCount,
         languages: languages,
         commit_count: commitCount,
-        user_counts: allUserCommitCounts
+        user_counts: allUserCommitCounts,
+        date_information: calendarStats.getResults()
     };
 
-    jsonfile.writeFile(outputFilename, outputObject, function (err) {
+    jsonFile.writeFile(outputFilename, outputObject, function (err) {
         console.error(err)
     });
 }
+
 function parseRepoCommitUserDetails(error, response, body) {
     if (!error && response.statusCode === 200) {
 
@@ -174,6 +177,7 @@ function parseRepoCommitUserDetails(error, response, body) {
                 commitCount++;
                 lastCommitIsWithinDateRange = true;
             }
+            calendarStats.parseCommit(commit);
         }
 
         if (body.next && lastCommitIsWithinDateRange == true) {
