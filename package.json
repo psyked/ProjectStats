@@ -9,7 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cached-request": "^0.1.4",
     "connect": "^3.4.0",
     "jsonfile": "^2.2.2",
     "minimist": "^1.2.0",

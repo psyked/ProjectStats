@@ -20,7 +20,6 @@ function parseCommit(commit) {
 }
 
 function getResults() {
-    console.log(results);
     return results;
 }
 

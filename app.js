@@ -41,7 +41,7 @@
  */
 
 var request = require("request"),
-    cachedRequest = require('cached-request')(request),
+    fs = require('fs'),
     moment = require("moment"),
     jsonFile = require('jsonfile'),
     calendarStats = require("./parsers/calendarStats");
@@ -59,11 +59,13 @@ var owner = argv.owner,
     username = argv.username,
     password = argv.password;
 
-var url = "https://bitbucket.org/api/2.0/repositories/" + owner,
+var url = "https://bitbucket.org/api/2.0/repositories/" + owner + "?pagelen=100",
     auth = "Basic " + new Buffer(username + ":" + password).toString("base64"),
     outputFilename = 'output.json';
 
-var startDate = Date.parse(moment().subtract(1, 'week').startOf('week').toString());
+var startOfLastWeek = Date.parse(moment().subtract(1, 'week').startOf('week').toString()),
+    endOfLastWeek = Date.parse(moment().startOf('week').toString()),
+    startOfYear = Date.parse(moment().startOf('year').toString());
 
 var gitCount = 0,
     hgCount = 0,
@@ -75,46 +77,80 @@ var gitCount = 0,
     allUserCommitCounts = {},
     requestsIndex = 0;
 
-function loadRepoInfoPage(url) {
-    function parseRepoInfoPage(error, response, body) {
-        if (!error && response.statusCode === 200) {
-            for (var i = 0, l = body.values.length; i < l; i++) {
-                var repo = body.values[i];
+function parseRepoInfoPage(body) {
+    for (var i = 0, l = body.values.length; i < l; i++) {
+        var repo = body.values[i];
 
-                if (repo.scm === 'hg') {
-                    hgCount++;
-                } else if (repo.scm === 'git') {
-                    gitCount++;
-                }
-
-                if (!languages[repo.language]) {
-                    languages[repo.language] = 0;
-                }
-                languages[repo.language]++;
-
-                if (Date.parse(repo.updated_on) > startDate) {
-                    activeCount++;
-                    allSlugs.push(repo.links.commits.href);
-                }
-
-                repoCount++;
-            }
-
-            if (body.next) {
-                loadRepoInfoPage(body.next);
-            } else {
-                finishedLoadingRepos();
-            }
+        if (repo.scm === 'hg') {
+            hgCount++;
+        } else if (repo.scm === 'git') {
+            gitCount++;
         }
+
+        if (!languages[repo.language]) {
+            languages[repo.language] = 0;
+        }
+        languages[repo.language]++;
+
+        if (Date.parse(repo.updated_on) > startOfLastWeek) {
+            activeCount++;
+        }
+
+        if (Date.parse(repo.updated_on) > startOfYear) {
+            allSlugs.push(repo.links.commits.href);
+        }
+
+        repoCount++;
     }
 
-    cachedRequest({
-        url: url,
-        json: true,
-        headers: {
-            "Authorization": auth
+    if (body.next) {
+        loadRepoInfoPage(body.next);
+    } else {
+        finishedLoadingRepos();
+    }
+}
+
+function makeCachedRequest(url, callback) {
+    var filename = url.replace(/[^a-zA-Z0-9_]/g, "_");
+    var cacheFile = "./cache/" + filename;
+    //console.log("Loading " + url);
+    //console.log("Checking against key: " + cacheFile);
+
+    fs.exists(cacheFile, function (exists) {
+        if (exists) {
+            fs.readFile(cacheFile, function (err, contents) {
+                if (err) {
+                    return console.log(err);
+                }
+                try {
+                    callback(JSON.parse(contents));
+                } catch (e) {
+                }
+            });
+        } else {
+            request({
+                url: url,
+                json: true,
+                headers: {
+                    "Authorization": auth
+                }
+            }, function (error, response, body) {
+                if (!error && response.statusCode === 200) {
+                    fs.writeFile(cacheFile, JSON.stringify(body), function (err, data) {
+                        if (err) {
+                            return console.log(err);
+                        }
+                        //console.log(data);
+                        callback(body);
+                    });
+                }
+            });
         }
-    }, parseRepoInfoPage);
+    });
+}
+
+function loadRepoInfoPage(url) {
+    makeCachedRequest(url, parseRepoInfoPage);
 }
 
 function finishedLoadingRepos() {
@@ -128,13 +164,8 @@ function finishedLoadingRepos() {
 }
 
 function loadCommitUserDetails() {
-    cachedRequest({
-        url: allSlugs[requestsIndex],
-        json: true,
-        headers: {
-            "Authorization": auth
-        }
-    }, parseRepoCommitUserDetails);
+    console.log("Loading request " + requestsIndex + " of " + allSlugs.length);
+    makeCachedRequest(allSlugs[requestsIndex] + "?pagelen=100", parseRepoCommitUserDetails);
 }
 
 function finishedLoadingAllData() {
@@ -156,39 +187,41 @@ function finishedLoadingAllData() {
     });
 }
 
-function parseRepoCommitUserDetails(error, response, body) {
-    if (!error && response.statusCode === 200) {
+function parseRepoCommitUserDetails(body) {
+    var lastCommitIsWithinDateRange = false;
 
-        var lastCommitIsWithinDateRange = false;
-
-        for (var i = 0, l = body.values.length; i < l; i++) {
-            /** @type {Commit} */
-            var commit = body.values[i];
-            if (commit.author.user) {
-                var username = commit.author.user.display_name;
-                if (Date.parse(commit.date) > startDate) {
-                    if (!allUserCommitCounts[username]) {
-                        allUserCommitCounts[username] = 0;
-                    }
-                    allUserCommitCounts[username]++;
+    for (var i = 0, l = body.values.length; i < l; i++) {
+        /** @type {Commit} */
+        var commit = body.values[i];
+        var commitDate = Date.parse(commit.date);
+        if (commit.author.user) {
+            var username = commit.author.user.display_name;
+            if (commitDate > startOfLastWeek && commitDate < endOfLastWeek) {
+                if (!allUserCommitCounts[username]) {
+                    allUserCommitCounts[username] = 0;
                 }
+                allUserCommitCounts[username]++;
             }
-            if (Date.parse(commit.date) > startDate) {
-                commitCount++;
-                lastCommitIsWithinDateRange = true;
-            }
+        }
+
+        if (commitDate > startOfLastWeek) {
+            commitCount++;
+        }
+
+        if (commitDate > startOfYear) {
+            lastCommitIsWithinDateRange = true;
             calendarStats.parseCommit(commit);
         }
-
-        if (body.next && lastCommitIsWithinDateRange == true) {
-            allSlugs.push(body.next);
-        } else {
-            if (requestsIndex == allSlugs.length) {
-                finishedLoadingAllData();
-            }
-        }
-        loadCommitUserDetails();
     }
+
+    if (body.next && lastCommitIsWithinDateRange == true) {
+        allSlugs.push(body.next);
+    } else {
+        if (requestsIndex == allSlugs.length) {
+            finishedLoadingAllData();
+        }
+    }
+    loadCommitUserDetails();
     requestsIndex++;
 }
 
