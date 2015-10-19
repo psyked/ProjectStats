@@ -160,18 +160,22 @@ function finishedLoadingRepos() {
     console.log("- " + activeCount + " Active Repos");
     console.log("- Languages: " + JSON.stringify(languages));
 
-    loadCommitUserDetails();
+    loadCommitDetails();
 }
 
-function loadCommitUserDetails() {
+function loadCommitDetails() {
     console.log("Loading request " + requestsIndex + " of " + allSlugs.length);
-    makeCachedRequest(allSlugs[requestsIndex] + "?pagelen=100", parseRepoCommitUserDetails);
+    makeCachedRequest(allSlugs[requestsIndex], parseRepoCommitDetails);
 }
 
 function finishedLoadingAllData() {
     console.log("- User Counts: " + JSON.stringify(allUserCommitCounts));
 
     var outputObject = {
+        year_start: moment(startOfYear).format("YYYY-MM-DD"),
+        year_end: moment(Date.now()).format("YYYY-MM-DD"),
+        week_start: moment(startOfLastWeek).format("dddd, Do MMMM YYYY"),
+        week_end: moment(endOfLastWeek).format("dddd, Do MMMM YYYY"),
         total_count: repoCount,
         hg_count: hgCount,
         git_count: gitCount,
@@ -187,7 +191,7 @@ function finishedLoadingAllData() {
     });
 }
 
-function parseRepoCommitUserDetails(body) {
+function parseRepoCommitDetails(body) {
     var lastCommitIsWithinDateRange = false;
 
     for (var i = 0, l = body.values.length; i < l; i++) {
@@ -221,7 +225,7 @@ function parseRepoCommitUserDetails(body) {
             finishedLoadingAllData();
         }
     }
-    loadCommitUserDetails();
+    loadCommitDetails();
     requestsIndex++;
 }
 

@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{total_count}} Repositories</title>
+    <title>Bitbucket Repository Stats</title>
 
     <!-- Add to homescreen -->
     <link rel="manifest" href="manifest.json">
@@ -38,6 +38,7 @@
 <body>
 <section>
     <div class="container">
+        <h3 style="float:right;text-align:right">From {{week_start}}<br/> to {{week_end}}</h3>
         <h1 id="headline">
             <strong>{{commit_count}}</strong> Commits<br/>
             <strong>{{active_count}}</strong> Repositories
@@ -52,13 +53,26 @@
 </section>
 <section>
     <div class="container">
-        <div class="g--third"><div id="repo_type"></div></div>
-        <div class="g--third"><div id="active_chart"></div></div>
-        <div class="g--third g--last"><div id="languages_chart"></div></div>
+        <div class="g--third">
+            <h3 class="subsection-title">Git vs Mercurial</h3>
+
+            <div id="repo_type"></div>
+        </div>
+        <div class="g--third">
+            <h3 class="subsection-title">Active vs Inactive</h3>
+
+            <div id="active_chart"></div>
+        </div>
+        <div class="g--third g--last">
+            <h3 class="subsection-title">Source Language</h3>
+
+            <div id="languages_chart"></div>
+        </div>
     </div>
 </section>
 <section>
     <div class="container calendar">
+        <h2>Commits this year</h2>
 <link rel="stylesheet" href="styles/morris.css">
 <script src="scripts/jquery-2.1.4.min.js"></script>
 <script src="scripts/raphael-min.js"></script>
@@ -89,7 +103,8 @@
         data: [
             {label: "Active", value: {{active_count}}},
             {label: "Inactive", value: {{total_count - active_count}}}
-        ]
+        ],
+        colors:['#f39c12', '#95a5a6']
     });
 
     Morris.Pie({
@@ -122,11 +137,11 @@
         stroke-width: 2px;
     }
 
-    .RdYlGn .q0-11{fill:rgb(165,0,38)}
-    .RdYlGn .q1-11{fill:rgb(215,48,39)}
-    .RdYlGn .q2-11{fill:rgb(244,109,67)}
-    .RdYlGn .q3-11{fill:rgb(253,174,97)}
-    .RdYlGn .q4-11{fill:rgb(254,224,139)}
+    /*.RdYlGn .q0-11{fill:rgb(165,0,38)}*/
+    /*.RdYlGn .q1-11{fill:rgb(215,48,39)}*/
+    /*.RdYlGn .q2-11{fill:rgb(244,109,67)}*/
+    /*.RdYlGn .q3-11{fill:rgb(253,174,97)}*/
+    /*.RdYlGn .q4-11{fill:rgb(254,224,139)}*/
     .RdYlGn .q5-11{fill:rgb(255,255,191)}
     .RdYlGn .q6-11{fill:rgb(217,239,139)}
     .RdYlGn .q7-11{fill:rgb(166,217,106)}
@@ -150,7 +165,7 @@
 
     var color = d3.scale.quantize()
             .domain([0, 1])
-            .range(d3.range(11).map(function(d) { return "q" + d + "-11"; }));
+            .range(d3.range(5,11).map(function(d) { return "q" + d + "-11"; }));
 
     var svg = d3.select(".container.calendar").selectAll("svg")
             .data(d3.range(2015, 2016))
