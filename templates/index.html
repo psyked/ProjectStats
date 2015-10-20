@@ -40,8 +40,8 @@
     <div class="container">
         <h3 style="float:right;text-align:right">From {{week_start}}<br/> to {{week_end}}</h3>
         <h1 id="headline">
-            <strong>{{commit_count}}</strong> Commits<br/>
-            <strong>{{active_count}}</strong> Repositories
+            <strong>{{commit_count.toLocaleString()}}</strong> Commits<br/>
+            <strong>{{active_count.toLocaleString()}}</strong> Repositories
         </h1>
     </div>
 <!--</section>-->
@@ -128,7 +128,7 @@
 
     .day {
         fill: #fff;
-        stroke: #ccc;
+        stroke: #fff;
     }
 
     .month {
@@ -142,7 +142,7 @@
     /*.RdYlGn .q2-11{fill:rgb(244,109,67)}*/
     /*.RdYlGn .q3-11{fill:rgb(253,174,97)}*/
     /*.RdYlGn .q4-11{fill:rgb(254,224,139)}*/
-    .RdYlGn .q5-11{fill:rgb(255,255,191)}
+    /*.RdYlGn .q5-11{fill:rgb(255,255,191)}*/
     .RdYlGn .q6-11{fill:rgb(217,239,139)}
     .RdYlGn .q7-11{fill:rgb(166,217,106)}
     .RdYlGn .q8-11{fill:rgb(102,189,99)}
@@ -165,10 +165,10 @@
 
     var color = d3.scale.quantize()
             .domain([0, 1])
-            .range(d3.range(5,11).map(function(d) { return "q" + d + "-11"; }));
+            .range(d3.range(6,11).map(function(d) { return "q" + d + "-11"; }));
 
     var svg = d3.select(".container.calendar").selectAll("svg")
-            .data(d3.range(2015, 2016))
+            .data(d3.range(2010, 2016).reverse())
             .enter().append("svg")
             .attr("width", "100%")
             .attr("viewBox", "0 0 " + width + " " + height)
