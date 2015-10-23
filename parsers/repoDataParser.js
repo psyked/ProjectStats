@@ -6,7 +6,7 @@ var gitCount = 0,
     languages = {},
     repoCount = 0;
 
-function parseRepoDetails(repo, startOfLastWeek) {
+function parseRepoDetails(repo, startOfLastWeek, callback) {
     if (repo.scm === 'hg') {
         hgCount++;
     } else if (repo.scm === 'git') {
@@ -23,6 +23,8 @@ function parseRepoDetails(repo, startOfLastWeek) {
     }
 
     repoCount++;
+
+    callback();
 }
 
 function getDetails() {

@@ -76,18 +76,19 @@ var allSlugs = [],
 function parseRepoInfoPage(body) {
     for (var i = 0, l = body.values.length; i < l; i++) {
         var repo = body.values[i];
+        repoDataParser.parseRepoDetails(repo, startOfLastWeek, next);
 
-
-        if (Date.parse(repo.updated_on) > startOfYear) {
-            allSlugs.push(repo.links.commits.href);
+        function next() {
+            if (Date.parse(repo.updated_on) > startOfYear) {
+                allSlugs.push(repo.links.commits.href);
+            }
         }
-
     }
 
     if (body.next) {
         loadRepoInfoPage(body.next);
     } else {
-        finishedLoadingRepos();
+        calendarStats.initOutput(finishedLoadingRepos);
     }
 }
 
@@ -117,12 +118,8 @@ function makeCachedRequest(url, callback, errorCallback) {
                     }
                 }, function (error, response, body) {
                     if (!error && response.statusCode === 200) {
-                        fs.writeFile(cacheFile, JSON.stringify(body), function (err, data) {
-                            if (err) {
-                                return console.log(err);
-                            }
-                            callback(body);
-                        });
+                        fs.writeFileSync(cacheFile, JSON.stringify(body));
+                        callback(body);
                     } else {
                         errorCallback();
                     }
@@ -143,18 +140,20 @@ function parseRepoInfoError() {
 }
 
 function finishedLoadingRepos() {
-
     loadCommitDetails();
 }
 
 function loadCommitDetails() {
-    console.log("Loading request " + requestsIndex + " of " + allSlugs.length);
-    makeCachedRequest(allSlugs[requestsIndex], parseRepoCommitDetails, parseRepoCommitError);
+    //console.log("Loading request " + requestsIndex + " of " + allSlugs.length);
+    if (requestsIndex >= allSlugs.length) {
+        finishedLoadingAllData();
+    } else {
+        makeCachedRequest(allSlugs[requestsIndex], parseRepoCommitDetails, parseRepoCommitError);
+        requestsIndex++;
+    }
 }
 
 function finishedLoadingAllData() {
-    console.log("- User Counts: " + JSON.stringify(allUserCommitCounts));
-
     var outputObject = {
         year_start: moment(startOfYear).format("YYYY-MM-DD"),
         year_end: moment(Date.now()).format("YYYY-MM-DD"),
@@ -165,9 +164,6 @@ function finishedLoadingAllData() {
         date_information: calendarStats.getResults(),
         date_user_information: calendarStats.getUserResults()
     };
-
-    console.log(calendarStats.getResults());
-    console.log(calendarStats.getUserResults());
 
     var source = repoDataParser.getDetails();
     for (var prop in source) {
@@ -202,7 +198,10 @@ function parseRepoCommitDetails(body) {
 
         if (commitDate > startOfYear) {
             lastCommitIsWithinDateRange = true;
-            calendarStats.parseCommit(commit);
+            var rtn = calendarStats.parseCommit(commit);
+            if (rtn) {
+                fs.appendFileSync("./output.csv", rtn);
+            }
         }
     }
 
@@ -214,12 +213,10 @@ function parseRepoCommitDetails(body) {
         }
     }
     loadCommitDetails();
-    requestsIndex++;
 }
 
 function parseRepoCommitError() {
     loadCommitDetails();
-    requestsIndex++;
 }
 
 loadRepoInfoPage(url);
