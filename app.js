@@ -200,7 +200,7 @@ function parseRepoCommitDetails(body) {
             lastCommitIsWithinDateRange = true;
             var rtn = calendarStats.parseCommit(commit);
             if (rtn) {
-                fs.appendFileSync("./output.csv", rtn);
+                fs.appendFileSync("./serve/output.csv", rtn);
             }
         }
     }
