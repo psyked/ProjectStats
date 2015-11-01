@@ -3,8 +3,61 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title></title>
+    <style>
+        html, body {
+            background: #2c3e50;
+            height: calc(100% - 5px);
+            margin: 0;
+            padding: 2.5px;
+        }
+
+        main {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+            align-content: stretch;
+            align-items: flex-start;
+        }
+
+        .timelines, .details {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+            align-content: stretch;
+            align-items: stretch;
+            flex: 1 1 auto;
+        }
+
+        .graph, .list {
+            background: #34495e;
+            order: 0;
+            flex: 1 1 auto;
+            align-self: auto;
+            padding: 10px;
+            border: 5px solid #2c3e50;
+            border-radius: 10px;
+        }
+
+        .date {
+            flex: 4 0 auto;
+        }
+    </style>
 </head>
 <body>
-
+<main class="container">
+    <div class="timelines">
+        <div class="graph date"></div>
+        <div class="graph time"></div>
+    </div>
+    <div class="details">
+        <div class="list user"></div>
+        <div class="list commit"></div>
+        <div class="list project"></div>
+    </div>
+</main>
 </body>
 </html>
