@@ -12,10 +12,10 @@ var userCommits = {};
 function parseCommit(commit) {
 
     function formatDate(date) {
-        return moment(date).format("YYYY-MM-DDThh:mm:ss");
+        return date;//moment.utc(date).format();
     }
 
-    var date = formatDate(new Date(commit.date));
+    var date = formatDate(commit.date);
 
     if (!results[date]) {
         results[date] = 0;
