@@ -2,6 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
+    <meta name="google" value="notranslate">
     <title>Source Control Stats</title>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     <style>
@@ -230,7 +231,27 @@
 <script src="scripts/jquery-2.1.4.min.js"></script>
 <script src="scripts/crossfilter.v1.min.js"></script>
 <script src="scripts/d3.v3.min.js"></script>
+<script src="scripts/native.history.js"></script>
 <script>
+    (function (window, undefined) {
+
+        // Bind to StateChange Event
+        History.Adapter.bind(window, 'statechange', function () { // Note: We are using statechange instead of popstate
+            var State = History.getState(); // Note: We are using History.getState() instead of event.state
+        });
+
+        // Change our States
+//        History.pushState({state:1}, "State 1", "?state=1"); // logs {state:1}, "State 1", "?state=1"
+//        History.pushState({state:2}, "State 2", "?state=2"); // logs {state:2}, "State 2", "?state=2"
+//        History.replaceState({state:3}, "State 3", "?state=3"); // logs {state:3}, "State 3", "?state=3"
+//        History.pushState(null, null, "?state=4"); // logs {}, '', "?state=4"
+//        History.back(); // logs {state:3}, "State 3", "?state=3"
+//        History.back(); // logs {state:1}, "State 1", "?state=1"
+//        History.back(); // logs {}, "Home Page", "?"
+//        History.go(2); // logs {state:3}, "State 3", "?state=3"
+
+    })(window);
+
     d3.csv("output.json", function (error, commits) {
 
         // exclude data from outside the last 365 days
@@ -365,11 +386,29 @@
                     return d == username;
                 })
                 $(".panel.user .reset").show();
+                History.pushState({user: username}, window.title, "?user=" + username);
             } else {
                 $(".panel.user .reset").hide();
                 user.filterAll();
+                History.pushState({user: undefined}, window.title, "dashboard.html");
             }
             renderAll();
+        }
+
+        var username = getQueryVariable("user");
+        if(username){
+            filterUser(decodeURI(username));
+        }
+
+        function getQueryVariable(variable)
+        {
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+            for (var i=0;i<vars.length;i++) {
+                var pair = vars[i].split("=");
+                if(pair[0] == variable){return pair[1];}
+            }
+            return(false);
         }
 
         function commitList(div) {
