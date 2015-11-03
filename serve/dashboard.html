@@ -24,6 +24,20 @@
             justify-content: flex-start;
             align-content: stretch;
             align-items: flex-start;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        aside {
+            text-align: right;
+            width: 100%;
+        }
+
+        aside #total {
+            color: #16a085;
+        }
+
+        aside #active {
+            color: #e67e22;
         }
 
         .timelines, .details {
@@ -54,7 +68,6 @@
             /*padding: 10px;*/
             border: 5px solid #2c3e50;
             border-radius: 10px;
-            font-family: 'Open Sans', sans-serif;
         }
 
         .list {
@@ -146,6 +159,7 @@
 </head>
 <body>
 <main class="container">
+    <aside id="totals"><span id="active">-</span> of <span id="total">-</span> commits selected.</aside>
     <div class="timelines">
         <div class="graph date">
             <div class="chart">
