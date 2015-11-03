@@ -155,6 +155,22 @@
             fill: #eee;
             stroke: #666;
         }
+
+        .user-info {
+            cursor: pointer;
+            float: left;
+            clear: both;
+            width: 100%;
+            line-height: 2em;
+        }
+
+        .user-info:hover {
+            background: #c0392b;
+        }
+
+        .user-info.selected {
+            background: #e74c3c;
+        }
     </style>
 </head>
 <body>
@@ -176,7 +192,9 @@
     </div>
     <div class="details">
         <div class="list user">
-            <div class="title">User</div>
+            <div class="title">User
+                <span class="reset"><a href="javascript:filterUser()">Reset</a></span>
+            </div>
         </div>
         <div class="list commit">
             <div class="title">Commits</div>
@@ -191,6 +209,18 @@
 <script src="scripts/d3.v3.min.js"></script>
 <script>
     d3.csv("output.json", function (error, commits) {
+
+        // exclude data from outside the last 365 days
+        commits = commits.filter(function (d) {
+            var startDate = (new Date() - 1000 * 60 * 60 * 24 * 365);
+            var endDate = (new Date());
+            var theDate = parseDate(d.date);
+            if (theDate > startDate && theDate < endDate) {
+                return true;
+            }
+            return false;
+        });
+
         // Various formatters.
         var formatNumber = d3.format(",d"),
                 formatDate = d3.time.format("%B %d, %Y"),
@@ -218,7 +248,10 @@
                 all = commit.groupAll(),
                 date = commit.dimension(function (d) {
                     return d.date;
-                }),
+                })//.filter([new Date() - 1000 * 60 * 60 * 24 * 365, new Date()]),
+        user = commit.dimension(function (d) {
+            return d.author;
+        }),
                 dates = date.group(d3.time.day),
                 weeks = date.group(d3.time.week),
                 hour = commit.dimension(function (d) {
@@ -301,6 +334,19 @@
             renderAll();
         };
 
+        window.filterUser = function (username) {
+            $(".user-info").removeClass("selected");
+            if (username) {
+                $(".user-info[data-user='" + username + "']").addClass("selected");
+                user.filterFunction(function (d) {
+                    return d == username;
+                })
+            } else {
+                user.filterAll();
+            }
+            renderAll();
+        }
+
         function commitList(div) {
             var commitsByDate = nestByDate.entries(date.top(1000));
 
@@ -358,20 +404,25 @@
                     return b.values.length > a.values.length ? 1 : -1;
                 });
 
-                var userList = d3.select(this).selectAll(".date")
+                var userList = d3.select(this).selectAll(".user-info")
                         .data(commitsByUser, function (d) {
                             return d.key;
                         });
 
                 userList.select(".commit-count").text(function (d) {
-
                     return d.values.length.toLocaleString() + " commits";
                 });
 
                 userList.enter().append("div")
-                        .attr("class", "date")
+                        .attr("class", "user-info")
+                        .attr("data-user", function (d) {
+                            return d.values[0].author;
+                        })
+                        .attr("onclick", function (d) {
+                            return "javascript:filterUser('" + d.values[0].author + "')";
+                        })
                         .append("div")
-                        .attr("class", "day")
+                        .attr("class", "user-name")
                         .append("span")
                         .text(function (d) {
                             return d.values[0].author;
