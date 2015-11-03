@@ -438,7 +438,9 @@
             timeFilters = [startTime, endTime];
         }
 
-        filter([dateFilters, timeFilters]);
+        if (startTime && endTime || startDate && endDate) {
+            filter([dateFilters, timeFilters]);
+        }
 
         function getQueryVariable(variable) {
             var query = window.location.search.substring(1);
