@@ -245,16 +245,6 @@
             var State = History.getState(); // Note: We are using History.getState() instead of event.state
         });
 
-        // Change our States
-//        History.pushState({state:1}, "State 1", "?state=1"); // logs {state:1}, "State 1", "?state=1"
-//        History.pushState({state:2}, "State 2", "?state=2"); // logs {state:2}, "State 2", "?state=2"
-//        History.replaceState({state:3}, "State 3", "?state=3"); // logs {state:3}, "State 3", "?state=3"
-//        History.pushState(null, null, "?state=4"); // logs {}, '', "?state=4"
-//        History.back(); // logs {state:3}, "State 3", "?state=3"
-//        History.back(); // logs {state:1}, "State 1", "?state=1"
-//        History.back(); // logs {}, "Home Page", "?"
-//        History.go(2); // logs {state:3}, "State 3", "?state=3"
-
     })(window);
 
     d3.csv("output.json", function (error, commits) {
@@ -381,6 +371,17 @@
 
         window.reset = function (i) {
             charts[i].filter(null);
+
+//            if (i == 0) {
+            startTime = undefined;
+            endTime = undefined;
+//            } else {
+            startDate = undefined;
+            endDate = undefined;
+//            }
+
+            History.pushState({}, window.title, getQueryString());
+
             renderAll();
         };
 
@@ -401,10 +402,43 @@
             renderAll();
         }
 
-        var selectedUsername = getQueryVariable("user");
+        var selectedUsername = getQueryVariable("user"),
+                startDate = getQueryVariable("startDate"),
+                endDate = getQueryVariable("endDate"),
+                startTime = getQueryVariable("startTime"),
+                endTime = getQueryVariable("endTime");
+
         if (selectedUsername) {
             filterUser(decodeURI(selectedUsername));
         }
+
+        if (startDate) {
+            startDate = new Date(parseInt(startDate, 10));
+        }
+
+        if (endDate) {
+            endDate = new Date(parseInt(endDate, 10));
+        }
+
+        if (startTime) {
+            startTime = parseInt(startTime, 10);
+        }
+
+        if (endTime) {
+            endTime = parseInt(endTime, 10);
+        }
+
+        var dateFilters, timeFilters;
+
+        if (startDate != undefined && endDate != undefined) {
+            dateFilters = [startDate, endDate];
+        }
+
+        if (startTime != undefined && endTime != undefined) {
+            timeFilters = [startTime, endTime];
+        }
+
+        filter([dateFilters, timeFilters]);
 
         function getQueryVariable(variable) {
             var query = window.location.search.substring(1);
@@ -419,11 +453,25 @@
         }
 
         function getQueryString() {
-            var string = "dashboard.html?";
+            var array = ["dashboard.html"];
             if (selectedUsername) {
-                string += "user=" + encodeURI(selectedUsername);
+                array.push("user=" + encodeURI(selectedUsername));
             }
-            return string;
+            if (startDate) {
+                array.push("startDate=" + Date.parse(startDate));
+            }
+            if (endDate) {
+                array.push("endDate=" + Date.parse(endDate));
+            }
+            if (startTime) {
+                array.push("startTime=" + parseInt(startTime, 10));
+            }
+            if (endTime) {
+                array.push("endTime=" + parseInt(endTime, 10));
+            }
+            var queryString = array.join("&");
+            queryString = queryString.replace(/&/, "?");
+            return queryString;
         }
 
         function commitList(div) {
@@ -653,7 +701,18 @@
                 g.select("#clip-" + id + " rect")
                         .attr("x", x(extent[0]))
                         .attr("width", x(extent[1]) - x(extent[0]));
+
+                if (extent[0] < 24) {
+                    startTime = extent[0];
+                    endTime = extent[1];
+                } else {
+                    startDate = extent[0];
+                    endDate = extent[1];
+                }
+
                 dimension.filterRange(extent);
+
+                History.pushState({}, window.title, getQueryString());
             });
 
             brush.on("brushend.chart", function () {
@@ -661,7 +720,15 @@
                     var div = d3.select(this.parentNode.parentNode.parentNode);
                     div.select(".title a").style("display", "none");
                     div.select("#clip-" + id + " rect").attr("x", null).attr("width", "100%");
+
+                    startTime = undefined;
+                    endTime = undefined;
+                    startDate = undefined;
+                    endDate = undefined;
+
                     dimension.filterAll();
+
+                    History.pushState({}, window.title, getQueryString());
                 }
             });
 
