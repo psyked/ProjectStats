@@ -143,7 +143,6 @@
 
         .reset {
             font-size: smaller;
-            line-height: 2em;
             color: #ccc;
             float: right;
         }
@@ -538,7 +537,7 @@
                 y.domain([0, group.top(1)[0].value]);
 
                 div.each(function () {
-                    var div = d3.select(this),
+                    var div = d3.select(this.parentNode),
                             g = div.select("g");
 
                     // Create the skeletal chart.
@@ -546,7 +545,7 @@
                         div.select(".title").append("a")
                                 .attr("href", "javascript:reset(" + id + ")")
                                 .attr("class", "reset")
-                                .text("reset")
+                                .text("Remove filter")
                                 .style("display", "none");
 
                         g = div.append("svg")
