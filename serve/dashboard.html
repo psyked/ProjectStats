@@ -85,6 +85,8 @@
             overflow-y: auto;
             clear: both;
             flex: 1 1 auto;
+            padding: 2px 5px;
+            margin: -2px -5px;
         }
 
         .panel .commit,
@@ -130,12 +132,9 @@
 
         .placeholder {
             width: 100%;
-            /*overflow-x: scroll;*/
-            /*overflow-y: hidden;*/
         }
 
         .reset {
-            /*padding-left: 1em;*/
             font-size: smaller;
             line-height: 2em;
             color: #ccc;
@@ -181,14 +180,16 @@
             clear: both;
             width: 100%;
             line-height: 2em;
+            padding: 2px 5px;
+            margin: -2px -5px;
         }
 
         .user-info:hover {
-            background: #c0392b;
+            background: #d35400;
         }
 
         .user-info.selected {
-            background: #e74c3c;
+            background: #e67e22;
         }
     </style>
 </head>
@@ -212,7 +213,7 @@
     <div class="details">
         <div class="panel user">
             <div class="title">User
-                <span class="reset"><a href="javascript:filterUser()">Reset</a></span>
+                <span class="reset" style="display:none;"><a href="javascript:filterUser()">Remove filter</a></span>
             </div>
             <div class="list"></div>
         </div>
@@ -363,7 +364,9 @@
                 user.filterFunction(function (d) {
                     return d == username;
                 })
+                $(".panel.user .reset").show();
             } else {
+                $(".panel.user .reset").hide();
                 user.filterAll();
             }
             renderAll();
