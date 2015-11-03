@@ -17,6 +17,7 @@
 
         main {
             height: 100%;
+            max-height: 100vh;
             display: flex;
             flex-direction: column;
             flex-wrap: nowrap;
@@ -33,6 +34,15 @@
             justify-content: flex-start;
             align-content: stretch;
             align-items: stretch;
+            /*flex: 1 0 auto;*/
+            overflow-y: auto;
+        }
+
+        .timelines {
+            flex: 0 0 160px;
+        }
+
+        .details {
             flex: 1 1 auto;
         }
 
@@ -45,6 +55,10 @@
             border: 5px solid #2c3e50;
             border-radius: 10px;
             font-family: 'Open Sans', sans-serif;
+        }
+
+        .list {
+            overflow-y: auto;
         }
 
         .list .commit,
@@ -135,19 +149,27 @@
     <div class="timelines">
         <div class="graph date">
             <div class="chart">
+                <div class="title">Date</div>
                 <div class="placeholder"></div>
             </div>
         </div>
         <div class="graph time">
             <div class="chart">
+                <div class="title">Time</div>
                 <div class="placeholder"></div>
             </div>
         </div>
     </div>
     <div class="details">
-        <div class="list user"></div>
-        <div class="list commit"></div>
-        <div class="list project"></div>
+        <div class="list user">
+            <div class="title">User</div>
+        </div>
+        <div class="list commit">
+            <div class="title">Commits</div>
+        </div>
+        <div class="list project">
+            <div class="title">Projects</div>
+        </div>
     </div>
 </main>
 <script src="scripts/jquery-2.1.4.min.js"></script>
@@ -394,7 +416,7 @@
                                 .attr("width", width + margin.left + margin.right)
                                 .attr("height", height + margin.top + margin.bottom)
                                 .append("g")
-                                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+//                                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
                         g.append("clipPath")
                                 .attr("id", "clip-" + id)
