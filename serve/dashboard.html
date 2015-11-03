@@ -60,7 +60,7 @@
             flex: 1 1 auto;
         }
 
-        .graph, .list {
+        .graph, .panel {
             background: #34495e;
             order: 0;
             flex: 1 1 auto;
@@ -68,38 +68,51 @@
             /*padding: 10px;*/
             border: 5px solid #2c3e50;
             border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .panel {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .title {
+            flex: 0 0 32px;
         }
 
         .list {
             overflow-y: auto;
+            clear: both;
+            flex: 1 1 auto;
         }
 
-        .list .commit,
-        .list .day {
-            float: left;
+        .panel .commit,
+        .panel .day {
+            /*float: left;*/
             clear: both;
             width: 100%;
             line-height: 2em;
         }
 
-        .list .day {
+        .panel .day {
             background: #16a085;
         }
 
-        .list .commit .time {
+        .panel .commit .time {
             margin: 0 .5em;
         }
 
-        .list .day span {
+        .panel .day span {
             margin: 0 .5em;
         }
 
-        .list .commit .time,
-        .list .commit .author {
+        .panel .commit .time,
+        .panel .commit .author {
             float: left;
         }
 
-        .list .commit .time {
+        .panel .commit .time {
             width: 80px;
         }
 
@@ -122,8 +135,14 @@
         }
 
         .reset {
-            padding-left: 1em;
+            /*padding-left: 1em;*/
             font-size: smaller;
+            line-height: 2em;
+            color: #ccc;
+            float: right;
+        }
+
+        .reset a {
             color: #ccc;
         }
 
@@ -191,16 +210,19 @@
         </div>
     </div>
     <div class="details">
-        <div class="list user">
+        <div class="panel user">
             <div class="title">User
                 <span class="reset"><a href="javascript:filterUser()">Reset</a></span>
             </div>
+            <div class="list"></div>
         </div>
-        <div class="list commit">
+        <div class="panel commit">
             <div class="title">Commits</div>
+            <div class="list"></div>
         </div>
-        <!--<div class="list project">
+        <!--<div class="panel project">
             <div class="title">Projects</div>
+            <div class="list"></div>
         </div>-->
     </div>
 </main>
@@ -226,7 +248,7 @@
                 formatDate = d3.time.format("%B %d, %Y"),
                 formatTime = d3.time.format("%I:%M %p");
 
-        // A nest operator, for grouping the commit list.
+        // A nest operator, for grouping the commit panel.
         var nestByDate = d3.nest()
                 .key(function (d) {
                     return d3.time.day(d.date);
@@ -292,10 +314,10 @@
                 });
 
         // Render the initial lists.
-        var commitsList = d3.selectAll(".list.commit")
+        var commitsList = d3.selectAll(".panel.commit .list")
                 .data([commitList]);
 
-        var usersList = d3.selectAll(".list.user")
+        var usersList = d3.selectAll(".panel.user .list")
                 .data([userList]);
 
         // Render the total.
