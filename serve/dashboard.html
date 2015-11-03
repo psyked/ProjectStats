@@ -223,8 +223,8 @@
                     .round(d3.time.day.round)
                     .x(d3.time.scale()
                             .domain([new Date() - 1000 * 60 * 60 * 24 * 365, new Date()])
-                            .rangeRound([0, dateColWidth * 365]))
-                    .filter([new Date() - 1000 * 60 * 60 * 24 * 365, new Date()]),
+                            .rangeRound([0, dateColWidth * 365])),
+//                    .filter([new Date() - 1000 * 60 * 60 * 24 * 365, new Date()]),
 
             barChart(timeColWidth)
                     .dimension(hour)
