@@ -386,24 +386,24 @@
 
         window.filterUser = function (username) {
             $(".user-info").removeClass("selected");
+            selectedUsername = username;
             if (username) {
                 $(".user-info[data-user='" + username + "']").addClass("selected");
                 user.filterFunction(function (d) {
                     return d == username;
                 })
                 $(".panel.user .reset").show();
-                History.pushState({user: username}, window.title, "?user=" + username);
             } else {
                 $(".panel.user .reset").hide();
                 user.filterAll();
-                History.pushState({user: undefined}, window.title, "dashboard.html");
             }
+            History.pushState({user: username}, window.title, getQueryString());
             renderAll();
         }
 
-        var username = getQueryVariable("user");
-        if (username) {
-            filterUser(decodeURI(username));
+        var selectedUsername = getQueryVariable("user");
+        if (selectedUsername) {
+            filterUser(decodeURI(selectedUsername));
         }
 
         function getQueryVariable(variable) {
@@ -416,6 +416,14 @@
                 }
             }
             return (false);
+        }
+
+        function getQueryString() {
+            var string = "dashboard.html?";
+            if (selectedUsername) {
+                string += "user=" + encodeURI(selectedUsername);
+            }
+            return string;
         }
 
         function commitList(div) {
