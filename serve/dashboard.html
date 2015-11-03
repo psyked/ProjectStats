@@ -54,7 +54,7 @@
         }
 
         .timelines {
-            flex: 0 0 160px;
+            flex: 0 0 180px;
         }
 
         .details {
@@ -129,6 +129,12 @@
 
         .chart {
             display: inline-block;
+            margin: -10px;
+            padding: 10px;
+        }
+
+        .chart .title {
+            padding: 10px;
         }
 
         .placeholder {
@@ -292,10 +298,11 @@
                 all = commit.groupAll(),
                 date = commit.dimension(function (d) {
                     return d.date;
-                })//.filter([new Date() - 1000 * 60 * 60 * 24 * 365, new Date()]),
-        user = commit.dimension(function (d) {
-            return d.author;
-        }),
+                }),
+        //.filter([new Date() - 1000 * 60 * 60 * 24 * 365, new Date()]),
+                user = commit.dimension(function (d) {
+                    return d.author;
+                }),
                 dates = date.group(d3.time.day),
                 weeks = date.group(d3.time.week),
                 hour = commit.dimension(function (d) {
@@ -396,19 +403,20 @@
         }
 
         var username = getQueryVariable("user");
-        if(username){
+        if (username) {
             filterUser(decodeURI(username));
         }
 
-        function getQueryVariable(variable)
-        {
+        function getQueryVariable(variable) {
             var query = window.location.search.substring(1);
             var vars = query.split("&");
-            for (var i=0;i<vars.length;i++) {
+            for (var i = 0; i < vars.length; i++) {
                 var pair = vars[i].split("=");
-                if(pair[0] == variable){return pair[1];}
+                if (pair[0] == variable) {
+                    return pair[1];
+                }
             }
-            return(false);
+            return (false);
         }
 
         function commitList(div) {
@@ -509,7 +517,7 @@
 
             var margin = {
                         top: 0,
-                        right: 10,
+                        right: 20,
                         bottom: 20,
                         left: 10
                     },
@@ -545,7 +553,7 @@
                                 .attr("width", width + margin.left + margin.right)
                                 .attr("height", height + margin.top + margin.bottom)
                                 .append("g")
-//                                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
                         g.append("clipPath")
                                 .attr("id", "clip-" + id)
