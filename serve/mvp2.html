@@ -455,7 +455,7 @@
         }
 
         function getQueryString() {
-            var array = ["dashboard.html"];
+            var array = [location.pathname.substring(location.pathname.lastIndexOf("/") + 1)];
             if (selectedUsername) {
                 array.push("user=" + encodeURI(selectedUsername));
             }
