@@ -2,9 +2,9 @@ var SASS_FILES = {
     './website/serve/css/main.css': './website/scss/main.scss'
 };
 
-var JAVASCRIPT_FILES = {
-    './website/serve/js/main.js': ['./website/js-source/**/*.js']
-};
+//var JAVASCRIPT_FILES = {
+//    './website/serve/js/main.js': ['./website/js-source/**/*.js']
+//};
 
 //var CRITICAL_CSS_FILE = './website/assets/css/<%= pkg.name %>/<%= pkg.name %>.critical.min.css';
 
@@ -32,11 +32,11 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON('package.json'),
 
         // Task configuration.
-        uglify: {
-            dist: {
-                files: JAVASCRIPT_FILES
-            }
-        },
+        //uglify: {
+        //    dist: {
+        //        files: JAVASCRIPT_FILES
+        //    }
+        //},
 
         requirejs: {
             compile: {
@@ -44,7 +44,7 @@ module.exports = function (grunt) {
                     mainConfigFile: "./website/js-source/require-config.js",
                     baseUrl: "./website/js-source",
                     name: "main",
-                    out: "./website/serve/scripts/main.js"
+                    out: "./website/serve/js/main.js"
                 }
             }
         },
@@ -71,7 +71,7 @@ module.exports = function (grunt) {
         watch: {
             uglify: {
                 files: WATCH_JAVASCRIPT_FILES,
-                tasks: ['uglify']
+                tasks: ['requirejs']
             },
 
             sass: {
@@ -83,5 +83,5 @@ module.exports = function (grunt) {
     });
 
     // Default task.
-    grunt.registerTask('default', ['uglify', 'sass', 'watch']);
+    grunt.registerTask('default', ['requirejs', 'sass', 'watch']);
 };
