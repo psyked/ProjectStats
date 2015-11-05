@@ -54,15 +54,17 @@ var argv = require('minimist')(process.argv.slice(2), {
         'password': 'p'
     }
 });
+//console.dir(argv);
 
 if(!argv.owner){
     console.error('\033[31mError:\033[39m No Bitbucket Account specified!');
+    return;
 }
 
 if(!argv.username || !argv.password){
-    console.warn('\033[33mWarning:\033[39m No Bitbucket Username or Password specified. Unable to inspect private repositories!');
+    console.warn('\033[31mError:\033[39m No Bitbucket Username or Password specified!');
+    return;
 }
-//console.dir(argv);
 
 var owner = argv.owner,
     username = argv.username,
@@ -103,7 +105,8 @@ function parseRepoInfoPage(body) {
 function makeCachedRequest(url, callback, errorCallback) {
     if (url) {
         var filename = url.replace(/[^a-zA-Z0-9_]/g, "_");
-        var cacheFile = "./cache/" + filename;
+        var cacheFile = "./datacollector/cache/" + filename;
+        console.log("\033[36mInfo:\033[39m Loading " + url);
         //console.log("Loading " + url + ", checking against key: " + cacheFile);
 
         fs.exists(cacheFile, function (exists) {
@@ -152,7 +155,7 @@ function finishedLoadingRepos() {
 }
 
 function loadCommitDetails() {
-    //console.log("Loading request " + requestsIndex + " of " + allSlugs.length);
+    console.log("\033[36mInfo:\033[39m Loading request " + requestsIndex + " of " + allSlugs.length);
     if (requestsIndex >= allSlugs.length) {
         finishedLoadingAllData();
     } else {
@@ -208,7 +211,7 @@ function parseRepoCommitDetails(body) {
             lastCommitIsWithinDateRange = true;
             var rtn = calendarStats.parseCommit(commit);
             if (rtn) {
-                fs.appendFileSync("./serve/output.csv", rtn);
+                fs.appendFileSync("./website/serve/output.json", rtn);
             }
         }
     }

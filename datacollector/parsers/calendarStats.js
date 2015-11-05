@@ -39,7 +39,7 @@ function parseCommit(commit) {
 }
 
 function initOutput(callback) {
-    fs.writeFileSync("./serve/output.csv", "date,author\n");
+    fs.writeFileSync("./website/serve/output.json", "date,author\n");
     callback();
 }
 
