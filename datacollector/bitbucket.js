@@ -54,6 +54,14 @@ var argv = require('minimist')(process.argv.slice(2), {
         'password': 'p'
     }
 });
+
+if(!argv.owner){
+    console.error('\033[31mError:\033[39m No Bitbucket Account specified!');
+}
+
+if(!argv.username || !argv.password){
+    console.warn('\033[33mWarning:\033[39m No Bitbucket Username or Password specified. Unable to inspect private repositories!');
+}
 //console.dir(argv);
 
 var owner = argv.owner,
