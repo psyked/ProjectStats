@@ -2,15 +2,15 @@ var SASS_FILES = {
     './website/serve/css/main.css': './website/scss/main.scss'
 };
 
-//var JAVASCRIPT_FILES = {
-//    './website/assets/js/<%= pkg.name %>/<%= pkg.name %>.min.js': ['./source/js/<%= pkg.name %>/**/*.js']
-//};
+var JAVASCRIPT_FILES = {
+    './website/serve/js/main.js': ['./website/js-source/**/*.js']
+};
 
 //var CRITICAL_CSS_FILE = './website/assets/css/<%= pkg.name %>/<%= pkg.name %>.critical.min.css';
 
-//var WATCH_JAVASCRIPT_FILES = [
-//    './source/js/<%= pkg.name %>/**/*.js'
-//];
+var WATCH_JAVASCRIPT_FILES = [
+    './website/js-source/**/*.js'
+];
 
 var WATCH_SASS_FILES = [
     './website/scss/**/*.scss'
@@ -32,11 +32,22 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON('package.json'),
 
         // Task configuration.
-        //uglify: {
-        //    dist: {
-        //        files: JAVASCRIPT_FILES
-        //    }
-        //},
+        uglify: {
+            dist: {
+                files: JAVASCRIPT_FILES
+            }
+        },
+
+        requirejs: {
+            compile: {
+                options: {
+                    mainConfigFile: "./website/js-source/require-config.js",
+                    baseUrl: "./website/js-source",
+                    name: "main",
+                    out: "./website/serve/scripts/main.js"
+                }
+            }
+        },
 
         sass: {
             dist: {
@@ -58,10 +69,10 @@ module.exports = function (grunt) {
         //},
 
         watch: {
-            //uglify: {
-            //    files: WATCH_JAVASCRIPT_FILES,
-            //    tasks: ['uglify']
-            //},
+            uglify: {
+                files: WATCH_JAVASCRIPT_FILES,
+                tasks: ['uglify']
+            },
 
             sass: {
                 loadPath: require('node-bourbon').includePaths, // awesome mixin lib: http://bourbon.io
@@ -72,5 +83,5 @@ module.exports = function (grunt) {
     });
 
     // Default task.
-    grunt.registerTask('default', ['sass', 'watch']);
+    grunt.registerTask('default', ['uglify', 'sass', 'watch']);
 };
