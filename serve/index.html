@@ -456,6 +456,9 @@
 
         function getQueryString() {
             var array = [location.pathname.substring(location.pathname.lastIndexOf("/") + 1)];
+            if(array[0] === "") {
+                array[0] = "index.html";
+            }
             if (selectedUsername) {
                 array.push("user=" + encodeURI(selectedUsername));
             }
