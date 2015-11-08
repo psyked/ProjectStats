@@ -2,13 +2,14 @@ require([
     "jquery",
     "crossfilter",
     "d3",
+    "c3",
     "history",
     "charts/barchart",
     "utils/querystring",
     "model/state",
     "lists/commitlist",
     "lists/userlist"
-], function($, crossfilter, d3, History, barChart, getQueryString, state, commitList, userList) {
+], function($, crossfilter, d3, c3, History, barChart, getQueryString, state, commitList, userList) {
     "use strict";
 
     (function(window, undefined) {
@@ -54,16 +55,24 @@ require([
 
         var dateColWidth = ($(".graph.date").width() - 30) / 365;
         var timeColWidth = ($(".graph.time").width() - 30) / 24;
+
+        //        var datesOfCommit = barChart(dateColWidth).dimension(date).group(dates).round(d3.time.day.round).x(d3.time.scale().domain([
+        //            new Date() - 1000 * 60 * 60 * 24 * 365, new Date()
+        //        ]).rangeRound([0, dateColWidth * 365]));
+
+        var datesOfCommit = barChart(dateColWidth).dimension(date).group(dates).round(d3.time.day.round).x(d3.time.scale().domain([
+            new Date() - 1000 * 60 * 60 * 24 * 365, new Date()
+        ]).rangeRound([0, dateColWidth * 365]));
+
+        var timeOfDay = barChart(timeColWidth).dimension(hour).group(hours).x(d3.scale.linear().domain([
+            0,
+            24
+        ]).rangeRound([
+            0, timeColWidth * 24
+        ]));
+
         var charts = [
-
-            barChart(dateColWidth).dimension(date).group(dates).round(d3.time.day.round).x(d3.time.scale().domain([
-                new Date() - 1000 * 60 * 60 * 24 * 365, new Date()
-            ]).rangeRound([0, dateColWidth * 365])), //                    .filter([new Date() - 1000 * 60 * 60 * 24 * 365, new Date()]),
-
-            barChart(timeColWidth).dimension(hour).group(hours).x(d3.scale.linear().domain([0, 24]).rangeRound([
-                0, timeColWidth * 24
-            ]))
-
+            datesOfCommit, timeOfDay
         ];
 
         // Given our array of charts, which we assume are in the same order as the
@@ -74,7 +83,6 @@ require([
         });
 
         commitList.setData(date);
-
         userList.setData(date);
 
         // Render the initial lists.

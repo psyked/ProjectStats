@@ -1,4 +1,4 @@
-define([], function() {
+define(["d3"], function(d3) {
 
     var nestByUser = d3.nest().key(function(d) {
         return d.author;

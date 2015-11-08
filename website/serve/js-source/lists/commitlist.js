@@ -1,4 +1,4 @@
-define([], function() {
+define(["d3"], function(d3) {
 
     var formatDate = d3.time.format("%B %d, %Y");
     var formatTime = d3.time.format("%I:%M %p");

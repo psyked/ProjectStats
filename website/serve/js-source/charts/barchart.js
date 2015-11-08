@@ -11,7 +11,9 @@ define(["d3", "history", "../utils/querystring", "../model/state"], function(d3,
             right: 20,
             bottom: 20,
             left: 10
-        }, x, y = d3.scale.linear().range([100, 0]), id = barChart.id++, axis = d3.svg.axis().orient("bottom"), brush = d3.svg.brush(), brushDirty, dimension, group, round;
+        }, x, y = d3.scale.linear().range([
+            100, 0
+        ]), id = barChart.id++, axis = d3.svg.axis().orient("bottom"), brush = d3.svg.brush(), brushDirty, dimension, group, round;
 
         function chart(div) {
             var width = x.range()[1], height = y.range()[0];
@@ -25,11 +27,14 @@ define(["d3", "history", "../utils/querystring", "../model/state"], function(d3,
                 if(g.empty()) {
                     div.select(".title").append("a").attr("href", "javascript:reset(" + id + ")").attr("class", "reset").text("Remove filter").style("display", "none");
 
-                    g = div.append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                    g =
+                        div.append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
                     g.append("clipPath").attr("id", "clip-" + id).append("rect").attr("width", width).attr("height", height);
 
-                    g.selectAll(".bar").data(["background", "foreground"]).enter().append("path").attr("class", function(d) {
+                    g.selectAll(".bar").data([
+                        "background", "foreground"
+                    ]).enter().append("path").attr("class", function(d) {
                         return d + " bar";
                     }).datum(group.all());
 
@@ -81,7 +86,8 @@ define(["d3", "history", "../utils/querystring", "../model/state"], function(d3,
 
         brush.on("brush.chart", function() {
             var g = d3.select(this.parentNode), extent = brush.extent();
-            if(round) g.select(".brush").call(brush.extent(extent = extent.map(round))).selectAll(".resize").style("display", null);
+            if(round) g.select(".brush").call(brush.extent(extent =
+                extent.map(round))).selectAll(".resize").style("display", null);
             g.select("#clip-" + id + " rect").attr("x", x(extent[0])).attr("width", x(extent[1]) - x(extent[0]));
 
             if(extent[0] < 24) {
