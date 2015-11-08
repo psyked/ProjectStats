@@ -60,9 +60,20 @@ require([
         //            new Date() - 1000 * 60 * 60 * 24 * 365, new Date()
         //        ]).rangeRound([0, dateColWidth * 365]));
 
-        var datesOfCommit = barChart(dateColWidth).dimension(date).group(dates).round(d3.time.day.round).x(d3.time.scale().domain([
-            new Date() - 1000 * 60 * 60 * 24 * 365, new Date()
-        ]).rangeRound([0, dateColWidth * 365]));
+        //var datesOfCommit = barChart(dateColWidth).dimension(date).group(dates).round(d3.time.day.round).x(d3.time.scale().domain([
+        //    new Date() - 1000 * 60 * 60 * 24 * 365, new Date()
+        //]).rangeRound([0, dateColWidth * 365]));
+
+        c3.generate({
+            bindto: '.graph.date',
+            data: {
+                columns: [
+                    ['data1', 30, 200, 100, 400, 150, 250],
+                    ['data2', 50, 20, 10, 40, 15, 25]
+                ]
+            }
+        });
+
 
         var timeOfDay = barChart(timeColWidth).dimension(hour).group(hours).x(d3.scale.linear().domain([
             0,
@@ -72,7 +83,7 @@ require([
         ]));
 
         var charts = [
-            datesOfCommit, timeOfDay
+            undefined, timeOfDay
         ];
 
         // Given our array of charts, which we assume are in the same order as the
