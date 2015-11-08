@@ -1,4 +1,5 @@
-define(["d3", "history"], function(d3, History) {
+define(["d3", "history", "../utils/querystring", "../model/state"], function(d3, History, getQueryString, state) {
+    "use strict";
 
     var columnPadding = 1;
 
@@ -84,11 +85,11 @@ define(["d3", "history"], function(d3, History) {
             g.select("#clip-" + id + " rect").attr("x", x(extent[0])).attr("width", x(extent[1]) - x(extent[0]));
 
             if(extent[0] < 24) {
-                startTime = extent[0];
-                endTime = extent[1];
+                state.startTime = extent[0];
+                state.endTime = extent[1];
             } else {
-                startDate = extent[0];
-                endDate = extent[1];
+                state.startDate = extent[0];
+                state.endDate = extent[1];
             }
 
             dimension.filterRange(extent);
@@ -102,10 +103,10 @@ define(["d3", "history"], function(d3, History) {
                 div.select(".title a").style("display", "none");
                 div.select("#clip-" + id + " rect").attr("x", null).attr("width", "100%");
 
-                startTime = undefined;
-                endTime = undefined;
-                startDate = undefined;
-                endDate = undefined;
+                state.startTime = undefined;
+                state.endTime = undefined;
+                state.startDate = undefined;
+                state.endDate = undefined;
 
                 dimension.filterAll();
 

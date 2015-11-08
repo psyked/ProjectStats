@@ -1,4 +1,13 @@
-require(["jquery", "crossfilter", "d3", "history", "charts/barchart"], function($, crossfilter, d3, History, barChart) {
+require([
+    "jquery",
+    "crossfilter",
+    "d3",
+    "history",
+    "charts/barchart",
+    "utils/querystring",
+    "model/state"
+], function($, crossfilter, d3, History, barChart, getQueryString, state) {
+    "use strict";
 
     (function(window, undefined) {
 
@@ -106,11 +115,11 @@ require(["jquery", "crossfilter", "d3", "history", "charts/barchart"], function(
             charts[i].filter(null);
 
             //            if (i == 0) {
-            startTime = undefined;
-            endTime = undefined;
+            state.startTime = undefined;
+            state.endTime = undefined;
             //            } else {
-            startDate = undefined;
-            endDate = undefined;
+            state.startDate = undefined;
+            state.endDate = undefined;
             //            }
 
             History.pushState({}, window.title, getQueryString());
@@ -120,7 +129,7 @@ require(["jquery", "crossfilter", "d3", "history", "charts/barchart"], function(
 
         window.filterUser = function(username) {
             $(".user-info").removeClass("selected");
-            selectedUsername = username;
+            state.selectedUsername = username;
             if(username) {
                 $(".user-info[data-user='" + username + "']").addClass("selected");
                 user.filterFunction(function(d) {
@@ -135,77 +144,40 @@ require(["jquery", "crossfilter", "d3", "history", "charts/barchart"], function(
             renderAll();
         };
 
-        var selectedUsername = getQueryVariable("user"), startDate = getQueryVariable("startDate"), endDate = getQueryVariable("endDate"), startTime = getQueryVariable("startTime"), endTime = getQueryVariable("endTime");
-
-        if(selectedUsername) {
-            filterUser(decodeURI(selectedUsername));
-        }
-
-        if(startDate) {
-            startDate = new Date(parseInt(startDate, 10));
-        }
-
-        if(endDate) {
-            endDate = new Date(parseInt(endDate, 10));
-        }
-
-        if(startTime) {
-            startTime = parseInt(startTime, 10);
-        }
-
-        if(endTime) {
-            endTime = parseInt(endTime, 10);
-        }
+        //var selectedUsername = getQueryVariable("user"), startDate = getQueryVariable("startDate"), endDate = getQueryVariable("endDate"), startTime = getQueryVariable("startTime"), endTime = getQueryVariable("endTime");
+        //
+        //if(selectedUsername) {
+        //    filterUser(decodeURI(selectedUsername));
+        //}
+        //
+        //if(startDate) {
+        //    startDate = new Date(parseInt(startDate, 10));
+        //}
+        //
+        //if(endDate) {
+        //    endDate = new Date(parseInt(endDate, 10));
+        //}
+        //
+        //if(startTime) {
+        //    startTime = parseInt(startTime, 10);
+        //}
+        //
+        //if(endTime) {
+        //    endTime = parseInt(endTime, 10);
+        //}
 
         var dateFilters, timeFilters;
 
-        if(startDate != undefined && endDate != undefined) {
-            dateFilters = [startDate, endDate];
+        if(state.startDate != undefined && state.endDate != undefined) {
+            dateFilters = [state.startDate, state.endDate];
         }
 
-        if(startTime != undefined && endTime != undefined) {
-            timeFilters = [startTime, endTime];
+        if(state.startTime != undefined && state.endTime != undefined) {
+            timeFilters = [state.startTime, state.endTime];
         }
 
-        if(startTime && endTime || startDate && endDate) {
+        if(state.startTime && state.endTime || state.startDate && state.endDate) {
             filter([dateFilters, timeFilters]);
-        }
-
-        function getQueryVariable(variable) {
-            var query = window.location.search.substring(1);
-            var vars = query.split("&");
-            for(var i = 0; i < vars.length; i++) {
-                var pair = vars[i].split("=");
-                if(pair[0] == variable) {
-                    return pair[1];
-                }
-            }
-            return (false);
-        }
-
-        function getQueryString() {
-            var array = [location.pathname.substring(location.pathname.lastIndexOf("/") + 1)];
-            if(array[0] === "") {
-                array[0] = "index.html";
-            }
-            if(selectedUsername) {
-                array.push("user=" + encodeURI(selectedUsername));
-            }
-            if(startDate) {
-                array.push("startDate=" + Date.parse(startDate));
-            }
-            if(endDate) {
-                array.push("endDate=" + Date.parse(endDate));
-            }
-            if(startTime) {
-                array.push("startTime=" + parseInt(startTime, 10));
-            }
-            if(endTime) {
-                array.push("endTime=" + parseInt(endTime, 10));
-            }
-            var queryString = array.join("&");
-            queryString = queryString.replace(/&/, "?");
-            return queryString;
         }
 
         function commitList(div) {
