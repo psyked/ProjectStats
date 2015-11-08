@@ -5,8 +5,10 @@ require([
     "history",
     "charts/barchart",
     "utils/querystring",
-    "model/state"
-], function($, crossfilter, d3, History, barChart, getQueryString, state) {
+    "model/state",
+    "lists/commitlist",
+    "lists/userlist"
+], function($, crossfilter, d3, History, barChart, getQueryString, state, commitList, userList) {
     "use strict";
 
     (function(window, undefined) {
@@ -32,16 +34,7 @@ require([
         });
 
         // Various formatters.
-        var formatNumber = d3.format(",d"), formatDate = d3.time.format("%B %d, %Y"), formatTime = d3.time.format("%I:%M %p");
-
-        // A nest operator, for grouping the commit panel.
-        var nestByDate = d3.nest().key(function(d) {
-            return d3.time.day(d.date);
-        });
-
-        var nestByUser = d3.nest().key(function(d) {
-            return d.author;
-        });
+        var formatNumber = d3.format(",d");
 
         // A little coercion, since the CSV is untyped.
         commits.forEach(function(d, i) {
@@ -63,9 +56,13 @@ require([
         var timeColWidth = ($(".graph.time").width() - 30) / 24;
         var charts = [
 
-            barChart(dateColWidth).dimension(date).group(dates).round(d3.time.day.round).x(d3.time.scale().domain([new Date() - 1000 * 60 * 60 * 24 * 365, new Date()]).rangeRound([0, dateColWidth * 365])), //                    .filter([new Date() - 1000 * 60 * 60 * 24 * 365, new Date()]),
+            barChart(dateColWidth).dimension(date).group(dates).round(d3.time.day.round).x(d3.time.scale().domain([
+                new Date() - 1000 * 60 * 60 * 24 * 365, new Date()
+            ]).rangeRound([0, dateColWidth * 365])), //                    .filter([new Date() - 1000 * 60 * 60 * 24 * 365, new Date()]),
 
-            barChart(timeColWidth).dimension(hour).group(hours).x(d3.scale.linear().domain([0, 24]).rangeRound([0, timeColWidth * 24]))
+            barChart(timeColWidth).dimension(hour).group(hours).x(d3.scale.linear().domain([0, 24]).rangeRound([
+                0, timeColWidth * 24
+            ]))
 
         ];
 
@@ -76,10 +73,14 @@ require([
             chart.on("brush", renderAll).on("brushend", renderAll);
         });
 
-        // Render the initial lists.
-        var commitsList = d3.selectAll(".panel.commit .list").data([commitList]);
+        commitList.setData(date);
 
-        var usersList = d3.selectAll(".panel.user .list").data([userList]);
+        userList.setData(date);
+
+        // Render the initial lists.
+        var commitsList = d3.selectAll(".panel.commit .list").data([commitList.init]);
+
+        var usersList = d3.selectAll(".panel.user .list").data([userList.init]);
 
         // Render the total.
         d3.selectAll("#total").text(formatNumber(commit.size()));
@@ -144,28 +145,6 @@ require([
             renderAll();
         };
 
-        //var selectedUsername = getQueryVariable("user"), startDate = getQueryVariable("startDate"), endDate = getQueryVariable("endDate"), startTime = getQueryVariable("startTime"), endTime = getQueryVariable("endTime");
-        //
-        //if(selectedUsername) {
-        //    filterUser(decodeURI(selectedUsername));
-        //}
-        //
-        //if(startDate) {
-        //    startDate = new Date(parseInt(startDate, 10));
-        //}
-        //
-        //if(endDate) {
-        //    endDate = new Date(parseInt(endDate, 10));
-        //}
-        //
-        //if(startTime) {
-        //    startTime = parseInt(startTime, 10);
-        //}
-        //
-        //if(endTime) {
-        //    endTime = parseInt(endTime, 10);
-        //}
-
         var dateFilters, timeFilters;
 
         if(state.startDate != undefined && state.endDate != undefined) {
@@ -178,76 +157,6 @@ require([
 
         if(state.startTime && state.endTime || state.startDate && state.endDate) {
             filter([dateFilters, timeFilters]);
-        }
-
-        function commitList(div) {
-            var commitsByDate = nestByDate.entries(date.top(1000));
-
-            div.each(function() {
-                var date = d3.select(this).selectAll(".date").data(commitsByDate, function(d) {
-                    return d.key;
-                });
-
-                date.enter().append("div").attr("class", "date").append("div").attr("class", "day").append("span").text(function(d) {
-                    return formatDate(d.values[0].date);
-                });
-
-                date.exit().remove();
-
-                var commit = date.order().selectAll(".commit").data(function(d) {
-                    return d.values;
-                }, function(d) {
-                    return d.index;
-                });
-
-                var commitEnter = commit.enter().append("div").attr("class", "commit");
-
-                commitEnter.append("div").attr("class", "time").text(function(d) {
-                    return formatTime(d.date);
-                });
-
-                commitEnter.append("div").attr("class", "author").text(function(d) {
-                    return d.author;
-                });
-
-                commit.exit().remove();
-
-                commit.order();
-            });
-        }
-
-        function userList(div) {
-            var commitsByUser = nestByUser.entries(date.top(100000));
-
-            div.each(function() {
-
-                commitsByUser.sort(function(a, b) {
-                    return b.values.length > a.values.length ? 1 : -1;
-                });
-
-                var userList = d3.select(this).selectAll(".user-info").data(commitsByUser, function(d) {
-                    return d.key;
-                });
-
-                userList.select(".commit-count").text(function(d) {
-                    return d.values.length.toLocaleString() + " commits";
-                });
-
-                userList.enter().append("div").attr("class", "user-info").attr("data-user", function(d) {
-                    return d.values[0].author;
-                }).attr("onclick", function(d) {
-                    return "javascript:filterUser('" + d.values[0].author + "')";
-                }).append("div").attr("class", "user-name").append("span").text(function(d) {
-                    return d.values[0].author;
-                }).append("span").attr("class", "commit-count").text(function(d) {
-                    return d.values.length.toLocaleString() + " commits";
-                });
-
-
-                userList.exit().remove();
-
-                userList.order();
-            });
         }
     });
 });
