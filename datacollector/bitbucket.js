@@ -56,12 +56,12 @@ var argv = require('minimist')(process.argv.slice(2), {
 });
 //console.dir(argv);
 
-if(!argv.owner){
+if (!argv.owner) {
     console.error('\033[31mError:\033[39m No Bitbucket Account specified!');
     return;
 }
 
-if(!argv.username || !argv.password){
+if (!argv.username || !argv.password) {
     console.warn('\033[31mError:\033[39m No Bitbucket Username or Password specified!');
     return;
 }
@@ -82,6 +82,13 @@ var allSlugs = [],
     commitCount = 0,
     allUserCommitCounts = {},
     requestsIndex = 0;
+
+var date = new Date();
+var dir = './datacollector/cache-' + date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate() + '/';
+
+if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+}
 
 function parseRepoInfoPage(body) {
     for (var i = 0, l = body.values.length; i < l; i++) {
@@ -105,7 +112,7 @@ function parseRepoInfoPage(body) {
 function makeCachedRequest(url, callback, errorCallback) {
     if (url) {
         var filename = url.replace(/[^a-zA-Z0-9_]/g, "_");
-        var cacheFile = "./datacollector/cache/" + filename;
+        var cacheFile = dir + filename;
         console.log("\033[36mInfo:\033[39m Loading " + url);
         //console.log("Loading " + url + ", checking against key: " + cacheFile);
 
