@@ -1,29 +1,31 @@
-.panel .commit,
-.panel .day {
-    clear: both;
-    width: 100%;
-    line-height: 2em;
-}
+.panel {
+    .commit,
+    .day {
+        clear: both;
+        width: 100%;
+        line-height: 2em;
+    }
 
-.panel .day {
-    background: $flat-green-sea;
-}
+    .day {
+        background: $flat-green-sea;
+    }
 
-.panel .commit .time {
-    margin: 0 .5em;
-}
+    .commit .time {
+        margin: 0 .5em;
+    }
 
-.panel .day span {
-    margin: 0 .5em;
-}
+    .day span {
+        margin: 0 .5em;
+    }
 
-.panel .commit .time,
-.panel .commit .author {
-    float: left;
-}
+    .commit .time,
+    .commit .author {
+        float: left;
+    }
 
-.panel .commit .time {
-    width: 80px;
+    .commit .time {
+        width: 80px;
+    }
 }
 
 .commit-count {
@@ -38,10 +40,10 @@
     font-size: smaller;
     color: $flat-silver;
     float: right;
-}
 
-.reset a {
-    color: $flat-silver;
+    a {
+        color: $flat-silver;
+    }
 }
 
 .background.bar {
@@ -52,14 +54,16 @@
     fill: $flat-carrot;
 }
 
-.brush rect.extent {
-    fill: $flat-carrot;
-    fill-opacity: .125;
-}
+.brush {
+    rect.extent {
+        fill: $flat-carrot;
+        fill-opacity: .125;
+    }
 
-.brush .resize path {
-    fill: $flat-clouds;
-    stroke: $flat-asbestos;
+    .resize path {
+        fill: $flat-clouds;
+        stroke: $flat-asbestos;
+    }
 }
 
 .user-info {

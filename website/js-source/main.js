@@ -7,8 +7,9 @@ require([
     "utils/querystring",
     "model/state",
     "lists/commitlist",
-    "lists/userlist"
-], function ($, crossfilter, d3, History, barChart, getQueryString, state, commitList, userList) {
+    "lists/userlist",
+    "moment"
+], function ($, crossfilter, d3, History, barChart, getQueryString, state, commitList, userList, moment) {
     "use strict";
 
     var DAYS = 90;
@@ -24,11 +25,15 @@ require([
 
     d3.csv("output.json", function (error, commits) {
 
-        // exclude data from outside the last 365 days
+        // exclude data from outside the last DAYS days
         commits = commits.filter(function (d) {
             var startDate = (new Date() - 1000 * 60 * 60 * 24 * DAYS);
             var endDate = (new Date());
             var theDate = parseDate(d.date);
+
+            d3.select(".date-from").text(moment(startDate).format("LL"));
+            d3.select(".date-to").text(moment(endDate).format("LL"));
+
             if (theDate > startDate && theDate < endDate) {
                 return true;
             }

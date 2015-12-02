@@ -21,19 +21,30 @@ main {
 }
 
 aside {
-    text-align: right;
-    width: 100%;
+    width: calc(100% - 1em);
+    padding: 0 0.5em;
+
+    .title {
+        float: left;
+    }
+
+    .info {
+        float: right;
+    }
 
     #total {
         color: $flat-green-sea;
     }
 
-    #active {
+    #active,
+    .date-from,
+    .date-to {
         color: $flat-carrot;
     }
 }
 
-.timelines, .details {
+.timelines,
+.details {
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -53,7 +64,8 @@ aside {
     flex: 1 1 auto;
 }
 
-.graph, .panel {
+.graph,
+.panel {
     background: $flat-wet-asphalt;
     order: 0;
     flex: 1 1 auto;
