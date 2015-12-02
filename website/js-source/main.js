@@ -114,7 +114,9 @@ require([
 
         window.filter = function (filters) {
             filters.forEach(function (d, i) {
-                charts[i].filter(d);
+                if (d) {
+                    charts[i].filter(d);
+                }
             });
             renderAll();
         };
@@ -154,15 +156,15 @@ require([
 
         var dateFilters, timeFilters;
 
-        if (state.startDate != undefined && state.endDate != undefined) {
+        if (state.startDate && state.endDate) {
             dateFilters = [state.startDate, state.endDate];
         }
 
-        if (state.startTime != undefined && state.endTime != undefined) {
+        if (state.startTime && state.endTime) {
             timeFilters = [state.startTime, state.endTime];
         }
 
-        if (state.startTime && state.endTime || state.startDate && state.endDate) {
+        if (dateFilters || timeFilters) {
             filter([dateFilters, timeFilters]);
         }
     });
