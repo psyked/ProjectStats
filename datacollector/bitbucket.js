@@ -76,7 +76,7 @@ var url = "https://bitbucket.org/api/2.0/repositories/" + owner + "?pagelen=100"
 
 var startOfLastWeek = Date.parse(moment().subtract(1, 'week').startOf('week').toString()),
     endOfLastWeek = Date.parse(moment().startOf('week').toString()),
-    startOfYear = Date.parse(moment().subtract(4, 'year').startOf('year').toString());
+    startOfYear = Date.parse(moment().subtract(90, 'day').toString());
 
 var allSlugs = [],
     commitCount = 0,
