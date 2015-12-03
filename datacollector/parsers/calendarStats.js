@@ -11,28 +11,22 @@ var userCommits = {};
  */
 function parseCommit(commit) {
 
-    function formatDate(date) {
-        return date;//moment.utc(date).format();
+    if (!results[commit.date]) {
+        results[commit.date] = 0;
     }
-
-    var date = formatDate(commit.date);
-
-    if (!results[date]) {
-        results[date] = 0;
-    }
-    results[date]++;
+    results[commit.date]++;
 
     var rtn;
     if (commit.author && commit.author.user && commit.author.user.display_name) {
         if (!userCommits[commit.author.user.display_name]) {
             userCommits[commit.author.user.display_name] = {};
         }
-        if (!userCommits[commit.author.user.display_name][date]) {
-            userCommits[commit.author.user.display_name][date] = 0;
+        if (!userCommits[commit.author.user.display_name][commit.date]) {
+            userCommits[commit.author.user.display_name][commit.date] = 0;
         }
-        userCommits[commit.author.user.display_name][date]++;
+        userCommits[commit.author.user.display_name][commit.date]++;
 
-        rtn = date + ",\"" + commit.author.user.display_name + "\"\n";
+        rtn = commit.date + ",\"" + commit.author.user.display_name + "\"\n";
     }
 
     return rtn;
