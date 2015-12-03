@@ -61,17 +61,25 @@ require([
 
         var dateColWidth = ($(".graph.date").width() - 30) / DAYS;
         var timeColWidth = ($(".graph.time").width() - 30) / 24;
-        var charts = [
 
-            barChart(dateColWidth).dimension(date).group(dates).round(d3.time.day.round).x(d3.time.scale().domain([
-                new Date() - 1000 * 60 * 60 * 24 * DAYS, new Date()
-            ]).rangeRound([0, dateColWidth * DAYS])),
+        var timeChart = barChart(dateColWidth)
+            .dimension(date)
+            .group(dates)
+            .round(d3.time.day.round)
+            .x(d3.time.scale()
+                .domain([new Date() - 1000 * 60 * 60 * 24 * DAYS, new Date()])
+                .rangeRound([0, dateColWidth * DAYS])
+            );
 
-            barChart(timeColWidth).dimension(hour).group(hours).x(d3.scale.linear().domain([0, 24]).rangeRound([
-                0, timeColWidth * 24
-            ]))
+        var hoursChart = barChart(timeColWidth)
+            .dimension(hour)
+            .group(hours)
+            .x(d3.scale.linear()
+                .domain([0, 24])
+                .rangeRound([0, timeColWidth * 24])
+            );
 
-        ];
+        var charts = [timeChart, hoursChart];
 
         // Given our array of charts, which we assume are in the same order as the
         // .chart elements in the DOM, bind the charts to the DOM and render them.
