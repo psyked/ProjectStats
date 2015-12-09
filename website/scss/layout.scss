@@ -1,8 +1,8 @@
 html, body {
     background: $flat-midnight-blue;
-    height: calc(100% - 5px);
+    height: 100%;
     margin: 0;
-    padding: 2.5px;
+    padding: 0;
     color: #ecf0f1;
     text-rendering: optimizeLegibility;
     overflow: hidden;
@@ -18,6 +18,39 @@ main {
     align-content: stretch;
     align-items: flex-start;
     font-family: 'Open Sans', sans-serif;
+}
+
+header {
+    flex: 0 0 44px;
+    width: 100%;
+    margin-bottom: .5em;
+    background: $flat-wet-asphalt;
+
+    .timeline-link,
+    .dashboard-link {
+        display: inline-block;
+        line-height: 40px;
+        height: 40px;
+        text-decoration: none;
+        color: white;
+        padding: 0 1em;
+    }
+
+    .timeline-link {
+        border-bottom: 4px solid $flat-orange;
+
+        &.active {
+            background: $flat-carrot;
+        }
+    }
+
+    .dashboard-link {
+        border-bottom: 4px solid $flat-turquoise;
+
+        &.active {
+            background: $flat-green-sea;
+        }
+    }
 }
 
 aside {
@@ -44,7 +77,8 @@ aside {
 }
 
 .timelines,
-.details {
+.details,
+.toplist {
     width: 100%;
     display: flex;
     flex-direction: row;

@@ -41,28 +41,6 @@ require([
             return false;
         });
 
-        var nested_data = d3.nest()
-            .key(function (d) {
-                return d.author;
-            })
-            .rollup(function (leaves) {
-                return leaves.length;
-            })
-            .entries(commits.filter(function (d) {
-                var startDate = (new Date() - 1000 * 60 * 60 * 24 * 1);
-                var endDate = (new Date());
-                var theDate = parseDate(d.date);
-
-                if (theDate > startDate && theDate < endDate) {
-                    return true;
-                }
-                return false;
-            }))
-            .sort(function (a, b) {
-                return d3.descending(a.values, b.values);
-            })
-            .splice(0, 3);
-
         // Various formatters.
         var formatNumber = d3.format(",d");
 

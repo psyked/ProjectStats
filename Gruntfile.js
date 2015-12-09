@@ -46,6 +46,14 @@ module.exports = function (grunt) {
                     name: "main",
                     out: "./website/serve/js/main.js"
                 }
+            },
+            compileagain: {
+                options: {
+                    mainConfigFile: "./website/js-source/require-config.js",
+                    baseUrl: "./website/js-source",
+                    name: "dashboard",
+                    out: "./website/serve/js/dashboard.js"
+                }
             }
         },
 
