@@ -1,6 +1,7 @@
 require([
     "jquery",
     "crossfilter",
+    "c3",
     "d3",
     "history",
     "charts/barchart",
@@ -9,7 +10,7 @@ require([
     "lists/commitlist",
     "lists/userlist",
     "moment"
-], function ($, crossfilter, d3, History, barChart, getQueryString, state, commitList, userList, moment) {
+], function ($, crossfilter, c3, d3, History, barChart, getQueryString, state, commitList, userList, moment) {
     "use strict";
 
     var DAYS = 90;
