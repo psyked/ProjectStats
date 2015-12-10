@@ -84,7 +84,7 @@ var allSlugs = [],
     requestsIndex = 0;
 
 var date = moment().startOf('day');
-var dir = './datacollector/cache-' + date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate() + '/';
+var dir = './datacollector/cache-' + date.format('YYYY-MM-DD') + '/';
 
 if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
