@@ -13,6 +13,7 @@ require(["d3", "moment"], function (d3, moment) {
             return !!(theDate > startDate && theDate < endDate);
         });
 
+        var COUNT = 10;
         var yesterday = d3.nest()
             .key(function (d) {
                 return d.author;
@@ -29,10 +30,10 @@ require(["d3", "moment"], function (d3, moment) {
             .sort(function (a, b) {
                 return d3.descending(a.values, b.values);
             })
-            .splice(0, 3);
+            .splice(0, COUNT);
 
         yesterday.forEach(function (d, i) {
-            d3.select('.toplist .list.last-day').append('div').attr("class", "commit").html('<span class="name">' +d.key + '</span> with ' + d.values + ' commits.');
+            d3.select('.toplist .list.last-day').append('div').attr("class", "commit").html((i + 1) + '. ' + '<span class="name">' + d.key + '</span> with ' + d.values + ' commits.');
         });
 
         var lastWeek = d3.nest()
@@ -51,10 +52,10 @@ require(["d3", "moment"], function (d3, moment) {
             .sort(function (a, b) {
                 return d3.descending(a.values, b.values);
             })
-            .splice(0, 3);
+            .splice(0, COUNT);
 
         lastWeek.forEach(function (d, i) {
-            d3.select('.toplist .list.last-week').append('div').attr("class", "commit").html('<span class="name">' +d.key + '</span> with ' + d.values + ' commits.');
+            d3.select('.toplist .list.last-week').append('div').attr("class", "commit").html((i + 1) + '. ' + '<span class="name">' + d.key + '</span> with ' + d.values + ' commits.');
         });
 
         var lastMonth = d3.nest()
@@ -73,10 +74,10 @@ require(["d3", "moment"], function (d3, moment) {
             .sort(function (a, b) {
                 return d3.descending(a.values, b.values);
             })
-            .splice(0, 3);
+            .splice(0, COUNT);
 
         lastMonth.forEach(function (d, i) {
-            d3.select('.toplist .list.last-month').append('div').attr("class", "commit").html('<span class="name">' +d.key + '</span> with ' + d.values + ' commits.');
+            d3.select('.toplist .list.last-month').append('div').attr("class", "commit").html((i + 1) + '. ' + '<span class="name">' + d.key + '</span> with ' + d.values + ' commits.');
         });
 
         var allTime = d3.nest()
@@ -90,10 +91,10 @@ require(["d3", "moment"], function (d3, moment) {
             .sort(function (a, b) {
                 return d3.descending(a.values, b.values);
             })
-            .splice(0, 3);
+            .splice(0, COUNT);
 
         allTime.forEach(function (d, i) {
-            d3.select('.toplist .list.all-time').append('div').attr("class", "commit").html('<span class="name">' +d.key + '</span> with ' + d.values + ' commits.');
+            d3.select('.toplist .list.all-time').append('div').attr("class", "commit").html((i + 1) + '. ' + '<span class="name">' + d.key + '</span> with ' + d.values + ' commits.');
         });
 
     });
