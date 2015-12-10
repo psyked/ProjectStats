@@ -94,4 +94,27 @@
     .name {
         color: white;
     }
+
+    .index {
+        width: 24px;
+        text-align: right;
+        display: inline-block;
+    }
+}
+
+.move-icon {
+    float: right;
+    color: $flat-orange;
+
+    &.fa {
+        line-height: 2em;
+    }
+
+    &.up {
+        color: $flat-green-1;
+    }
+
+    &.down {
+        color: $flat-red-1;
+    }
 }

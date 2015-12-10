@@ -18,6 +18,7 @@
   ],
   "dependencies": {
     "moment": "~2.10.6",
-    "c3": "~0.4.10"
+    "c3": "~0.4.10",
+    "font-awesome": "fontawesome#~4.5.0"
   }
 }
