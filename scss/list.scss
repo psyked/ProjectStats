@@ -134,6 +134,12 @@
         background: $flat-concrete;
         margin: .5em;
         border-radius: .5em;
+
+        img {
+            width: 100%;
+            height: 100%;
+            border-radius: .5em;
+        }
     }
 
     .first {
