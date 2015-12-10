@@ -28,8 +28,8 @@ require([
 
         // exclude data from outside the last DAYS days
         commits = commits.filter(function (d) {
-            var startDate = (new Date() - 1000 * 60 * 60 * 24 * DAYS);
-            var endDate = (new Date());
+            var startDate = moment().add(-DAYS, 'day').startOf('day');//(new Date() - 1000 * 60 * 60 * 24 * DAYS);
+            var endDate = moment().startOf('day');//(new Date());
             var theDate = parseDate(d.date);
 
             d3.select(".date-from").text(moment(startDate).format("LL"));
@@ -68,7 +68,7 @@ require([
             .group(dates)
             .round(d3.time.day.round)
             .x(d3.time.scale()
-                .domain([new Date() - 1000 * 60 * 60 * 24 * DAYS, new Date()])
+                .domain([moment().add(-DAYS, 'day').startOf('day'), moment().startOf('day')])
                 .rangeRound([0, dateColWidth * DAYS])
             );
 

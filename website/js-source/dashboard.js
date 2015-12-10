@@ -1,4 +1,4 @@
-require(["d3"], function (d3) {
+require(["d3", "moment"], function (d3, moment) {
     "use strict";
 
     var DAYS = 90;
@@ -11,8 +11,8 @@ require(["d3"], function (d3) {
 
         // exclude data from outside the last DAYS days
         commits = commits.filter(function (d) {
-            var startDate = (new Date() - 1000 * 60 * 60 * 24 * DAYS);
-            var endDate = (new Date());
+            var startDate = moment().add(-DAYS, 'day').startOf('day');//(new Date() - 1000 * 60 * 60 * 24 * DAYS);
+            var endDate = moment().startOf('day');//(new Date());
             var theDate = parseDate(d.date);
 
             if (theDate > startDate && theDate < endDate) {
@@ -29,8 +29,8 @@ require(["d3"], function (d3) {
                 return leaves.length;
             })
             .entries(commits.filter(function (d) {
-                var startDate = (new Date() - 1000 * 60 * 60 * 24 * 1);
-                var endDate = (new Date());
+                var startDate = moment().add(-1, 'day').startOf('day');//(new Date() - 1000 * 60 * 60 * 24 * 1);
+                var endDate = moment().startOf('day');//(new Date());
                 var theDate = parseDate(d.date);
 
                 if (theDate > startDate && theDate < endDate) {
