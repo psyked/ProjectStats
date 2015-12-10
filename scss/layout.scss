@@ -45,6 +45,8 @@ header {
     .timeline-link {
         border-bottom: 4px solid $flat-orange;
 
+        &:hover,
+        &:active,
         &.active {
             background: $flat-carrot;
         }
@@ -53,6 +55,8 @@ header {
     .dashboard-link {
         border-bottom: 4px solid $flat-turquoise;
 
+        &:hover,
+        &:active,
         &.active {
             background: $flat-green-sea;
         }
