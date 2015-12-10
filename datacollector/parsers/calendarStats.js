@@ -26,14 +26,16 @@ function parseCommit(commit) {
         }
         userCommits[commit.author.user.display_name][commit.date]++;
 
-        rtn = commit.date + ",\"" + commit.author.user.display_name + "\"\n";
+        rtn = commit.date + ",\"" + commit.author.user.display_name + "\",\"" + commit.author.user.links.avatar.href + "\"\n";
+    } else {
+        rtn = commit.date + ",\"" + commit.author.user.raw + "\",\"\"\n";
     }
 
     return rtn;
 }
 
 function initOutput(callback) {
-    fs.writeFileSync("./website/serve/output.json", "date,author\n");
+    fs.writeFileSync("./website/serve/output.json", "date,author,avatar\n");
     callback();
 }
 
