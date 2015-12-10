@@ -83,7 +83,7 @@ var allSlugs = [],
     allUserCommitCounts = {},
     requestsIndex = 0;
 
-var date = new Date();
+var date = moment().startOf('day');
 var dir = './datacollector/cache-' + date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate() + '/';
 
 if (!fs.existsSync(dir)) {
