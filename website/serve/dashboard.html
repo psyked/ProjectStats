@@ -12,12 +12,26 @@
 </head>
 <body>
 <main class="container">
-    <header><a href="./dashboard.html" class="dashboard-link active">Dashboard</a><a href="index.html" class="timeline-link">Timeline</a>
+    <header>
+        <a href="./dashboard.html" class="dashboard-link active">Dashboard</a>
+        <a href="index.html" class="timeline-link">Timeline</a>
     </header>
     <div class="toplist">
         <div class="panel user">
-            <div class="title">Top Contributers</div>
-            <div class="list"></div>
+            <div class="title">Yesterday</div>
+            <div class="list last-day"></div>
+        </div>
+        <div class="panel user">
+            <div class="title">This Week</div>
+            <div class="list last-week"></div>
+        </div>
+        <div class="panel user">
+            <div class="title">This Month</div>
+            <div class="list last-month"></div>
+        </div>
+        <div class="panel user">
+            <div class="title">All Time</div>
+            <div class="list all-time"></div>
         </div>
     </div>
 </main>
