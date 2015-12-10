@@ -1,0 +1,85 @@
+.panel {
+    .commit,
+    .day {
+        clear: both;
+        width: 100%;
+        line-height: 2em;
+    }
+
+    .day {
+        background: $flat-green-sea;
+    }
+
+    .commit .time {
+        margin: 0 .5em;
+    }
+
+    .day span {
+        margin: 0 .5em;
+    }
+
+    .commit .time,
+    .commit .author {
+        float: left;
+    }
+
+    .commit .time {
+        width: 80px;
+    }
+}
+
+.commit-count {
+    float: right;
+}
+
+.date {
+    flex: 4 0 auto;
+}
+
+.reset {
+    font-size: smaller;
+    color: $flat-silver;
+    float: right;
+
+    a {
+        color: $flat-silver;
+    }
+}
+
+.background.bar {
+    fill: $flat-green-sea;
+}
+
+.foreground.bar {
+    fill: $flat-carrot;
+}
+
+.brush {
+    rect.extent {
+        fill: $flat-carrot;
+        fill-opacity: .125;
+    }
+
+    .resize path {
+        fill: $flat-clouds;
+        stroke: $flat-asbestos;
+    }
+}
+
+.user-info {
+    cursor: pointer;
+    float: left;
+    clear: both;
+    width: 100%;
+    line-height: 2em;
+    padding: 2px 5px;
+    margin: -2px -5px;
+
+    &:hover {
+        background: $flat-pumpkin;
+    }
+
+    &.selected {
+        background: $flat-carrot;
+    }
+}

@@ -1,0 +1,27 @@
+.chart {
+    display: inline-block;
+    margin: -10px;
+    padding: 10px;
+
+    .title {
+        padding: 10px;
+    }
+}
+
+.placeholder {
+    width: 100%;
+}
+
+.axis {
+    path, line {
+        fill: none;
+        stroke: #95a5a6;
+        shape-rendering: crispEdges;
+    }
+
+    text {
+        font: 10px sans-serif;
+        fill: #95a5a6;
+    }
+}
+
