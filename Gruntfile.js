@@ -1,5 +1,5 @@
 var SASS_FILES = {
-    './website/serve/css/main.css': './website/scss/main.scss'
+    './website/serve/css/main.css': './website/serve/scss/main.scss'
 };
 
 //var JAVASCRIPT_FILES = {
@@ -9,11 +9,11 @@ var SASS_FILES = {
 //var CRITICAL_CSS_FILE = './website/assets/css/<%= pkg.name %>/<%= pkg.name %>.critical.min.css';
 
 var WATCH_JAVASCRIPT_FILES = [
-    './website/js-source/**/*.js'
+    './website/serve/js-source/**/*.js'
 ];
 
 var WATCH_SASS_FILES = [
-    './website/scss/**/*.scss'
+    './website/serve/scss/**/*.scss'
 ];
 
 /*global module:false*/
@@ -41,16 +41,16 @@ module.exports = function (grunt) {
         requirejs: {
             compile: {
                 options: {
-                    mainConfigFile: "./website/js-source/require-config.js",
-                    baseUrl: "./website/js-source",
+                    mainConfigFile: "./website/serve/js-source/require-config.js",
+                    baseUrl: "./website/serve/js-source",
                     name: "main",
                     out: "./website/serve/js/main.js"
                 }
             },
             compileagain: {
                 options: {
-                    mainConfigFile: "./website/js-source/require-config.js",
-                    baseUrl: "./website/js-source",
+                    mainConfigFile: "./website/serve/js-source/require-config.js",
+                    baseUrl: "./website/serve/js-source",
                     name: "dashboard",
                     out: "./website/serve/js/dashboard.js"
                 }
