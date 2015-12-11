@@ -28,7 +28,7 @@ function parseCommit(commit) {
 
         rtn = commit.date + ",\"" + commit.author.user.display_name + "\",\"" + commit.author.user.links.avatar.href + "\"\n";
     } else {
-        rtn = commit.date + ",\"" + commit.author.user.raw + "\",\"\"\n";
+        rtn = commit.date + ",\"" + commit.author.raw + "\",\"\"\n";
     }
 
     return rtn;
