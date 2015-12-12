@@ -68,29 +68,36 @@ require(["d3", "moment"], function (d3, moment) {
         });
 
         var dataToCheck = results;
-        var firstImage = "";
-        avatars.forEach(function (d, i) {
-            if (d.key === dataToCheck[0].key) {
-                firstImage = d.values[0].key;
-            }
-        });
-        d3.select(panel).select('.avatars-area .first').append('img').attr('src', firstImage);
 
-        var secondImage = "";
-        avatars.forEach(function (d, i) {
-            if (d.key === dataToCheck[1].key) {
-                secondImage = d.values[0].key;
-            }
-        });
-        d3.select(panel).select('.avatars-area .second').append('img').attr('src', secondImage);
+        if (dataToCheck[0]) {
+            var firstImage = "";
+            avatars.forEach(function (d, i) {
+                if (d.key === dataToCheck[0].key) {
+                    firstImage = d.values[0].key;
+                }
+            });
+            d3.select(panel).select('.avatars-area .first').append('img').attr('src', firstImage);
+        }
 
-        var thirdImage = "";
-        avatars.forEach(function (d, i) {
-            if (d.key === dataToCheck[2].key) {
-                thirdImage = d.values[0].key;
-            }
-        });
-        d3.select(panel).select('.avatars-area .third').append('img').attr('src', thirdImage);
+        if (dataToCheck[1]) {
+            var secondImage = "";
+            avatars.forEach(function (d, i) {
+                if (d.key === dataToCheck[1].key) {
+                    secondImage = d.values[0].key;
+                }
+            });
+            d3.select(panel).select('.avatars-area .second').append('img').attr('src', secondImage);
+        }
+
+        if (dataToCheck[2]) {
+            var thirdImage = "";
+            avatars.forEach(function (d, i) {
+                if (d.key === dataToCheck[2].key) {
+                    thirdImage = d.values[0].key;
+                }
+            });
+            d3.select(panel).select('.avatars-area .third').append('img').attr('src', thirdImage);
+        }
     }
 
     d3.csv("output.json", function (error, commits) {
@@ -113,7 +120,6 @@ require(["d3", "moment"], function (d3, moment) {
                 return leaves.author;
             })
             .entries(commits);
-
 
         d3.selectAll('.toplist .panel').each(function (d, i) {
             renderLeaderboard(commits, avatars, this);
