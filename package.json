@@ -10,7 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "connect": "^3.4.0",
-    "jsonfile": "^2.2.2",
     "minimist": "^1.2.0",
     "moment": "^2.10.6",
     "request": "^2.65.0",

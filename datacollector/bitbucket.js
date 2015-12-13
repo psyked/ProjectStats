@@ -43,7 +43,6 @@
 var request = require("request"),
     fs = require('fs'),
     moment = require("moment"),
-    jsonFile = require('jsonfile'),
     calendarStats = require("./parsers/calendarStats"),
     repoDataParser = require("./parsers/repoDataParser");
 
