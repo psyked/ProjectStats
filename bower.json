@@ -20,6 +20,7 @@
     "moment": "~2.10.6",
     "c3": "~0.4.10",
     "font-awesome": "fontawesome#~4.5.0",
-    "handlebars": "~4.0.5"
+    "handlebars": "~4.0.5",
+    "velocity": "~1.2.3"
   }
 }
