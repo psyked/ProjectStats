@@ -44,7 +44,7 @@ var request = require("request"),
     fs = require('fs'),
     moment = require("moment"),
     calendarStats = require("./parsers/calendarStats"),
-    repoDataParser = require("./parsers/repoDataParser");
+    weekend = require('./badges/weekend');
 
 var argv = require('minimist')(process.argv.slice(2), {
     alias: {
@@ -71,19 +71,17 @@ var owner = argv.owner,
 
 var url = "https://bitbucket.org/api/2.0/repositories/" + owner + "?pagelen=100",
     auth = "Basic " + new Buffer(username + ":" + password).toString("base64"),
-    outputFile = "./website/serve/output.json";
+    outputFile = "./website/serve/output.json",
+    badgesFile = "./website/serve/badges.json";
 
-var startOfLastWeek = Date.parse(moment().subtract(1, 'week').startOf('week').toString()),
-    endOfLastWeek = Date.parse(moment().startOf('week').toString()),
-    startOfYear = Date.parse(moment().subtract(90, 'day').toString());
+var startDate = Date.parse(moment().subtract(90, 'day').startOf('day').toString());
 
 var allSlugs = [],
-    commitCount = 0,
-    allUserCommitCounts = {},
-    requestsIndex = 0;
+    requestsIndex = 0,
+    allBadges = [];
 
-var date = moment().startOf('day');
-var dir = './datacollector/cache-' + date.format('YYYY-MM-DD') + '/';
+var todaysDate = moment().startOf('day');
+var dir = './datacollector/cache-' + todaysDate.format('YYYY-MM-DD') + '/';
 
 if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
@@ -92,10 +90,11 @@ if (!fs.existsSync(dir)) {
 function parseRepoInfoPage(body) {
     for (var i = 0, l = body.values.length; i < l; i++) {
         var repo = body.values[i];
-        repoDataParser.parseRepoDetails(repo, startOfLastWeek, next);
+
+        next();
 
         function next() {
-            if (Date.parse(repo.updated_on) > startOfYear) {
+            if (Date.parse(repo.updated_on) > startDate) {
                 allSlugs.push(repo.links.commits.href);
             }
         }
@@ -164,6 +163,7 @@ function finishedLoadingRepos() {
 
 function finishedLoadingAllData() {
     console.log("\033[32mSuccess:\033[39m Finished Loading all commits!");
+    fs.writeFileSync(badgesFile, JSON.stringify(allBadges));
 }
 
 function loadNextItemInQueue() {
@@ -181,25 +181,17 @@ function parseRepoCommitDetails(body) {
         /** @type {Commit} */
         var commit = body.values[i];
         var commitDate = Date.parse(commit.date);
-        if (commit.author.user) {
-            var username = commit.author.user.display_name;
-            if (commitDate > startOfLastWeek && commitDate < endOfLastWeek) {
-                if (!allUserCommitCounts[username]) {
-                    allUserCommitCounts[username] = 0;
-                }
-                allUserCommitCounts[username]++;
-            }
-        }
 
-        if (commitDate > startOfLastWeek) {
-            commitCount++;
-        }
-
-        if (commitDate > startOfYear) {
+        if (commitDate > startDate) {
             lastCommitIsWithinDateRange = true;
+
             var rtn = calendarStats.parseCommit(commit);
-            if (rtn) {
-                fs.appendFileSync(outputFile, rtn);
+            weekend.parseCommit(allBadges, commit, next);
+
+            function next() {
+                if (rtn) {
+                    fs.appendFileSync(outputFile, rtn);
+                }
             }
         }
     }
