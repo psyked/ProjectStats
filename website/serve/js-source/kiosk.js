@@ -25,7 +25,7 @@ require(["jquery", "velocity", "handlebars", "nprogress"], function ($, velocity
     function displayBadges(jsonBadgeData) {
         badgeData = jsonBadgeData;
 
-        var tile = $(badgeTemplate(badgeData));
+        var tile = $(badgeTemplate(findABadge()));
         tile.css('margin-top', '50%');
 
         $('.kiosk-container').append(tile);
@@ -39,7 +39,8 @@ require(["jquery", "velocity", "handlebars", "nprogress"], function ($, velocity
 
     function showCard(tile) {
         tile.velocity({
-            marginTop: '0%'
+            marginTop: '0%',
+            scale: 1.2
         }, {
             duration: EASING_TIME,
             easing: EASING_PROPS,
@@ -62,7 +63,8 @@ require(["jquery", "velocity", "handlebars", "nprogress"], function ($, velocity
 
     function hideCard(tile) {
         tile.velocity({
-            marginTop: '-50%'
+            marginTop: '-50%',
+            scale: 1
         }, {
             duration: EASING_TIME,
             easing: EASING_PROPS,
@@ -74,11 +76,20 @@ require(["jquery", "velocity", "handlebars", "nprogress"], function ($, velocity
     }
 
     function displayNewCard() {
-        var tile = $(badgeTemplate(badgeData));
+        var tile = $(badgeTemplate(findABadge()));
         tile.css('margin-top', '50%');
 
         $('.kiosk-container').append(tile);
 
         showCard(tile);
+    }
+
+    function findABadge() {
+        if (badgeData.length) {
+            var indexToReturn = Math.floor(Math.random() * badgeData.length);
+            return badgeData[indexToReturn];
+        } else {
+            return badgeData;
+        }
     }
 });
