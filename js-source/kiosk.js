@@ -1,4 +1,4 @@
-require(["jquery", "velocity", "handlebars"], function ($, velocity, Handlebars) {
+require(["jquery", "velocity", "handlebars", "nprogress"], function ($, velocity, Handlebars, NProgress) {
     "use strict";
 
     var source = $("#accolade-template").html();
@@ -8,6 +8,13 @@ require(["jquery", "velocity", "handlebars"], function ($, velocity, Handlebars)
     const EASING_PROPS = [0.645, 0.045, 0.355, 1];
     const EASING_TIME = 500;
     const HOLD_CARD_TIME = 10000;
+
+    NProgress.configure({
+        minimum: 0,
+        trickle: false,
+        showSpinner: false,
+        parent: '.kiosk-container'
+    });
 
     $.ajax({
         url: './badges.json',
@@ -37,7 +44,17 @@ require(["jquery", "velocity", "handlebars"], function ($, velocity, Handlebars)
             duration: EASING_TIME,
             easing: EASING_PROPS,
             complete: function animationComplete() {
+                NProgress.set(0.0);
+                var i = 0;
+                var countDown = setInterval(function () {
+                    i++;
+                    console.log(i * (HOLD_CARD_TIME / 100000));
+                    NProgress.set(i * (HOLD_CARD_TIME / 100000));
+                }, 1000);
+
                 setTimeout(function () {
+                    clearInterval(countDown);
+                    NProgress.set(1.0);
                     hideCard(tile);
                 }, HOLD_CARD_TIME);
             }
@@ -50,7 +67,7 @@ require(["jquery", "velocity", "handlebars"], function ($, velocity, Handlebars)
         }, {
             duration: EASING_TIME,
             easing: EASING_PROPS,
-            complete: function(){
+            complete: function () {
                 tile.remove();
                 displayNewCard();
             }

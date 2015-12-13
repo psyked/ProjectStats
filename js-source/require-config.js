@@ -7,7 +7,8 @@ require.config({
         "c3": "libs/c3/c3",
         "moment": "libs/moment/moment",
         "handlebars": "libs/handlebars/handlebars.amd",
-        "velocity": "libs/velocity/velocity"
+        "velocity": "libs/velocity/velocity",
+        "nprogress": "libs/nprogress/nprogress"
     },
     shim: {
         'crossfilter': {
