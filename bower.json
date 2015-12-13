@@ -21,6 +21,7 @@
     "c3": "~0.4.10",
     "font-awesome": "fontawesome#~4.5.0",
     "handlebars": "~4.0.5",
-    "velocity": "~1.2.3"
+    "velocity": "~1.2.3",
+    "nprogress": "~0.2.0"
   }
 }
