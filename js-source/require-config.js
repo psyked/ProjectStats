@@ -18,6 +18,10 @@ require.config({
         'history': {
             deps: [],
             exports: 'History'
+        },
+        'velocity': {
+            deps: ["jquery"],
+            exports: 'jQuery.fn.velocity'
         }
     },
     config: {
