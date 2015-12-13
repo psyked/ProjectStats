@@ -5,7 +5,8 @@ require.config({
         "history": "libs/native.history",
         "d3": "libs/d3/d3",
         "c3": "libs/c3/c3",
-        "moment": "libs/moment/moment"
+        "moment": "libs/moment/moment",
+        "handlebars": "libs/handlebars/handlebars.amd"
     },
     shim: {
         'crossfilter': {
