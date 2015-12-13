@@ -48,7 +48,6 @@ require(["jquery", "velocity", "handlebars", "nprogress"], function ($, velocity
                 var i = 0;
                 var countDown = setInterval(function () {
                     i++;
-                    console.log(i * (HOLD_CARD_TIME / 100000));
                     NProgress.set(i * (HOLD_CARD_TIME / 100000));
                 }, 1000);
 
