@@ -72,7 +72,7 @@ var owner = argv.owner,
 
 var url = "https://bitbucket.org/api/2.0/repositories/" + owner + "?pagelen=100",
     auth = "Basic " + new Buffer(username + ":" + password).toString("base64"),
-    outputFilename = 'output.json';
+    outputFile = "./website/serve/output.json";
 
 var startOfLastWeek = Date.parse(moment().subtract(1, 'week').startOf('week').toString()),
     endOfLastWeek = Date.parse(moment().startOf('week').toString()),
@@ -113,21 +113,23 @@ function makeCachedRequest(url, callback, errorCallback) {
     if (url) {
         var filename = url.replace(/[^a-zA-Z0-9_]/g, "_");
         var cacheFile = dir + filename;
-        console.log("\033[36mInfo:\033[39m Loading " + url);
-        //console.log("Loading " + url + ", checking against key: " + cacheFile);
 
         fs.exists(cacheFile, function (exists) {
             if (exists) {
+                console.log("\033[33mInfo:\033[39m Loading " + url + " from local cache");
                 fs.readFile(cacheFile, function (err, contents) {
                     if (err) {
+                        errorCallback();
                         return console.log(err);
                     }
                     try {
                         callback(JSON.parse(contents));
                     } catch (e) {
+                        errorCallback();
                     }
                 });
             } else {
+                console.log("\033[36mInfo:\033[39m Loading " + url);
                 request({
                     url: url,
                     json: true,
@@ -158,39 +160,19 @@ function parseRepoInfoError() {
 }
 
 function finishedLoadingRepos() {
-    loadCommitDetails();
-}
-
-function loadCommitDetails() {
-    console.log("\033[36mInfo:\033[39m Loading request " + requestsIndex + " of " + allSlugs.length);
-    if (requestsIndex >= allSlugs.length) {
-        finishedLoadingAllData();
-    } else {
-        makeCachedRequest(allSlugs[requestsIndex], parseRepoCommitDetails, parseRepoCommitError);
-        requestsIndex++;
-    }
+    loadNextItemInQueue();
 }
 
 function finishedLoadingAllData() {
-    var outputObject = {
-        year_start: moment(startOfYear).format("YYYY-MM-DD"),
-        year_end: moment(Date.now()).format("YYYY-MM-DD"),
-        week_start: moment(startOfLastWeek).format("dddd, Do MMMM YYYY"),
-        week_end: moment(endOfLastWeek).format("dddd, Do MMMM YYYY"),
-        commit_count: commitCount,
-        user_counts: allUserCommitCounts,
-        date_information: calendarStats.getResults(),
-        date_user_information: calendarStats.getUserResults()
-    };
+    console.log("\033[32mSuccess:\033[39m Finished Loading all commits!");
+}
 
-    var source = repoDataParser.getDetails();
-    for (var prop in source) {
-        outputObject[prop] = source[prop];
+function loadNextItemInQueue() {
+    if (allSlugs[requestsIndex]) {
+        console.log("\033[36mInfo:\033[39m Loading request " + (requestsIndex + 1) + " of " + allSlugs.length);
+        makeCachedRequest(allSlugs[requestsIndex], parseRepoCommitDetails, parseRepoCommitError);
+        requestsIndex++;
     }
-
-    jsonFile.writeFile(outputFilename, outputObject, function (err) {
-        //console.error(err);
-    });
 }
 
 function parseRepoCommitDetails(body) {
@@ -218,7 +200,7 @@ function parseRepoCommitDetails(body) {
             lastCommitIsWithinDateRange = true;
             var rtn = calendarStats.parseCommit(commit);
             if (rtn) {
-                fs.appendFileSync("./website/serve/output.json", rtn);
+                fs.appendFileSync(outputFile, rtn);
             }
         }
     }
@@ -230,11 +212,11 @@ function parseRepoCommitDetails(body) {
             finishedLoadingAllData();
         }
     }
-    loadCommitDetails();
+    loadNextItemInQueue();
 }
 
 function parseRepoCommitError() {
-    loadCommitDetails();
+    loadNextItemInQueue();
 }
 
 loadRepoInfoPage(url);
