@@ -46,6 +46,7 @@ var request = require("request"),
     calendarStats = require("./parsers/calendarStats"),
     weekend = require('./badges/weekend'),
     aftermidnight = require('./badges/aftermidnight'),
+    mergemaster = require('./badges/merge-master'),
     afterhours = require('./badges/afterhours');
 
 var argv = require('minimist')(process.argv.slice(2), {
@@ -191,6 +192,7 @@ function parseRepoCommitDetails(body) {
             weekend.parseCommit(allBadges, commit, next);
             afterhours.parseCommit(allBadges, commit, next);
             aftermidnight.parseCommit(allBadges, commit, next);
+            mergemaster.parseCommit(allBadges, commit, next);
 
             function next() {
                 if (rtn) {
