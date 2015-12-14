@@ -6,13 +6,17 @@ function parseCommit(badges, commit, callback) {
     try {
         var commitDate = new Date(commit.date);
         var day = commitDate.getDay();
-        var isWeekend = (day == 6) || (day == 0);
-        if (isWeekend && commit.author.user) {
+        var startTime = moment("4:00am", "h:mma");
+        var endTime = moment("0:00am", "h:mma");
+        var theTime = moment(moment(commit.date).format("h:mma"), "h:mma");
+        var isOutOfHours = theTime.isBefore(startTime) && theTime.isAfter(endTime);
+        var isWeekday = (day < 6) && (day > 0);
+        if (isWeekday && isOutOfHours && commit.author.user) {
             badges.push({
-                "badge_img": "./img/weekend.jpg",
-                "title": "Weekend Coder",
-                "subtitle": "Why stop just because it's the weekend?",
-                "description": "Awarded to those dedicated developers who don't understand the meaning of downtime.",
+                "badge_img": "./img/after-midnight.jpg",
+                "title": "The Witching Hour",
+                "subtitle": "Beware after hours coding.",
+                "description": "Awarded to developers working into the wee hours of the morning.",
                 "recipient": [
                     {
                         "avatar": "https://bitbucket.org/account/" + commit.author.user.username + "/avatar/32/",

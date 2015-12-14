@@ -44,7 +44,9 @@ var request = require("request"),
     fs = require('fs'),
     moment = require("moment"),
     calendarStats = require("./parsers/calendarStats"),
-    weekend = require('./badges/weekend');
+    weekend = require('./badges/weekend'),
+    aftermidnight = require('./badges/aftermidnight'),
+    afterhours = require('./badges/afterhours');
 
 var argv = require('minimist')(process.argv.slice(2), {
     alias: {
@@ -187,6 +189,8 @@ function parseRepoCommitDetails(body) {
 
             var rtn = calendarStats.parseCommit(commit);
             weekend.parseCommit(allBadges, commit, next);
+            afterhours.parseCommit(allBadges, commit, next);
+            aftermidnight.parseCommit(allBadges, commit, next);
 
             function next() {
                 if (rtn) {

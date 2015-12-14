@@ -39,8 +39,7 @@ require(["jquery", "velocity", "handlebars", "nprogress"], function ($, velocity
 
     function showCard(tile) {
         tile.velocity({
-            marginTop: '0%',
-            scale: 1.2
+            marginTop: '0%'
         }, {
             duration: EASING_TIME,
             easing: EASING_PROPS,
@@ -63,8 +62,7 @@ require(["jquery", "velocity", "handlebars", "nprogress"], function ($, velocity
 
     function hideCard(tile) {
         tile.velocity({
-            marginTop: '-50%',
-            scale: 1
+            marginTop: '-50%'
         }, {
             duration: EASING_TIME,
             easing: EASING_PROPS,
