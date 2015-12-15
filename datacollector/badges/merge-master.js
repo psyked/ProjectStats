@@ -27,6 +27,7 @@ function parseCommit(badges, commit, callback) {
                         }
                     ]
                 });
+                users[commit.author.user.username] = 0;
             }
         }
         callback();
