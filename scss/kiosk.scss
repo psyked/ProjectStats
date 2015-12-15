@@ -150,15 +150,16 @@
         }
 
         .avatar {
-            width: 32px;
-            height: 32px;
-            line-height: 32px;
+            width: 64px;
+            height: 64px;
+            line-height: 64px;
             float: left;
             margin-right: 1em;
 
             img {
                 vertical-align: middle;
                 width: 100%;
+                image-rendering: pixelated;
                 //height: 100%;
             }
         }
@@ -166,7 +167,7 @@
         .label {
             float: left;
             color: $flat-concrete;
-            line-height: 32px;
+            line-height: 64px;
 
             .username {
                 color: white;
