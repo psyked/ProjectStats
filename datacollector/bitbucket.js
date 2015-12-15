@@ -43,6 +43,7 @@
 var request = require("request"),
     fs = require('fs'),
     moment = require("moment"),
+    async = require("async"),
     calendarStats = require("./parsers/calendarStats"),
     weekend = require('./badges/weekend'),
     aftermidnight = require('./badges/aftermidnight'),
@@ -188,11 +189,22 @@ function parseRepoCommitDetails(body) {
         if (commitDate > startDate) {
             lastCommitIsWithinDateRange = true;
 
-            var rtn = calendarStats.parseCommit(commit);
-            weekend.parseCommit(allBadges, commit, next);
-            afterhours.parseCommit(allBadges, commit, next);
-            aftermidnight.parseCommit(allBadges, commit, next);
-            mergemaster.parseCommit(allBadges, commit, next);
+            var rtn;
+            rtn = calendarStats.parseCommit(commit);
+            async.parallel([
+                function (callback) {
+                    weekend.parseCommit(allBadges, commit, callback);
+                },
+                function (callback) {
+                    afterhours.parseCommit(allBadges, commit, callback);
+                },
+                function (callback) {
+                    aftermidnight.parseCommit(allBadges, commit, callback);
+                },
+                function (callback) {
+                    mergemaster.parseCommit(allBadges, commit, callback);
+                }
+            ], next);
 
             function next() {
                 if (rtn) {
