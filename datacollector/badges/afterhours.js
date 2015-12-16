@@ -6,25 +6,41 @@ function parseCommit(badges, commit, callback) {
     try {
         var commitDate = new Date(commit.date);
         var day = commitDate.getDay();
-        var startTime = moment("8:30am", "h:mma");
-        var endTime = moment("6:00pm", "h:mma");
-        var theTime = moment(moment(commit.date).format("h:mma"), "h:mma");
-        var isOutOfHours = theTime.isBefore(startTime) || theTime.isAfter(endTime);
+        var startTime = moment("8:30am", "hh:mma");
+        var endTime = moment("6:00pm", "hh:mma");
+        var theTime = moment(moment(commit.date).format("H:mm"), "H:mm");
+        //var isOutOfHours = theTime.isBefore(startTime) || theTime.isAfter(endTime);
         var isWeekday = (day < 6) && (day > 0);
-        if (isWeekday && isOutOfHours && commit.author.user) {
-            badges.push({
-                "badge_img": "./img/after-hours.jpg",
-                "title": "After Hours",
-                "subtitle": "Just five more minutes, mom!",
-                "description": "Awarded to those dedicated developers who don't understand the meaning of home time.",
-                "recipient": [
-                    {
-                        "avatar": "https://bitbucket.org/account/" + commit.author.user.username + "/avatar/32/",
-                        "username": commit.author.user.display_name,
-                        "date": moment(commit.date).format("LLLL")
-                    }
-                ]
-            });
+        if (isWeekday && commit.author.user) {
+            if (theTime.isAfter(endTime)) {
+                badges.push({
+                    "badge_img": "./img/after-hours.jpg",
+                    "title": "After Hours",
+                    "subtitle": "Just five more minutes, mom!",
+                    "description": "Awarded to those dedicated developers who don't understand the meaning of home time.",
+                    "recipient": [
+                        {
+                            "avatar": "https://bitbucket.org/account/" + commit.author.user.username + "/avatar/32/",
+                            "username": commit.author.user.display_name,
+                            "date": moment(commit.date).format("LLLL")
+                        }
+                    ]
+                });
+            } else if (theTime.isBefore(startTime)) {
+                badges.push({
+                    "badge_img": "./img/before-hours.jpg",
+                    "title": "Early Morning",
+                    "subtitle": "Obviously a morning person.",
+                    "description": "Awarded to the eager beavers who just can't wait for the day to begin.",
+                    "recipient": [
+                        {
+                            "avatar": "https://bitbucket.org/account/" + commit.author.user.username + "/avatar/32/",
+                            "username": commit.author.user.display_name,
+                            "date": moment(commit.date).format("LLLL")
+                        }
+                    ]
+                });
+            }
         }
         callback();
     } catch (error) {
