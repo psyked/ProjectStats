@@ -8,7 +8,7 @@ function parseCommit(badges, commit, callback) {
         var day = commitDate.getDay();
         var startTime = moment("8:30am", "hh:mma").utc();
         var endTime = moment("6:00pm", "hh:mma").utc();
-        var theTime = moment(moment(commit.date).format("H:mm"), "H:mm").utc();
+        var theTime = moment(moment(commit.date).utc().format("H:mm"), "H:mm").utc();
         //var isOutOfHours = theTime.isBefore(startTime) || theTime.isAfter(endTime);
         var isWeekday = (day < 6) && (day > 0);
         if (isWeekday && commit.author.user) {
@@ -22,7 +22,7 @@ function parseCommit(badges, commit, callback) {
                         {
                             "avatar": "https://bitbucket.org/account/" + commit.author.user.username + "/avatar/32/",
                             "username": commit.author.user.display_name,
-                            "date": moment(commit.date).format("LLLL")
+                            "date": moment(commit.date).utc().format("LLLL")
                         }
                     ]
                 });
@@ -36,7 +36,7 @@ function parseCommit(badges, commit, callback) {
                         {
                             "avatar": "https://bitbucket.org/account/" + commit.author.user.username + "/avatar/32/",
                             "username": commit.author.user.display_name,
-                            "date": moment(commit.date).format("LLLL")
+                            "date": moment(commit.date).utc().format("LLLL")
                         }
                     ]
                 });
