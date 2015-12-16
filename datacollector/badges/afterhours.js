@@ -26,7 +26,7 @@ function parseCommit(badges, commit, callback) {
                         }
                     ]
                 });
-            } else if (theTime.isBefore(startTime)) {
+            } else if (theTime.isBefore(startTime) && theTime.isBefore(moment("4:00am", "hh:mma").utc())) {
                 badges.push({
                     "badge_img": "./img/before-hours.jpg",
                     "title": "Early Morning",
