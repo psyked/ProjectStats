@@ -78,13 +78,13 @@ var url = "https://bitbucket.org/api/2.0/repositories/" + owner + "?pagelen=100"
     outputFile = "./website/serve/output.json",
     badgesFile = "./website/serve/badges.json";
 
-var startDate = Date.parse(moment().subtract(90, 'day').startOf('day').toString());
+var startDate = Date.parse(moment().utc().subtract(90, 'day').startOf('day').toString());
 
 var allSlugs = [],
     requestsIndex = 0,
     allBadges = [];
 
-var todaysDate = moment().startOf('day');
+var todaysDate = moment().utc().startOf('day');
 var dir = './datacollector/cache-' + todaysDate.format('YYYY-MM-DD') + '/';
 
 if (!fs.existsSync(dir)) {
