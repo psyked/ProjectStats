@@ -6,9 +6,9 @@ function parseCommit(badges, commit, callback) {
     try {
         var commitDate = new Date(commit.date);
         var day = commitDate.getDay();
-        var startTime = moment("8:30am", "hh:mma");
-        var endTime = moment("6:00pm", "hh:mma");
-        var theTime = moment(moment(commit.date).format("H:mm"), "H:mm");
+        var startTime = moment("8:30am", "hh:mma").utc();
+        var endTime = moment("6:00pm", "hh:mma").utc();
+        var theTime = moment(moment(commit.date).format("H:mm"), "H:mm").utc();
         //var isOutOfHours = theTime.isBefore(startTime) || theTime.isAfter(endTime);
         var isWeekday = (day < 6) && (day > 0);
         if (isWeekday && commit.author.user) {
