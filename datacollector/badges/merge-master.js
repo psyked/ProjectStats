@@ -1,7 +1,7 @@
 "use strict";
 
 var moment = require("moment");
-var threshold = 250;
+var threshold = 50;
 var users = {};
 
 function parseCommit(badges, commit, callback) {
