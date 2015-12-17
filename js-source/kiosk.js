@@ -1,4 +1,4 @@
-require(["jquery", "velocity", "handlebars", "nprogress"], function ($, velocity, Handlebars, NProgress) {
+require(["jquery", "velocity", "handlebars", "nprogress","./components/chromecast-integration"], function ($, velocity, Handlebars, NProgress, chromecast) {
     "use strict";
 
     var source = $("#accolade-template").html();
@@ -21,6 +21,8 @@ require(["jquery", "velocity", "handlebars", "nprogress"], function ($, velocity
         success: displayBadges,
         error: displayError
     });
+
+    chromecast();
 
     function displayBadges(jsonBadgeData) {
         badgeData = jsonBadgeData;

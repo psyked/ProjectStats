@@ -9,8 +9,9 @@ require([
     "model/state",
     "lists/commitlist",
     "lists/userlist",
-    "moment"
-], function ($, crossfilter, c3, d3, History, barChart, getQueryString, state, commitList, userList, moment) {
+    "moment",
+    "./components/chromecast-integration"
+], function ($, crossfilter, c3, d3, History, barChart, getQueryString, state, commitList, userList, moment, chromecast) {
     "use strict";
 
     var DAYS = 90;
@@ -23,6 +24,8 @@ require([
         });
 
     })(window);
+
+    chromecast();
 
     d3.csv("output.json", function (error, commits) {
 

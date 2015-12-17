@@ -32,6 +32,20 @@ header {
         font-size: 16px;
     }
 
+    .chromecast-link {
+        float: right;
+        margin-right: 1em;
+        color: white;
+
+        .material-icons {
+            line-height: 40px;
+
+            &.active {
+                color: $flat-peter-river;
+            }
+        }
+    }
+
     .timeline-link,
     .dashboard-link,
     .kiosk-link {
