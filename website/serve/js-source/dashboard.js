@@ -1,5 +1,7 @@
-require(["d3", "moment"], function (d3, moment) {
+require(["d3", "moment", "./components/chromecast-integration"], function (d3, moment, chromecast) {
     "use strict";
+
+    chromecast();
 
     var DAYS = 90;
     var COUNT = 10;
