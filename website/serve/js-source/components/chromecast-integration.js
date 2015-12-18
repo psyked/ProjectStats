@@ -1,10 +1,21 @@
 define(["jquery"], function ($) {
-    var applicationID = '67584AFB';
-    var namespace = 'urn:x-cast:couk.psyked.projectstats';
-    var session = null;
-
     return function () {
-        $('.chromecast-link').on('click', function () {
+        var applicationID = '67584AFB';
+        var namespace = 'urn:x-cast:couk.psyked.projectstats';
+        var session = null;
+
+        var chromecastLaunchButton = $('.chromecast-link');
+        if (chromecastLaunchButton.length) {
+            chromecastLaunchButton.on('click', startChromeCast);
+
+            function startChromeCast() {
+                transcribe("tellsd");
+            }
+
+            appendMessage("starting");
+
+            //$(document).ready(function () {
+            appendMessage((!chrome.cast || !chrome.cast.isAvailable).toString());
             /**
              * Call initialization for Cast
              */
@@ -13,7 +24,8 @@ define(["jquery"], function ($) {
             } else {
                 initializeCastApi();
             }
-        });
+        }
+        //});
 
         /**
          * initialization
@@ -31,8 +43,6 @@ define(["jquery"], function ($) {
          */
         function onInitSuccess() {
             appendMessage("onInitSuccess");
-            $('.chromecast-link .material-icons').text("cast_connected").addClass("active");
-            transcribe("tellsd");
         }
 
         /**
@@ -48,6 +58,7 @@ define(["jquery"], function ($) {
          */
         function onSuccess(message) {
             appendMessage("onSuccess: " + message);
+            $('.chromecast-link .material-icons').text("cast_connected").addClass("active");
         }
 
         /**
@@ -132,13 +143,7 @@ define(["jquery"], function ($) {
          */
         function appendMessage(message) {
             console.log(message);
-        }
-
-        /**
-         * utility function to handle text typed in by user in the input field
-         */
-        function update() {
-            sendMessage(document.getElementById("input").value);
+            $(".console").text(message);
         }
 
         /**
