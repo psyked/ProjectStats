@@ -38,6 +38,17 @@ module.exports = function (grunt) {
         //    }
         //},
 
+        autoprefixer: {
+            options: {
+                browsers: ['last 2 versions', 'ie 8', 'ie 9']
+            },
+            your_target: {
+                files: {
+                    './website/serve/css/main.css': './website/serve/css/main.css'
+                }
+            },
+        },
+
         requirejs: {
             compile: {
                 options: {
@@ -85,7 +96,7 @@ module.exports = function (grunt) {
             sass: {
                 loadPath: require('node-bourbon').includePaths, // awesome mixin lib: http://bourbon.io
                 files: WATCH_SASS_FILES,
-                tasks: ['sass']
+                tasks: ['sass', 'autoprefixer']
             }
         }
     });
