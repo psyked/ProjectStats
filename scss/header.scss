@@ -25,7 +25,7 @@ header {
     }
 
     .timeline-link,
-    .dashboard-link,
+    .leaderboard-link,
     .kiosk-link {
         display: inline-block;
         line-height: 40px;
@@ -45,7 +45,7 @@ header {
         }
     }
 
-    .dashboard-link {
+    .leaderboard-link {
         border-bottom: 4px solid $flat-turquoise;
 
         &:hover,
