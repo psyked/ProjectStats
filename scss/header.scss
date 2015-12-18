@@ -1,0 +1,67 @@
+header {
+    flex: 0 0 40px;
+    width: 100%;
+    margin-bottom: .5em;
+    background: darken($flat-concrete, 25%);
+    border-bottom: 4px solid $flat-concrete;
+    font-size: 0;
+
+    a {
+        font-size: 16px;
+    }
+
+    .chromecast-link {
+        float: right;
+        margin-right: 1em;
+        color: white;
+
+        .material-icons {
+            line-height: 40px;
+
+            &.active {
+                color: $flat-peter-river;
+            }
+        }
+    }
+
+    .timeline-link,
+    .dashboard-link,
+    .kiosk-link {
+        display: inline-block;
+        line-height: 40px;
+        height: 40px;
+        text-decoration: none;
+        color: white;
+        padding: 0 1em;
+    }
+
+    .timeline-link {
+        border-bottom: 4px solid $flat-orange;
+
+        &:hover,
+        &:active,
+        &.active {
+            background: $flat-carrot;
+        }
+    }
+
+    .dashboard-link {
+        border-bottom: 4px solid $flat-turquoise;
+
+        &:hover,
+        &:active,
+        &.active {
+            background: $flat-green-sea;
+        }
+    }
+
+    .kiosk-link {
+        border-bottom: 4px solid $flat-alizarin;
+
+        &:hover,
+        &:active,
+        &.active {
+            background: $flat-pomegranate;
+        }
+    }
+}
