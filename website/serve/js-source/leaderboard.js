@@ -1,4 +1,4 @@
-require(["d3", "moment", "./components/chromecast-integration"], function (d3, moment, chromecast) {
+require(["d3", "c3", "moment", "./components/chromecast-integration"], function (d3, c3, moment, chromecast) {
     "use strict";
 
     chromecast();
@@ -125,6 +125,19 @@ require(["d3", "moment", "./components/chromecast-integration"], function (d3, m
 
         d3.selectAll('.toplist .panel').each(function (d, i) {
             renderLeaderboard(commits, avatars, this);
+        });
+
+        var chart = c3.generate({
+            bindto: '.chart',
+            data: {
+                columns: [
+                    ['data1', 30, 200, 100, 400, 150, 250],
+                    ['data2', 50, 20, 10, 40, 15, 25]
+                ]
+            },
+            size: {
+                height: 180
+            }
         });
     });
 });

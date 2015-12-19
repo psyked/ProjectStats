@@ -1,8 +1,8 @@
 require([
     "jquery",
     "crossfilter",
-    "c3",
     "d3",
+    "c3",
     "history",
     "charts/barchart",
     "utils/querystring",
@@ -11,7 +11,7 @@ require([
     "lists/userlist",
     "moment",
     "./components/chromecast-integration"
-], function ($, crossfilter, c3, d3, History, barChart, getQueryString, state, commitList, userList, moment, chromecast) {
+], function ($, crossfilter, d3, c3, History, barChart, getQueryString, state, commitList, userList, moment, chromecast) {
     "use strict";
 
     var DAYS = 90;

@@ -62,7 +62,7 @@ module.exports = function (grunt) {
                 options: {
                     mainConfigFile: "./website/serve/js-source/require-config.js",
                     baseUrl: "./website/serve/js-source",
-                    name: "dashboard",
+                    name: "leaderboard",
                     out: "./website/serve/js/leaderboard.js"
                 }
             }

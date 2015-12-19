@@ -22,6 +22,10 @@ require.config({
         'velocity': {
             deps: ["jquery"],
             exports: 'jQuery.fn.velocity'
+        },
+        'c3': {
+            deps: ["d3"],
+            exports: 'c3'
         }
     },
     config: {
