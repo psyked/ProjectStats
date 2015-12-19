@@ -61,6 +61,14 @@ aside {
 
 .timelines {
     flex: 0 0 180px;
+
+    &.user-commits {
+        flex: 0 0 320px;
+
+        .graph {
+            padding: 10px;
+        }
+    }
 }
 
 .details {
@@ -90,6 +98,14 @@ aside {
 
     .c3 text {
         fill: $flat-concrete;
+    }
+
+    .c3-tooltip {
+        color: #333;
+    }
+
+    .c3-area {
+        opacity: 1;
     }
 }
 
