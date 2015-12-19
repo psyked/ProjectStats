@@ -126,3 +126,21 @@ aside {
     padding: 2px 5px;
     margin: -2px -5px;
 }
+
+.view-options {
+    display: inline-block;
+    margin-left: 1em;
+
+    a {
+        color: $flat-concrete;
+
+        &:hover,
+        &:active {
+            color: $flat-orange;
+        }
+
+        &.active {
+            color: $flat-carrot;
+        }
+    }
+}

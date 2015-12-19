@@ -1,4 +1,4 @@
-require(["d3", "c3", "moment", "./components/chromecast-integration"], function (d3, c3, moment, chromecast) {
+require(["d3", "c3", "moment", "./components/chromecast-integration", "jquery"], function (d3, c3, moment, chromecast, $) {
     "use strict";
 
     chromecast();
@@ -233,5 +233,69 @@ require(["d3", "c3", "moment", "./components/chromecast-integration"], function 
                 grouped: false // Default true
             }
         });
+
+        var nextTimeout;
+
+        var selectBar = function () {
+            $('.area-button,.pie-button').removeClass('active');
+            $('.bar-button').addClass('active');
+            chart.transform('bar');
+        };
+
+        var selectArea = function () {
+            $('.bar-button,.pie-button').removeClass('active');
+            $('.area-button').addClass('active');
+            chart.transform('area-spline');
+        };
+
+        var selectPie = function () {
+            $('.area-button,.bar-button').removeClass('active');
+            $('.pie-button').addClass('active');
+            chart.transform('pie');
+        };
+
+        function cycleChartTypes() {
+            var time = 5000;
+            nextTimeout = setTimeout(function () {
+                selectPie();
+
+                nextTimeout = setTimeout(function () {
+                    selectBar();
+
+                    nextTimeout = setTimeout(function () {
+                        selectArea();
+
+                        nextTimeout = setTimeout(function () {
+                            cycleChartTypes();
+                        }, time);
+                    }, time);
+                }, time);
+            }, time);
+        }
+
+        $('.bar-button').on('click', function () {
+            $('.play-button').removeClass('active');
+            clearTimeout(nextTimeout);
+            selectBar();
+        });
+
+        $('.area-button').on('click', function () {
+            $('.play-button').removeClass('active');
+            clearTimeout(nextTimeout);
+            selectArea();
+        });
+
+        $('.pie-button').on('click', function () {
+            $('.play-button').removeClass('active');
+            clearTimeout(nextTimeout);
+            selectPie();
+        });
+
+        $('.play-button').on('click', function () {
+            $('.play-button').addClass('active');
+            cycleChartTypes();
+        });
+
+        cycleChartTypes();
     });
 });
