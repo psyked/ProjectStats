@@ -252,25 +252,6 @@ require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
             chart.transform('pie');
         };
 
-        function cycleChartTypes() {
-            var time = 5000;
-            nextTimeout = setTimeout(function () {
-                selectPie();
-
-                nextTimeout = setTimeout(function () {
-                    selectBar();
-
-                    nextTimeout = setTimeout(function () {
-                        selectArea();
-
-                        nextTimeout = setTimeout(function () {
-                            cycleChartTypes();
-                        }, time);
-                    }, time);
-                }, time);
-            }, time);
-        }
-
         $('.bar-button').on('click', function () {
             $('.play-button').removeClass('active');
             clearTimeout(nextTimeout);
@@ -289,11 +270,5 @@ require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
             selectPie();
         });
 
-        $('.play-button').on('click', function () {
-            $('.play-button').addClass('active');
-            cycleChartTypes();
-        });
-
-        cycleChartTypes();
     });
 });
