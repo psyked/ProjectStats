@@ -120,7 +120,7 @@ require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
                 return d.author;
             })
             .key(function (d) {
-                return d.avatar;
+                return "https://bitbucket.org/account/" + d.username + "/avatar/32/";
             })
             .rollup(function (leaves) {
                 return leaves.author;

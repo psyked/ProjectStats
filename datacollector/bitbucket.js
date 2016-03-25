@@ -40,15 +40,15 @@
  * @property {string} type
  */
 
-var request = require("request"),
-    fs = require('fs'),
-    moment = require("moment"),
-    async = require("async"),
-    calendarStats = require("./parsers/calendarStats"),
-    weekend = require('./badges/weekend'),
-    aftermidnight = require('./badges/aftermidnight'),
-    mergemaster = require('./badges/merge-master'),
-    afterhours = require('./badges/afterhours');
+var fs = require('fs');
+var moment = require("moment");
+var async = require("async");
+var calendarStats = require("./parsers/calendarStats");
+var weekend = require('./badges/weekend');
+var aftermidnight = require('./badges/aftermidnight');
+var mergemaster = require('./badges/merge-master');
+var afterhours = require('./badges/afterhours');
+var makeCachedRequest = require('./cachedRequest');
 
 var argv = require('minimist')(process.argv.slice(2), {
     alias: {
@@ -57,24 +57,15 @@ var argv = require('minimist')(process.argv.slice(2), {
         'password': 'p'
     }
 });
-//console.dir(argv);
 
 if (!argv.owner) {
     console.error('\033[31mError:\033[39m No Bitbucket Account specified!');
     return;
 }
 
-if (!argv.username || !argv.password) {
-    console.warn('\033[31mError:\033[39m No Bitbucket Username or Password specified!');
-    return;
-}
-
-var owner = argv.owner,
-    username = argv.username,
-    password = argv.password;
+var owner = argv.owner;
 
 var url = "https://bitbucket.org/api/2.0/repositories/" + owner + "?pagelen=100",
-    auth = "Basic " + new Buffer(username + ":" + password).toString("base64"),
     outputFile = "./website/serve/output.json",
     badgesFile = "./website/serve/badges.json";
 
@@ -84,12 +75,12 @@ var allSlugs = [],
     requestsIndex = 0,
     allBadges = [];
 
-var todaysDate = moment().utc().startOf('day');
-var dir = './datacollector/cache-' + todaysDate.format('YYYY-MM-DD') + '/';
-
-if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
-}
+// var todaysDate = moment().utc().startOf('day');
+// var dir = './datacollector/cache-' + todaysDate.format('YYYY-MM-DD') + '/';
+//
+// if (!fs.existsSync(dir)) {
+//     fs.mkdirSync(dir);
+// }
 
 function parseRepoInfoPage(body) {
     for (var i = 0, l = body.values.length; i < l; i++) {
@@ -108,48 +99,6 @@ function parseRepoInfoPage(body) {
         loadRepoInfoPage(body.next);
     } else {
         calendarStats.initOutput(finishedLoadingRepos);
-    }
-}
-
-function makeCachedRequest(url, callback, errorCallback) {
-    if (url) {
-        var filename = url.replace(/[^a-zA-Z0-9_]/g, "_");
-        var cacheFile = dir + filename;
-
-        fs.exists(cacheFile, function (exists) {
-            if (exists) {
-                console.log("\033[33mInfo:\033[39m Loading " + url + " from local cache");
-                fs.readFile(cacheFile, function (err, contents) {
-                    if (err) {
-                        errorCallback();
-                        return console.log(err);
-                    }
-                    try {
-                        callback(JSON.parse(contents));
-                    } catch (e) {
-                        errorCallback();
-                    }
-                });
-            } else {
-                console.log("\033[36mInfo:\033[39m Loading " + url);
-                request({
-                    url: url,
-                    json: true,
-                    headers: {
-                        "Authorization": auth
-                    }
-                }, function (error, response, body) {
-                    if (!error && response.statusCode === 200) {
-                        fs.writeFileSync(cacheFile, JSON.stringify(body));
-                        callback(body);
-                    } else {
-                        errorCallback();
-                    }
-                });
-            }
-        });
-    } else {
-        errorCallback();
     }
 }
 
@@ -228,4 +177,11 @@ function parseRepoCommitError() {
     loadNextItemInQueue();
 }
 
-loadRepoInfoPage(url);
+
+// make a request to fetch the team membership listing
+require('./parsers/teamMembership')(owner)
+    .then(function (userlist) {
+        // console.log(userlist);
+        calendarStats.setTeamMembers(userlist);
+        loadRepoInfoPage(url);
+    });
