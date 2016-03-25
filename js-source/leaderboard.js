@@ -131,7 +131,7 @@ require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
             renderLeaderboard(commits, avatars, this);
         });
 
-        var results = d3.nest()
+        var userCommitDetails = d3.nest()
             .key(function (d) {
                 d.author = d.author.split("_").join(" ");
                 d.author = d.author.split("[").join("");
@@ -147,59 +147,42 @@ require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
             .rollup(function (leaves) {
                 return leaves.length;
             })
-            .entries(commits.filter(function (d) {
-                if (d.author.indexOf("unknown") !== -1) {
-                    return false;
-                }
-                if (d.author.indexOf("<") !== -1) {
-                    var email = d.author.split("<")[1].split(">")[0];
-                    if (email.indexOf("@mmtdigital.co.uk") === -1) {
-                        return false;
-                    }
-                    d.author = toTitleCase(d.author.split("<")[0]);
-                }
-                return true;
-            })).sort(function (a, b) {
+            .entries(commits)
+            .sort(function (a, b) {
                 return d3.ascending(a.key, b.key);
             });
-        //.entries(commits.filter(function (d) {
-        //    var startDate = moment().add(-90, 'days').startOf('days');
-        //    var endDate = moment().startOf('days');
-        //    var theDate = new Date(d.date);
-        //    return !!(theDate > startDate && theDate < endDate);
-        //}));
-        //.sort(function (a, b) {
-        //    return d3.descending(a.key, b.key);
-        //})
-        //.splice(0, COUNT);
 
         var timeseries = ['x'];
-        for (var i = 30, l = 0; i > l; i--) {
-            timeseries.push(moment().add(-i, 'days').format('DD-MM-YYYY'));
+        var GRAPH_TIMESERIES_DAY = 30;
+        for (var i = GRAPH_TIMESERIES_DAY, l = 0; i > l; i--) {
+            var date = moment().add(-i, 'days');
+            if (!(date.format('E') == 6 || date.format('E') == 7)) {
+                timeseries.push(date.format('DD-MM-YYYY'));
+            }
         }
-
-        //console.log(results);
 
         var types = {};
         var groups = [];
         var cols = [timeseries];
 
         var row;
-        for (i = 0, l = results.length; i < l; i++) {
-            row = [results[i].key];
-            types[results[i].key] = 'area-spline';
-            groups.push(results[i].key);
+        for (i = 0, l = userCommitDetails.length; i < l; i++) {
+            var userDisplayName = userCommitDetails[i].key;
+            row = [userDisplayName];
+            types[userDisplayName] = 'area-spline';
+            groups.push(userDisplayName);
 
-            for (var j = 0, jl = 30; j < jl; j++) {
-                row.push(0);
+            for (var j = 0, jl = GRAPH_TIMESERIES_DAY; j < jl; j++) {
+                var date = moment().add(-j, 'days');
+                if (!(date.format('E') == 6 || date.format('E') == 7)) {
+                    row.push(0);
+                }
             }
-            for (j = 0, jl = results[i].values.length; j < jl; j++) {
-                row[timeseries.indexOf(results[i].values[j].key)] = results[i].values[j].values;
+            for (j = 0, jl = userCommitDetails[i].values.length; j < jl; j++) {
+                row[timeseries.indexOf(userCommitDetails[i].values[j].key)] = userCommitDetails[i].values[j].values;
             }
             cols.push(row);
         }
-
-        //console.log(types);
 
         var chart = c3.generate({
             bindto: '.chart',
@@ -215,7 +198,7 @@ require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
             },
             axis: {
                 x: {
-                    type: 'timeseries',
+                    type: 'category',
                     tick: {
                         format: '%e %B %Y'
                     }
