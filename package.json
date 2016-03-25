@@ -29,6 +29,7 @@
     "load-grunt-tasks": "^3.3.0",
     "node-bourbon": "^4.2.3",
     "promise": "^7.1.1",
+    "randomcolor": "^0.4.3",
     "time-grunt": "^1.2.2"
   }
 }

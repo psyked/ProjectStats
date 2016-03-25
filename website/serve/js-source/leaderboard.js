@@ -1,4 +1,4 @@
-require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
+require(["d3", "c3", "moment", "jquery", "randomcolor"], function (d3, c3, moment, $, randomColor) {
     "use strict";
 
     var DAYS = 90;
@@ -165,11 +165,20 @@ require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
         var groups = [];
         var cols = [timeseries];
 
+        var colours = randomColor({
+            luminosity: 'bright',
+            hue: 'orange',
+            count: userCommitDetails.length
+        });
+
+        var colors = {};
+
         var row;
         for (i = 0, l = userCommitDetails.length; i < l; i++) {
             var userDisplayName = userCommitDetails[i].key;
             row = [userDisplayName];
             types[userDisplayName] = 'area-spline';
+            colors[userDisplayName] = colours[i];
             groups.push(userDisplayName);
 
             for (var j = 0, jl = GRAPH_TIMESERIES_DAY; j < jl; j++) {
@@ -191,6 +200,7 @@ require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
                 xFormat: '%d-%m-%Y',
                 types: types,
                 columns: cols,
+                colors: colors,
                 groups: [groups]
             },
             point: {

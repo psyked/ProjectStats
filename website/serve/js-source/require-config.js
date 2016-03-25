@@ -8,7 +8,8 @@ require.config({
         "moment": "libs/moment/moment",
         "handlebars": "libs/handlebars/handlebars.amd",
         "velocity": "libs/velocity/velocity",
-        "nprogress": "libs/nprogress/nprogress"
+        "nprogress": "libs/nprogress/nprogress",
+        "randomcolor": "libs/randomColor"
     },
     shim: {
         'crossfilter': {
