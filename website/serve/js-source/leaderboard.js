@@ -173,10 +173,7 @@ require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
             groups.push(userDisplayName);
 
             for (var j = 0, jl = GRAPH_TIMESERIES_DAY; j < jl; j++) {
-                var date = moment().add(-j, 'days');
-                if (!(date.format('E') == 6 || date.format('E') == 7)) {
-                    row.push(0);
-                }
+                row.push(0);
             }
             for (j = 0, jl = userCommitDetails[i].values.length; j < jl; j++) {
                 row[timeseries.indexOf(userCommitDetails[i].values[j].key)] = userCommitDetails[i].values[j].values;
