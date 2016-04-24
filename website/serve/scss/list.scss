@@ -4,6 +4,9 @@
         clear: both;
         width: 100%;
         line-height: 2em;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
 
     .day {
