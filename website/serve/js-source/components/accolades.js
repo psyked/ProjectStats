@@ -44,7 +44,7 @@ define(["jquery", "velocity", "handlebars", "nprogress"], function ($, velocity,
             }, {
                 duration: EASING_TIME,
                 easing: EASING_PROPS,
-                complete: function animationComplete() {
+                complete() {
                     NProgress.set(0.0);
                     let i = 0;
                     const countDown = setInterval(function () {
@@ -67,7 +67,7 @@ define(["jquery", "velocity", "handlebars", "nprogress"], function ($, velocity,
             }, {
                 duration: EASING_TIME,
                 easing: EASING_PROPS,
-                complete: function () {
+                complete() {
                     tile.remove();
                     displayNewCard();
                 }

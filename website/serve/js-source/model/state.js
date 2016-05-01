@@ -36,10 +36,10 @@ define([], function() {
     }
 
     return {
-        selectedUsername: selectedUsername,
-        startDate: startDate,
-        endDate: endDate,
-        startTime: startTime,
-        endTime: endTime
+        selectedUsername,
+        startDate,
+        endDate,
+        startTime,
+        endTime
     }
 });
