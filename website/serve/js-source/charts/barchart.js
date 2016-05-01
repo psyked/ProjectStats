@@ -11,15 +11,27 @@ define(["d3", "history", "../utils/querystring", "../model/state"], function(d3,
             right: 20,
             bottom: 20,
             left: 10
-        }, x, y = d3.scale.linear().range([100, 0]), id = barChart.id++, axis = d3.svg.axis().orient("bottom"), brush = d3.svg.brush(), brushDirty, dimension, group, round;
+        };
+
+        var x;
+        var y = d3.scale.linear().range([100, 0]);
+        var id = barChart.id++;
+        var axis = d3.svg.axis().orient("bottom");
+        var brush = d3.svg.brush();
+        var brushDirty;
+        var dimension;
+        var group;
+        var round;
 
         function chart(div) {
-            var width = x.range()[1], height = y.range()[0];
+            var width = x.range()[1];
+            var height = y.range()[0];
 
             y.domain([0, group.top(1)[0].value]);
 
             div.each(function() {
-                var div = d3.select(this.parentNode), g = div.select("g");
+                var div = d3.select(this.parentNode);
+                var g = div.select("g");
 
                 // Create the skeletal chart.
                 if(g.empty()) {
@@ -60,7 +72,10 @@ define(["d3", "history", "../utils/querystring", "../model/state"], function(d3,
             });
 
             function barPath(groups) {
-                var path = [], i = -1, n = groups.length, d;
+                var path = [];
+                var i = -1;
+                var n = groups.length;
+                var d;
                 while(++i < n) {
                     d = groups[i];
                     path.push("M", x(d.key), ",", height, "V", y(d.value), "h" + (colWidth - columnPadding) + "V", height);
@@ -69,7 +84,9 @@ define(["d3", "history", "../utils/querystring", "../model/state"], function(d3,
             }
 
             function resizePath(d) {
-                var e = +(d == "e"), x = e ? 1 : -1, y = height / 3;
+                var e = +(d == "e");
+                var x = e ? 1 : -1;
+                var y = height / 3;
                 return "M" + (.5 * x) + "," + y + "A6,6 0 0 " + e + " " + (6.5 * x) + "," + (y + 6) + "V" + (2 * y - 6) + "A6,6 0 0 " + e + " " + (.5 * x) + "," + (2 * y) + "Z" + "M" + (2.5 * x) + "," + (y + 8) + "V" + (2 * y - 8) + "M" + (4.5 * x) + "," + (y + 8) + "V" + (2 * y - 8);
             }
         }
@@ -80,7 +97,8 @@ define(["d3", "history", "../utils/querystring", "../model/state"], function(d3,
         });
 
         brush.on("brush.chart", function() {
-            var g = d3.select(this.parentNode), extent = brush.extent();
+            var g = d3.select(this.parentNode);
+            var extent = brush.extent();
             if(round) g.select(".brush").call(brush.extent(extent = extent.map(round))).selectAll(".resize").style("display", null);
             g.select("#clip-" + id + " rect").attr("x", x(extent[0])).attr("width", x(extent[1]) - x(extent[0]));
 

@@ -1,7 +1,11 @@
 define([], function() {
     "use strict";
 
-    var selectedUsername = getQueryVariable("user"), startDate = getQueryVariable("startDate"), endDate = getQueryVariable("endDate"), startTime = getQueryVariable("startTime"), endTime = getQueryVariable("endTime");
+    var selectedUsername = getQueryVariable("user");
+    var startDate = getQueryVariable("startDate");
+    var endDate = getQueryVariable("endDate");
+    var startTime = getQueryVariable("startTime");
+    var endTime = getQueryVariable("endTime");
 
     if(startDate) {
         startDate = new Date(parseInt(startDate, 10));
