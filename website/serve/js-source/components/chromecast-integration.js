@@ -1,10 +1,10 @@
 define(["jquery"], function ($) {
     return function () {
-        var applicationID = '67584AFB';
-        var namespace = 'urn:x-cast:couk.psyked.projectstats';
-        var session = null;
+        const applicationID = '67584AFB';
+        const namespace = 'urn:x-cast:couk.psyked.projectstats';
+        let session = null;
 
-        var chromecastLaunchButton = $('.chromecast-link');
+        const chromecastLaunchButton = $('.chromecast-link');
         if (chromecastLaunchButton.length) {
             chromecastLaunchButton.on('click', startChromeCast);
 
@@ -31,8 +31,8 @@ define(["jquery"], function ($) {
          * initialization
          */
         function initializeCastApi() {
-            var sessionRequest = new chrome.cast.SessionRequest(applicationID);
-            var apiConfig = new chrome.cast.ApiConfig(sessionRequest,
+            const sessionRequest = new chrome.cast.SessionRequest(applicationID);
+            const apiConfig = new chrome.cast.ApiConfig(sessionRequest,
                 sessionListener,
                 receiverListener);
             chrome.cast.initialize(apiConfig, onInitSuccess, onError);
@@ -83,7 +83,7 @@ define(["jquery"], function ($) {
          * listener for session updates
          */
         function sessionUpdateListener(isAlive) {
-            var message = isAlive ? 'Session Updated' : 'Session Removed';
+            let message = isAlive ? 'Session Updated' : 'Session Removed';
             message += `: ${session.sessionId}`;
             appendMessage(message);
             if (!isAlive) {

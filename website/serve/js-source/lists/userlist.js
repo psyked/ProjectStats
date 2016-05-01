@@ -1,17 +1,17 @@
 define(["d3"], function (d3) {
 
-    var nestByUser = d3.nest().key(function (d) {
+    const nestByUser = d3.nest().key(function (d) {
         return d.author;
     });
 
-    var date;
+    let date;
 
     function setData(data) {
         date = data;
     }
 
     function userList(div) {
-        var commitsByUser = nestByUser.entries(date.top(100000));
+        const commitsByUser = nestByUser.entries(date.top(100000));
 
         div.each(function () {
 
@@ -19,7 +19,7 @@ define(["d3"], function (d3) {
                 return b.values.length > a.values.length ? 1 : -1;
             });
 
-            var userList = d3.select(this).selectAll(".user-info").data(commitsByUser, function (d) {
+            const userList = d3.select(this).selectAll(".user-info").data(commitsByUser, function (d) {
                 return d.key;
             });
 

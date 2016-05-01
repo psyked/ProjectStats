@@ -1,11 +1,11 @@
 define([], function() {
     "use strict";
 
-    var selectedUsername = getQueryVariable("user");
-    var startDate = getQueryVariable("startDate");
-    var endDate = getQueryVariable("endDate");
-    var startTime = getQueryVariable("startTime");
-    var endTime = getQueryVariable("endTime");
+    const selectedUsername = getQueryVariable("user");
+    let startDate = getQueryVariable("startDate");
+    let endDate = getQueryVariable("endDate");
+    let startTime = getQueryVariable("startTime");
+    let endTime = getQueryVariable("endTime");
 
     if(startDate) {
         startDate = new Date(parseInt(startDate, 10));
@@ -24,10 +24,10 @@ define([], function() {
     }
 
     function getQueryVariable(variable) {
-        var query = window.location.search.substring(1);
-        var vars = query.split("&");
-        for(var i = 0; i < vars.length; i++) {
-            var pair = vars[i].split("=");
+        const query = window.location.search.substring(1);
+        const vars = query.split("&");
+        for(let i = 0; i < vars.length; i++) {
+            const pair = vars[i].split("=");
             if(pair[0] == variable) {
                 return pair[1];
             }
