@@ -1,23 +1,23 @@
 define(["d3"], function (d3) {
 
-    var formatDate = d3.time.format("%B %d, %Y");
-    var formatTime = d3.time.format("%I:%M %p");
+    const formatDate = d3.time.format("%B %d, %Y");
+    const formatTime = d3.time.format("%I:%M %p");
 
-    var nestByDate = d3.nest().key(function (d) {
+    const nestByDate = d3.nest().key(function (d) {
         return d3.time.day(d.date);
     });
 
-    var date;
+    let date;
 
     function setData(data) {
         date = data;
     }
 
     function commitList(div) {
-        var commitsByDate = nestByDate.entries(date.top(1000));
+        const commitsByDate = nestByDate.entries(date.top(1000));
 
         div.each(function () {
-            var date = d3.select(this).selectAll(".date").data(commitsByDate, function (d) {
+            const date = d3.select(this).selectAll(".date").data(commitsByDate, function (d) {
                 return d.key;
             });
 
@@ -27,13 +27,13 @@ define(["d3"], function (d3) {
 
             date.exit().remove();
 
-            var commit = date.order().selectAll(".commit").data(function (d) {
+            const commit = date.order().selectAll(".commit").data(function (d) {
                 return d.values;
             }, function (d) {
                 return d.index;
             });
 
-            var commitEnter = commit.enter().append("div").attr("class", "commit");
+            const commitEnter = commit.enter().append("div").attr("class", "commit");
 
             commitEnter.append("div").attr("class", "time").text(function (d) {
                 return formatTime(d.date);

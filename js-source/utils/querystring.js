@@ -2,7 +2,7 @@ define(["../model/state"], function(state) {
     "use strict";
 
     function getQueryString() {
-        var array = [location.pathname.substring(location.pathname.lastIndexOf("/") + 1)];
+        const array = [location.pathname.substring(location.pathname.lastIndexOf("/") + 1)];
         if(array[0] === "") {
             array[0] = "index.html";
         }
@@ -21,7 +21,7 @@ define(["../model/state"], function(state) {
         if(state.endTime) {
             array.push(`endTime=${parseInt(state.endTime, 10)}`);
         }
-        var queryString = array.join("&");
+        let queryString = array.join("&");
         queryString = queryString.replace(/&/, "?");
         return queryString;
     }

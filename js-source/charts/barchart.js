@@ -1,37 +1,37 @@
 define(["d3", "history", "../utils/querystring", "../model/state"], function(d3, History, getQueryString, state) {
     "use strict";
 
-    var columnPadding = 1;
+    const columnPadding = 1;
 
     return function barChart(colWidth) {
         if(!barChart.id) barChart.id = 0;
 
-        var margin = {
+        let margin = {
             top: 0,
             right: 20,
             bottom: 20,
             left: 10
         };
 
-        var x;
-        var y = d3.scale.linear().range([100, 0]);
+        let x;
+        let y = d3.scale.linear().range([100, 0]);
         var id = barChart.id++;
-        var axis = d3.svg.axis().orient("bottom");
-        var brush = d3.svg.brush();
-        var brushDirty;
-        var dimension;
-        var group;
-        var round;
+        const axis = d3.svg.axis().orient("bottom");
+        const brush = d3.svg.brush();
+        let brushDirty;
+        let dimension;
+        let group;
+        let round;
 
         function chart(div) {
-            var width = x.range()[1];
-            var height = y.range()[0];
+            const width = x.range()[1];
+            const height = y.range()[0];
 
             y.domain([0, group.top(1)[0].value]);
 
             div.each(function() {
-                var div = d3.select(this.parentNode);
-                var g = div.select("g");
+                const div = d3.select(this.parentNode);
+                let g = div.select("g");
 
                 // Create the skeletal chart.
                 if(g.empty()) {
@@ -50,7 +50,7 @@ define(["d3", "history", "../utils/querystring", "../model/state"], function(d3,
                     g.append("g").attr("class", "axis").attr("transform", `translate(0,${height})`).call(axis);
 
                     // Initialize the brush component with pretty resize handles.
-                    var gBrush = g.append("g").attr("class", "brush").call(brush);
+                    const gBrush = g.append("g").attr("class", "brush").call(brush);
                     gBrush.selectAll("rect").attr("height", height);
                     gBrush.selectAll(".resize").append("path").attr("d", resizePath);
                 }
@@ -63,7 +63,7 @@ define(["d3", "history", "../utils/querystring", "../model/state"], function(d3,
                     if(brush.empty()) {
                         g.selectAll(`#clip-${id} rect`).attr("x", 0).attr("width", width);
                     } else {
-                        var extent = brush.extent();
+                        const extent = brush.extent();
                         g.selectAll(`#clip-${id} rect`).attr("x", x(extent[0])).attr("width", x(extent[1]) - x(extent[0]));
                     }
                 }
@@ -72,10 +72,10 @@ define(["d3", "history", "../utils/querystring", "../model/state"], function(d3,
             });
 
             function barPath(groups) {
-                var path = [];
-                var i = -1;
-                var n = groups.length;
-                var d;
+                const path = [];
+                let i = -1;
+                const n = groups.length;
+                let d;
                 while(++i < n) {
                     d = groups[i];
                     path.push("M", x(d.key), ",", height, "V", y(d.value), `h${colWidth - columnPadding}V`, height);
@@ -84,21 +84,21 @@ define(["d3", "history", "../utils/querystring", "../model/state"], function(d3,
             }
 
             function resizePath(d) {
-                var e = +(d == "e");
-                var x = e ? 1 : -1;
-                var y = height / 3;
+                const e = +(d == "e");
+                const x = e ? 1 : -1;
+                const y = height / 3;
                 return `M${.5 * x},${y}A6,6 0 0 ${e} ${6.5 * x},${y + 6}V${2 * y - 6}A6,6 0 0 ${e} ${.5 * x},${2 * y}ZM${2.5 * x},${y + 8}V${2 * y - 8}M${4.5 * x},${y + 8}V${2 * y - 8}`;
             }
         }
 
         brush.on("brushstart.chart", function() {
-            var div = d3.select(this.parentNode.parentNode.parentNode);
+            const div = d3.select(this.parentNode.parentNode.parentNode);
             div.select(".title a").style("display", null);
         });
 
         brush.on("brush.chart", function() {
-            var g = d3.select(this.parentNode);
-            var extent = brush.extent();
+            const g = d3.select(this.parentNode);
+            let extent = brush.extent();
             if(round) g.select(".brush").call(brush.extent(extent = extent.map(round))).selectAll(".resize").style("display", null);
             g.select(`#clip-${id} rect`).attr("x", x(extent[0])).attr("width", x(extent[1]) - x(extent[0]));
 
@@ -117,7 +117,7 @@ define(["d3", "history", "../utils/querystring", "../model/state"], function(d3,
 
         brush.on("brushend.chart", function() {
             if(brush.empty()) {
-                var div = d3.select(this.parentNode.parentNode.parentNode);
+                const div = d3.select(this.parentNode.parentNode.parentNode);
                 div.select(".title a").style("display", "none");
                 div.select(`#clip-${id} rect`).attr("x", null).attr("width", "100%");
 

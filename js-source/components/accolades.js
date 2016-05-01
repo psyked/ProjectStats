@@ -2,9 +2,9 @@ define(["jquery", "velocity", "handlebars", "nprogress"], function ($, velocity,
     "use strict";
 
     return function () {
-        var source = $("#accolade-template").html();
-        var badgeTemplate = Handlebars.compile(source);
-        var badgeData;
+        const source = $("#accolade-template").html();
+        const badgeTemplate = Handlebars.compile(source);
+        let badgeData;
 
         const EASING_PROPS = [0.645, 0.045, 0.355, 1];
         const EASING_TIME = 500;
@@ -26,7 +26,7 @@ define(["jquery", "velocity", "handlebars", "nprogress"], function ($, velocity,
         function displayBadges(jsonBadgeData) {
             badgeData = jsonBadgeData;
 
-            var tile = $(badgeTemplate(findABadge()));
+            const tile = $(badgeTemplate(findABadge()));
             tile.css('margin-top', '50%');
 
             $('.kiosk-container').append(tile);
@@ -46,8 +46,8 @@ define(["jquery", "velocity", "handlebars", "nprogress"], function ($, velocity,
                 easing: EASING_PROPS,
                 complete: function animationComplete() {
                     NProgress.set(0.0);
-                    var i = 0;
-                    var countDown = setInterval(function () {
+                    let i = 0;
+                    const countDown = setInterval(function () {
                         i++;
                         NProgress.set(i / (HOLD_CARD_TIME / 1000));
                     }, 1000);
@@ -75,7 +75,7 @@ define(["jquery", "velocity", "handlebars", "nprogress"], function ($, velocity,
         }
 
         function displayNewCard() {
-            var tile = $(badgeTemplate(findABadge()));
+            const tile = $(badgeTemplate(findABadge()));
             tile.css('margin-top', '50%');
 
             $('.kiosk-container').append(tile);
@@ -85,7 +85,7 @@ define(["jquery", "velocity", "handlebars", "nprogress"], function ($, velocity,
 
         function findABadge() {
             if (badgeData.length) {
-                var indexToReturn = Math.floor(Math.random() * badgeData.length);
+                const indexToReturn = Math.floor(Math.random() * badgeData.length);
                 return badgeData[indexToReturn];
             } else {
                 return badgeData;
