@@ -50,14 +50,14 @@ define(["jquery"], function ($) {
          */
         function onError(message) {
             $('.chromecast-link .material-icons').text("cast").removeClass("active");
-            appendMessage("onError: " + JSON.stringify(message));
+            appendMessage(`onError: ${JSON.stringify(message)}`);
         }
 
         /**
          * generic success callback
          */
         function onSuccess(message) {
-            appendMessage("onSuccess: " + message);
+            appendMessage(`onSuccess: ${message}`);
             $('.chromecast-link .material-icons').text("cast_connected").addClass("active");
         }
 
@@ -73,7 +73,7 @@ define(["jquery"], function ($) {
          * session listener during initialization
          */
         function sessionListener(e) {
-            appendMessage('New session ID:' + e.sessionId);
+            appendMessage(`New session ID:${e.sessionId}`);
             session = e;
             session.addUpdateListener(sessionUpdateListener);
             session.addMessageListener(namespace, receiverMessage);
@@ -84,7 +84,7 @@ define(["jquery"], function ($) {
          */
         function sessionUpdateListener(isAlive) {
             var message = isAlive ? 'Session Updated' : 'Session Removed';
-            message += ': ' + session.sessionId;
+            message += `: ${session.sessionId}`;
             appendMessage(message);
             if (!isAlive) {
                 session = null;
@@ -97,7 +97,7 @@ define(["jquery"], function ($) {
          * @param {string} message A message string
          */
         function receiverMessage(namespace, message) {
-            appendMessage("receiverMessage: " + namespace + ", " + message);
+            appendMessage(`receiverMessage: ${namespace}, ${message}`);
         }
 
         /**
@@ -127,12 +127,12 @@ define(["jquery"], function ($) {
          */
         function sendMessage(message) {
             if (session != null) {
-                session.sendMessage(namespace, message, onSuccess.bind(this, "Message sent: " + message), onError);
+                session.sendMessage(namespace, message, onSuccess.bind(this, `Message sent: ${message}`), onError);
             }
             else {
                 chrome.cast.requestSession(function (e) {
                     session = e;
-                    session.sendMessage(namespace, message, onSuccess.bind(this, "Message sent: " + message), onError);
+                    session.sendMessage(namespace, message, onSuccess.bind(this, `Message sent: ${message}`), onError);
                 }, onError);
             }
         }

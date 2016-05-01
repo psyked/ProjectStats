@@ -24,17 +24,17 @@ define(["d3"], function (d3) {
             });
 
             userList.select(".commit-count").text(function (d) {
-                return d.values.length.toLocaleString() + " commits";
+                return `${d.values.length.toLocaleString()} commits`;
             });
 
             userList.enter().append("div").attr("class", "user-info").attr("data-user", function (d) {
                 return d.values[0].author;
             }).attr("onclick", function (d) {
-                return "javascript:filterUser('" + d.values[0].author + "')";
+                return `javascript:filterUser('${d.values[0].author}')`;
             }).append("div").attr("class", "user-name").append("span").text(function (d) {
                 return d.values[0].author;
             }).append("span").attr("class", "commit-count").text(function (d) {
-                return d.values.length.toLocaleString() + " commits";
+                return `${d.values.length.toLocaleString()} commits`;
             });
 
 

@@ -35,19 +35,19 @@ define(["d3", "history", "../utils/querystring", "../model/state"], function(d3,
 
                 // Create the skeletal chart.
                 if(g.empty()) {
-                    div.select(".title").append("a").attr("href", "javascript:reset(" + id + ")").attr("class", "reset").text("Remove filter").style("display", "none");
+                    div.select(".title").append("a").attr("href", `javascript:reset(${id})`).attr("class", "reset").text("Remove filter").style("display", "none");
 
-                    g = div.append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                    g = div.append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
-                    g.append("clipPath").attr("id", "clip-" + id).append("rect").attr("width", width).attr("height", height);
+                    g.append("clipPath").attr("id", `clip-${id}`).append("rect").attr("width", width).attr("height", height);
 
                     g.selectAll(".bar").data(["background", "foreground"]).enter().append("path").attr("class", function(d) {
-                        return d + " bar";
+                        return `${d} bar`;
                     }).datum(group.all());
 
-                    g.selectAll(".foreground.bar").attr("clip-path", "url(#clip-" + id + ")");
+                    g.selectAll(".foreground.bar").attr("clip-path", `url(#clip-${id})`);
 
-                    g.append("g").attr("class", "axis").attr("transform", "translate(0," + height + ")").call(axis);
+                    g.append("g").attr("class", "axis").attr("transform", `translate(0,${height})`).call(axis);
 
                     // Initialize the brush component with pretty resize handles.
                     var gBrush = g.append("g").attr("class", "brush").call(brush);
@@ -61,10 +61,10 @@ define(["d3", "history", "../utils/querystring", "../model/state"], function(d3,
                     g.selectAll(".brush").call(brush);
                     div.select(".title a").style("display", brush.empty() ? "none" : null);
                     if(brush.empty()) {
-                        g.selectAll("#clip-" + id + " rect").attr("x", 0).attr("width", width);
+                        g.selectAll(`#clip-${id} rect`).attr("x", 0).attr("width", width);
                     } else {
                         var extent = brush.extent();
-                        g.selectAll("#clip-" + id + " rect").attr("x", x(extent[0])).attr("width", x(extent[1]) - x(extent[0]));
+                        g.selectAll(`#clip-${id} rect`).attr("x", x(extent[0])).attr("width", x(extent[1]) - x(extent[0]));
                     }
                 }
 
@@ -78,7 +78,7 @@ define(["d3", "history", "../utils/querystring", "../model/state"], function(d3,
                 var d;
                 while(++i < n) {
                     d = groups[i];
-                    path.push("M", x(d.key), ",", height, "V", y(d.value), "h" + (colWidth - columnPadding) + "V", height);
+                    path.push("M", x(d.key), ",", height, "V", y(d.value), `h${colWidth - columnPadding}V`, height);
                 }
                 return path.join("");
             }
@@ -87,7 +87,7 @@ define(["d3", "history", "../utils/querystring", "../model/state"], function(d3,
                 var e = +(d == "e");
                 var x = e ? 1 : -1;
                 var y = height / 3;
-                return "M" + (.5 * x) + "," + y + "A6,6 0 0 " + e + " " + (6.5 * x) + "," + (y + 6) + "V" + (2 * y - 6) + "A6,6 0 0 " + e + " " + (.5 * x) + "," + (2 * y) + "Z" + "M" + (2.5 * x) + "," + (y + 8) + "V" + (2 * y - 8) + "M" + (4.5 * x) + "," + (y + 8) + "V" + (2 * y - 8);
+                return `M${.5 * x},${y}A6,6 0 0 ${e} ${6.5 * x},${y + 6}V${2 * y - 6}A6,6 0 0 ${e} ${.5 * x},${2 * y}ZM${2.5 * x},${y + 8}V${2 * y - 8}M${4.5 * x},${y + 8}V${2 * y - 8}`;
             }
         }
 
@@ -100,7 +100,7 @@ define(["d3", "history", "../utils/querystring", "../model/state"], function(d3,
             var g = d3.select(this.parentNode);
             var extent = brush.extent();
             if(round) g.select(".brush").call(brush.extent(extent = extent.map(round))).selectAll(".resize").style("display", null);
-            g.select("#clip-" + id + " rect").attr("x", x(extent[0])).attr("width", x(extent[1]) - x(extent[0]));
+            g.select(`#clip-${id} rect`).attr("x", x(extent[0])).attr("width", x(extent[1]) - x(extent[0]));
 
             if(extent[0] < 24) {
                 state.startTime = extent[0];
@@ -119,7 +119,7 @@ define(["d3", "history", "../utils/querystring", "../model/state"], function(d3,
             if(brush.empty()) {
                 var div = d3.select(this.parentNode.parentNode.parentNode);
                 div.select(".title a").style("display", "none");
-                div.select("#clip-" + id + " rect").attr("x", null).attr("width", "100%");
+                div.select(`#clip-${id} rect`).attr("x", null).attr("width", "100%");
 
                 state.startTime = undefined;
                 state.endTime = undefined;
