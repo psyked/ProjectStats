@@ -7,19 +7,19 @@ define(["jquery"], function ($) {
 
             // handler for the 'ready' event
             castReceiverManager.onReady = function (event) {
-                console.log('Received Ready event: ' + JSON.stringify(event.data));
+                console.log(`Received Ready event: ${JSON.stringify(event.data)}`);
                 window.castReceiverManager.setApplicationState("Application status is ready...");
             };
 
             // handler for 'senderconnected' event
             castReceiverManager.onSenderConnected = function (event) {
-                console.log('Received Sender Connected event: ' + event.data);
+                console.log(`Received Sender Connected event: ${event.data}`);
                 console.log(window.castReceiverManager.getSender(event.data).userAgent);
             };
 
             // handler for 'senderdisconnected' event
             castReceiverManager.onSenderDisconnected = function (event) {
-                console.log('Received Sender Disconnected event: ' + event.data);
+                console.log(`Received Sender Disconnected event: ${event.data}`);
                 if (window.castReceiverManager.getSenders().length == 0) {
                     window.close();
                 }
@@ -27,8 +27,7 @@ define(["jquery"], function ($) {
 
             // handler for 'systemvolumechanged' event
             castReceiverManager.onSystemVolumeChanged = function (event) {
-                console.log('Received System Volume Changed event: ' + event.data['level'] + ' ' +
-                    event.data['muted']);
+                console.log(`Received System Volume Changed event: ${event.data['level']} ${event.data['muted']}`);
             };
 
             // create a CastMessageBus to handle messages for a custom namespace
@@ -36,7 +35,7 @@ define(["jquery"], function ($) {
 
             // handler for the CastMessageBus message event
             window.messageBus.onMessage = function (event) {
-                console.log('Message [' + event.senderId + ']: ' + event.data);
+                console.log(`Message [${event.senderId}]: ${event.data}`);
                 // display the message from the sender
                 displayText(event.data);
                 // inform all senders on the CastMessageBus of the incoming message event
