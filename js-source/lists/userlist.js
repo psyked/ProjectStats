@@ -46,6 +46,6 @@ define(["d3"], function (d3) {
 
     return {
         init: userList,
-        setData: setData
+        setData
     }
 });

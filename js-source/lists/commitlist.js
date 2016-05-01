@@ -51,6 +51,6 @@ define(["d3"], function (d3) {
 
     return {
         init: commitList,
-        setData: setData
+        setData
     }
 });
