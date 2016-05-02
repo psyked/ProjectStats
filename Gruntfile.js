@@ -2,12 +2,6 @@ var SASS_FILES = {
     './website/serve/css/main.css': './website/serve/scss/main.scss'
 };
 
-//var JAVASCRIPT_FILES = {
-//    './website/serve/js/main.js': ['./website/js-source/**/*.js']
-//};
-
-//var CRITICAL_CSS_FILE = './website/assets/css/<%= pkg.name %>/<%= pkg.name %>.critical.min.css';
-
 var WATCH_JAVASCRIPT_FILES = [
     './website/serve/js-source/**/*.js'
 ];
@@ -26,17 +20,9 @@ module.exports = function (grunt) {
     // time the events
     require('time-grunt')(grunt);
 
-
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-
-        // Task configuration.
-        //uglify: {
-        //    dist: {
-        //        files: JAVASCRIPT_FILES
-        //    }
-        //},
 
         autoprefixer: {
             options: {
@@ -46,22 +32,46 @@ module.exports = function (grunt) {
                 files: {
                     './website/serve/css/main.css': './website/serve/css/main.css'
                 }
+            }
+        },
+
+        copy: {
+            js: {
+                files: [
+                    // makes all src relative to cwd
+                    {expand: true, cwd: 'website/serve/js-source/', src: ['**'], dest: 'website/serve/js-source-es5/'},
+                ]
+            }
+        },
+
+        babel: {
+            options: {
+                // sourceMap: true,
+                presets: ['es2015']
             },
+            dist: {
+                files: [{
+                    expand: true,
+                    cwd: 'website/serve/js-source',
+                    src: ['**/*.js', '!libs/**/*.js'],
+                    dest: 'website/serve/js-source-es5'
+                }]
+            }
         },
 
         requirejs: {
-            compile: {
+            main: {
                 options: {
-                    mainConfigFile: "./website/serve/js-source/require-config.js",
-                    baseUrl: "./website/serve/js-source",
+                    mainConfigFile: "./website/serve/js-source-es5/require-config.js",
+                    baseUrl: "./website/serve/js-source-es5",
                     name: "main",
                     out: "./website/serve/js/main.js"
                 }
             },
-            compileagain: {
+            leaderboard: {
                 options: {
-                    mainConfigFile: "./website/serve/js-source/require-config.js",
-                    baseUrl: "./website/serve/js-source",
+                    mainConfigFile: "./website/serve/js-source-es5/require-config.js",
+                    baseUrl: "./website/serve/js-source-es5",
                     name: "leaderboard",
                     out: "./website/serve/js/leaderboard.js"
                 }
@@ -77,20 +87,10 @@ module.exports = function (grunt) {
             }
         },
 
-        //criticalcss: {
-        //    custom: {
-        //        options: {
-        //            url: SITE_URL,
-        //            filename: './website/assets/css/<%= pkg.name %>/<%= pkg.name %>.min.css',
-        //            outputfile: CRITICAL_CSS_FILE
-        //        }
-        //    }
-        //},
-
         watch: {
             uglify: {
                 files: WATCH_JAVASCRIPT_FILES,
-                tasks: ['requirejs']
+                tasks: ['babel', 'requirejs']
             },
 
             sass: {
@@ -102,5 +102,5 @@ module.exports = function (grunt) {
     });
 
     // Default task.
-    grunt.registerTask('default', ['requirejs', 'sass', 'watch']);
+    grunt.registerTask('default', ['copy', 'babel', 'requirejs', 'sass', 'watch']);
 };
