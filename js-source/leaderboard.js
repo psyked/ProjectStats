@@ -1,11 +1,11 @@
 require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
     "use strict";
 
-    var DAYS = 90;
-    var COUNT = 10;
+    const DAYS = 90;
+    const COUNT = 10;
 
     function renderLeaderboard(commits, avatars, panel) {
-        var units = d3.select(panel).attr('data-timeunit');
+        const units = d3.select(panel).attr('data-timeunit');
 
         if (units) {
             var previousResults = d3.nest()
@@ -16,9 +16,9 @@ require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
                     return leaves.length;
                 })
                 .entries(commits.filter(function (d) {
-                    var startDate = moment().add(-2, units).startOf(units);
-                    var endDate = moment().add(-1, units).startOf(units);
-                    var theDate = new Date(d.date);
+                    const startDate = moment().add(-2, units).startOf(units);
+                    const endDate = moment().add(-1, units).startOf(units);
+                    const theDate = new Date(d.date);
                     return !!(theDate > startDate && theDate < endDate);
                 }))
                 .sort(function (a, b) {
@@ -26,7 +26,7 @@ require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
                 });
         }
 
-        var results = d3.nest()
+        const results = d3.nest()
             .key(function (d) {
                 return d.author;
             })
@@ -35,9 +35,9 @@ require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
             })
             .entries(commits.filter(function (d) {
                 if (units) {
-                    var startDate = moment().add(-1, units).startOf(units);
-                    var endDate = moment().startOf(units);
-                    var theDate = new Date(d.date);
+                    const startDate = moment().add(-1, units).startOf(units);
+                    const endDate = moment().startOf(units);
+                    const theDate = new Date(d.date);
                     return !!(theDate > startDate && theDate < endDate);
                 } else {
                     return true;
@@ -49,10 +49,10 @@ require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
             .splice(0, COUNT);
 
         results.forEach(function (d, i) {
-            var moveIndex = "";
+            let moveIndex = "";
             if (units) {
-                var oldIndex = previousResults.length;
-                for (var j = 0; j < previousResults.length; j += 1) {
+                let oldIndex = previousResults.length;
+                for (let j = 0; j < previousResults.length; j += 1) {
                     if (previousResults[j]["key"] === d.key) {
                         oldIndex = j;
                     }
@@ -67,10 +67,10 @@ require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
             d3.select(panel).select('.list').append('div').attr("class", "commit").html(moveIndex + ' <span class="index">' + (i + 1) + '.</span> ' + '<span class="name">' + d.key + '</span> with ' + d.values.toLocaleString() + ' commits.');
         });
 
-        var dataToCheck = results;
+        const dataToCheck = results;
 
         if (dataToCheck[0]) {
-            var firstImage = "";
+            let firstImage = "";
             avatars.forEach(function (d, i) {
                 if (d.key === dataToCheck[0].key) {
                     firstImage = d.values[0].key;
@@ -80,7 +80,7 @@ require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
         }
 
         if (dataToCheck[1]) {
-            var secondImage = "";
+            let secondImage = "";
             avatars.forEach(function (d, i) {
                 if (d.key === dataToCheck[1].key) {
                     secondImage = d.values[0].key;
@@ -90,7 +90,7 @@ require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
         }
 
         if (dataToCheck[2]) {
-            var thirdImage = "";
+            let thirdImage = "";
             avatars.forEach(function (d, i) {
                 if (d.key === dataToCheck[2].key) {
                     thirdImage = d.values[0].key;
@@ -109,13 +109,13 @@ require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
     d3.csv("output.json", function (error, commits) {
         // exclude data from outside the last DAYS days
         commits = commits.filter(function (d) {
-            var startDate = moment().add(-DAYS, 'day').startOf('day');
-            var endDate = moment().startOf('day');
-            var theDate = new Date(d.date);
+            const startDate = moment().add(-DAYS, 'day').startOf('day');
+            const endDate = moment().startOf('day');
+            const theDate = new Date(d.date);
             return !!(theDate > startDate && theDate < endDate);
         });
 
-        var avatars = d3.nest()
+        const avatars = d3.nest()
             .key(function (d) {
                 return d.author;
             })
@@ -131,7 +131,7 @@ require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
             renderLeaderboard(commits, avatars, this);
         });
 
-        var userCommitDetails = d3.nest()
+        const userCommitDetails = d3.nest()
             .key(function (d) {
                 d.author = d.author.split("_").join(" ");
                 d.author = d.author.split("[").join("");
@@ -152,8 +152,8 @@ require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
                 return d3.ascending(a.key, b.key);
             });
 
-        var timeseries = ['x'];
-        var GRAPH_TIMESERIES_DAY = 30;
+        const timeseries = ['x'];
+        const GRAPH_TIMESERIES_DAY = 30;
         for (var i = GRAPH_TIMESERIES_DAY, l = 0; i > l; i--) {
             var date = moment().add(-i, 'days');
             if (!(date.format('E') == 6 || date.format('E') == 7)) {
@@ -161,13 +161,13 @@ require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
             }
         }
 
-        var types = {};
-        var groups = [];
-        var cols = [timeseries];
+        const types = {};
+        const groups = [];
+        const cols = [timeseries];
 
-        var row;
+        let row;
         for (i = 0, l = userCommitDetails.length; i < l; i++) {
-            var userDisplayName = userCommitDetails[i].key;
+            const userDisplayName = userCommitDetails[i].key;
             row = [userDisplayName];
             types[userDisplayName] = 'area-spline';
             groups.push(userDisplayName);
@@ -181,7 +181,7 @@ require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
             cols.push(row);
         }
 
-        var chart = c3.generate({
+        const chart = c3.generate({
             bindto: '.chart',
             data: {
                 x: 'x',
@@ -212,21 +212,21 @@ require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
             }
         });
 
-        var nextTimeout;
+        let nextTimeout;
 
-        var selectBar = function () {
+        const selectBar = function () {
             $('.area-button,.pie-button').removeClass('active');
             $('.bar-button').addClass('active');
             chart.transform('bar');
         };
 
-        var selectArea = function () {
+        const selectArea = function () {
             $('.bar-button,.pie-button').removeClass('active');
             $('.area-button').addClass('active');
             chart.transform('area-spline');
         };
 
-        var selectPie = function () {
+        const selectPie = function () {
             $('.area-button,.bar-button').removeClass('active');
             $('.pie-button').addClass('active');
             chart.transform('pie');
