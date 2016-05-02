@@ -64,7 +64,7 @@ require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
                     moveIndex = '<i class="fa fa-arrow-down move-icon down"></i>';
                 }
             }
-            d3.select(panel).select('.list').append('div').attr("class", "commit").html(moveIndex + ' <span class="index">' + (i + 1) + '.</span> ' + '<span class="name">' + d.key + '</span> with ' + d.values.toLocaleString() + ' commits.');
+            d3.select(panel).select('.list').append('div').attr("class", "commit").html(`${moveIndex} <span class="index">${i + 1}.</span> <span class="name">${d.key}</span> with ${d.values.toLocaleString()} commits.`);
         });
 
         const dataToCheck = results;
@@ -120,7 +120,7 @@ require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
                 return d.author;
             })
             .key(function (d) {
-                return "https://bitbucket.org/account/" + d.username + "/avatar/32/";
+                return `https://bitbucket.org/account/${d.username}/avatar/32/`;
             })
             .rollup(function (leaves) {
                 return leaves.author;
