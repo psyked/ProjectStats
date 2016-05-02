@@ -186,7 +186,7 @@ require(["d3", "c3", "moment", "jquery"], function (d3, c3, moment, $) {
             data: {
                 x: 'x',
                 xFormat: '%d-%m-%Y',
-                types: types,
+                types,
                 columns: cols,
                 groups: [groups]
             },
