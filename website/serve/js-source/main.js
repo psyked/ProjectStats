@@ -157,7 +157,7 @@ require([
             $(".user-info").removeClass("selected");
             state.selectedUsername = username;
             if (username) {
-                $(".user-info[data-user='" + username + "']").addClass("selected");
+                $(`.user-info[data-user='${username}']`).addClass("selected");
                 user.filterFunction(function (d) {
                     return d == username;
                 });
