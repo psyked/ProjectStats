@@ -25,7 +25,6 @@ require([
     })(window);
 
     d3.csv("output.json", function (error, commits) {
-
         // exclude data from outside the last DAYS days
         commits = commits.filter(function (d) {
             const startDate = moment().add(-DAYS, 'day').startOf('day');//(new Date() - 1000 * 60 * 60 * 24 * DAYS);
@@ -51,21 +50,27 @@ require([
         });
 
         // Create the crossfilter for the relevant dimensions and groups.
-        const commit = crossfilter(commits),
-              all = commit.groupAll(),
-              //.filter([new Date() - 1000 * 60 * 60 * 24 * 365, new Date()]),
-              date = commit.dimension(function (d) {
-                      return d.date;
-                  }),
-              user = commit.dimension(function (d) {
-                  return d.author;
-              }),
-              dates = date.group(d3.time.day),
-              weeks = date.group(d3.time.week),
-              hour = commit.dimension(function (d) {
-                      return d.date.getHours() + d.date.getMinutes() / 60;
-                  }),
-              hours = hour.group(Math.floor);
+        const commit = crossfilter(commits);
+
+        const all = commit.groupAll();
+
+        //.filter([new Date() - 1000 * 60 * 60 * 24 * 365, new Date()]),
+        const date = commit.dimension(function (d) {
+                return d.date;
+            });
+
+        const user = commit.dimension(function (d) {
+            return d.author;
+        });
+
+        const dates = date.group(d3.time.day);
+        const weeks = date.group(d3.time.week);
+
+        const hour = commit.dimension(function (d) {
+                return d.date.getHours() + d.date.getMinutes() / 60;
+            });
+
+        const hours = hour.group(Math.floor);
 
         const dateColWidth = ($(".graph.date").width() - 30) / DAYS;
         const timeColWidth = ($(".graph.time").width() - 30) / 24;
@@ -170,7 +175,8 @@ require([
             renderAll();
         };
 
-        let dateFilters, timeFilters;
+        let dateFilters;
+        let timeFilters;
 
         if (state.startDate && state.endDate) {
             dateFilters = [state.startDate, state.endDate];
