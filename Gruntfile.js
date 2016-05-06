@@ -64,8 +64,8 @@ module.exports = function (grunt) {
                 options: {
                     mainConfigFile: "./website/serve/js-source-es5/require-config.js",
                     baseUrl: "./website/serve/js-source-es5",
-                    name: "main",
-                    out: "./website/serve/js/main.js"
+                    name: "timeline",
+                    out: "./website/serve/js/timeline.js"
                 }
             },
             leaderboard: {
@@ -74,6 +74,14 @@ module.exports = function (grunt) {
                     baseUrl: "./website/serve/js-source-es5",
                     name: "leaderboard",
                     out: "./website/serve/js/leaderboard.js"
+                }
+            },
+            kiosk: {
+                options: {
+                    mainConfigFile: "./website/serve/js-source-es5/require-config.js",
+                    baseUrl: "./website/serve/js-source-es5",
+                    name: "kiosk",
+                    out: "./website/serve/js/kiosk.js"
                 }
             }
         },
