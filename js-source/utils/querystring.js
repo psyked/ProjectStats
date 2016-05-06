@@ -1,3 +1,4 @@
+/* globals require, define */
 define(["../model/state"], function(state) {
     "use strict";
 
