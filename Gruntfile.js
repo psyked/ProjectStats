@@ -56,6 +56,14 @@ module.exports = function (grunt) {
                     src: ['**/*.js', '!libs/**/*.js'],
                     dest: 'website/serve/js-source-es5'
                 }]
+            },
+            serviceworker: {
+                files: [{
+                    expand: true,
+                    cwd: 'website/serve/js-source',
+                    src: ['serviceworker.js'],
+                    dest: 'website/serve'
+                }]
             }
         },
 
