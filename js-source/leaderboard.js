@@ -1,6 +1,16 @@
 require(["d3", "c3", "moment", "jquery", "components/commits-timeline"], function (d3, c3, moment, $, commitsTimeline) {
     "use strict";
 
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./serviceworker.js').then(function(registration) {
+            // Registration was successful
+            console.log('ServiceWorker registration successful with scope: ',    registration.scope);
+        }).catch(function(err) {
+            // registration failed :(
+            console.log('ServiceWorker registration failed: ', err);
+        });
+    }
+
     const DAYS = 90;
     const COUNT = 10;
 
