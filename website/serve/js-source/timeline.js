@@ -13,6 +13,11 @@ require([
 ], function ($, crossfilter, d3, c3, History, barChart, getQueryString, state, commitList, userList, moment) {
     "use strict";
 
+    var host = "psyked.github.io";
+    if((host == window.location.host) && (window.location.protocol != "https:")) {
+        window.location.protocol = "https";
+    }
+    
     const DAYS = 90;
 
     (function (window, undefined) {
