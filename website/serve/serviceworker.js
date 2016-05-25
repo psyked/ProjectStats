@@ -28,7 +28,7 @@ self.addEventListener("fetch", function (event) {
         return;
     }
 
-    event.respondWith(fetch(request).then(function (response) {
+    event.respondWith(fetch(event.request).then(function (response) {
         return caches.open(CACHE_NAME).then(function (cache) {
             var cacheCopy = response.clone();
             return cache.put(event.request, cacheCopy);
