@@ -1,10 +1,10 @@
 require(["d3", "c3", "moment", "jquery", "components/commits-timeline"], function (d3, c3, moment, $, commitsTimeline) {
     "use strict";
 
-    // var host = "psyked.github.io";
-    // if((host == window.location.host) && (window.location.protocol != "https:")) {
-    //     window.location.protocol = "https";
-    // }
+    var host = "psyked.github.io";
+    if((host == window.location.host) && (window.location.protocol != "https:")) {
+        window.location.protocol = "https";
+    }
     
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./serviceworker.js').then(function(registration) {
