@@ -7,9 +7,10 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
+    font-size: 2rem;
 
     .accolade {
-        max-width: 50%;
+        //max-width: 50%;
         background: $flat-wet-asphalt;
         order: 0;
         flex: 1 1 auto;
@@ -20,6 +21,7 @@
         padding: 30px;
         line-height: 1.4em;
         color: $flat-clouds;
+        margin: 1rem;
 
         hr {
             color: $flat-midnight-blue;
@@ -36,8 +38,13 @@
             height: 100px;
             line-height: 100px;
             align-items: center;
-            float: left;
+            //float: left;
             padding: 0px 20px 0px 0px;
+            position: absolute;
+            left: 50%;
+            transform: translateY(-50%) translateX(-50%);
+            border-radius: 50%;
+            border: 1rem solid white;
 
             img {
                 vertical-align: middle;
