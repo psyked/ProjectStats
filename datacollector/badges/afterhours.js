@@ -11,8 +11,8 @@ function parseCommit(badges, commit, callback) {
         var theTime = moment(moment(commit.date).utc().format("H:mm"), "H:mm").utc();
         //var isOutOfHours = theTime.isBefore(startTime) || theTime.isAfter(endTime);
         var isWeekday = (day < 6) && (day > 0);
-        if (isWeekday && commit.author.user) {
-            if (theTime.isAfter(endTime)) {
+        if(isWeekday && commit.author.user) {
+            if(theTime.isAfter(endTime)) {
                 badges.push({
                     "badge_img": "./img/after-hours.jpg",
                     "title": "After Hours",
@@ -26,7 +26,7 @@ function parseCommit(badges, commit, callback) {
                         }
                     ]
                 });
-            } else if (theTime.isBefore(startTime) && theTime.isBefore(moment("4:00am", "hh:mma").utc())) {
+            } else if(theTime.isBefore(startTime) && theTime.isBefore(moment("4:00am", "hh:mma").utc())) {
                 badges.push({
                     "badge_img": "./img/before-hours.jpg",
                     "title": "Early Morning",
@@ -43,7 +43,7 @@ function parseCommit(badges, commit, callback) {
             }
         }
         callback();
-    } catch (error) {
+    } catch(error) {
         console.log(error);
     }
 }

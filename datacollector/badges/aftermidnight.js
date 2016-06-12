@@ -11,7 +11,7 @@ function parseCommit(badges, commit, callback) {
         var theTime = moment(moment(commit.date).utc().format("h:mma"), "h:mma").utc();
         var isOutOfHours = theTime.isBefore(startTime) && theTime.isAfter(endTime);
         var isWeekday = (day < 6) && (day > 0);
-        if (isWeekday && isOutOfHours && commit.author.user) {
+        if(isWeekday && isOutOfHours && commit.author.user) {
             badges.push({
                 "badge_img": "./img/after-midnight.jpg",
                 "title": "The Witching Hour",
@@ -27,7 +27,7 @@ function parseCommit(badges, commit, callback) {
             });
         }
         callback();
-    } catch (error) {
+    } catch(error) {
         console.log(error);
     }
 }

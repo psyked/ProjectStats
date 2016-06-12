@@ -1,7 +1,7 @@
-define(["jquery", "velocity", "handlebars", "nprogress"], function ($, velocity, Handlebars, NProgress) {
+define(["jquery", "velocity", "handlebars", "nprogress"], function($, velocity, Handlebars, NProgress) {
     "use strict";
 
-    return function () {
+    return function() {
         const source = $("#accolade-template").html();
         const badgeTemplate = Handlebars.compile(source);
         let badgeData;
@@ -47,12 +47,12 @@ define(["jquery", "velocity", "handlebars", "nprogress"], function ($, velocity,
                 complete() {
                     NProgress.set(0.0);
                     let i = 0;
-                    const countDown = setInterval(function () {
+                    const countDown = setInterval(function() {
                         i++;
                         NProgress.set(i / (HOLD_CARD_TIME / 1000));
                     }, 1000);
 
-                    setTimeout(function () {
+                    setTimeout(function() {
                         clearInterval(countDown);
                         NProgress.set(1.0);
                         hideCard(tile);
@@ -84,7 +84,7 @@ define(["jquery", "velocity", "handlebars", "nprogress"], function ($, velocity,
         }
 
         function findABadge() {
-            if (badgeData.length) {
+            if(badgeData.length) {
                 const indexToReturn = Math.floor(Math.random() * badgeData.length);
                 return badgeData[indexToReturn];
             } else {

@@ -10,7 +10,7 @@ require([
     "lists/commitlist",
     "lists/userlist",
     "moment"
-], function ($, crossfilter, d3, c3, History, barChart, getQueryString, state, commitList, userList, moment) {
+], function($, crossfilter, d3, c3, History, barChart, getQueryString, state, commitList, userList, moment) {
     "use strict";
 
     // var host = "psyked.github.io";
@@ -18,30 +18,30 @@ require([
     //     window.location.protocol = "https";
     // }
 
-    if ('serviceWorker' in navigator) {
+    if('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./serviceworker.js').then(function(registration) {
             // Registration was successful
-            console.log('ServiceWorker registration successful with scope: ',    registration.scope);
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
         }).catch(function(err) {
             // registration failed :(
             console.log('ServiceWorker registration failed: ', err);
         });
     }
-    
+
     const DAYS = 90;
 
-    (function (window, undefined) {
+    (function(window, undefined) {
 
         // Bind to StateChange Event
-        History.Adapter.bind(window, 'statechange', function () { // Note: We are using statechange instead of popstate
+        History.Adapter.bind(window, 'statechange', function() { // Note: We are using statechange instead of popstate
             const State = History.getState(); // Note: We are using History.getState() instead of event.state
         });
 
     })(window);
 
-    d3.csv("output.json", function (error, commits) {
+    d3.csv("output.json", function(error, commits) {
         // exclude data from outside the last DAYS days
-        commits = commits.filter(function (d) {
+        commits = commits.filter(function(d) {
             const startDate = moment().add(-DAYS, 'day').startOf('day');//(new Date() - 1000 * 60 * 60 * 24 * DAYS);
             const endDate = moment().startOf('day');//(new Date());
             const theDate = parseDate(d.date);
@@ -49,7 +49,7 @@ require([
             d3.select(".date-from").text(moment(startDate).format("LL"));
             d3.select(".date-to").text(moment(endDate).format("LL"));
 
-            if (theDate > startDate && theDate < endDate) {
+            if(theDate > startDate && theDate < endDate) {
                 return true;
             }
             return false;
@@ -59,7 +59,7 @@ require([
         const formatNumber = d3.format(",d");
 
         // A little coercion, since the CSV is untyped.
-        commits.forEach(function (d, i) {
+        commits.forEach(function(d, i) {
             d.index = i;
             d.date = parseDate(d.date);
         });
@@ -70,20 +70,20 @@ require([
         const all = commit.groupAll();
 
         //.filter([new Date() - 1000 * 60 * 60 * 24 * 365, new Date()]),
-        const date = commit.dimension(function (d) {
-                return d.date;
-            });
+        const date = commit.dimension(function(d) {
+            return d.date;
+        });
 
-        const user = commit.dimension(function (d) {
+        const user = commit.dimension(function(d) {
             return d.author;
         });
 
         const dates = date.group(d3.time.day);
         const weeks = date.group(d3.time.week);
 
-        const hour = commit.dimension(function (d) {
-                return d.date.getHours() + d.date.getMinutes() / 60;
-            });
+        const hour = commit.dimension(function(d) {
+            return d.date.getHours() + d.date.getMinutes() / 60;
+        });
 
         const hours = hour.group(Math.floor);
 
@@ -112,7 +112,7 @@ require([
         // Given our array of charts, which we assume are in the same order as the
         // .chart elements in the DOM, bind the charts to the DOM and render them.
         // We also listen to the chart's brush events to update the display.
-        const chart = d3.selectAll(".chart .placeholder").data(charts).each(function (chart) {
+        const chart = d3.selectAll(".chart .placeholder").data(charts).each(function(chart) {
             chart.on("brush", renderAll).on("brushend", renderAll);
         });
 
@@ -148,16 +148,16 @@ require([
             return new Date(d);
         }
 
-        window.filter = function (filters) {
-            filters.forEach(function (d, i) {
-                if (d) {
+        window.filter = function(filters) {
+            filters.forEach(function(d, i) {
+                if(d) {
                     charts[i].filter(d);
                 }
             });
             renderAll();
         };
 
-        window.reset = function (i) {
+        window.reset = function(i) {
             charts[i].filter(null);
 
             //            if (i == 0) {
@@ -173,12 +173,12 @@ require([
             renderAll();
         };
 
-        window.filterUser = function (username) {
+        window.filterUser = function(username) {
             $(".user-info").removeClass("selected");
             state.selectedUsername = username;
-            if (username) {
+            if(username) {
                 $(`.user-info[data-user='${username}']`).addClass("selected");
-                user.filterFunction(function (d) {
+                user.filterFunction(function(d) {
                     return d == username;
                 });
                 $(".panel.user .reset").show();
@@ -193,15 +193,15 @@ require([
         let dateFilters;
         let timeFilters;
 
-        if (state.startDate && state.endDate) {
+        if(state.startDate && state.endDate) {
             dateFilters = [state.startDate, state.endDate];
         }
 
-        if (state.startTime && state.endTime) {
+        if(state.startTime && state.endTime) {
             timeFilters = [state.startTime, state.endTime];
         }
 
-        if (dateFilters || timeFilters) {
+        if(dateFilters || timeFilters) {
             filter([dateFilters, timeFilters]);
         }
     });

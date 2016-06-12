@@ -6,14 +6,14 @@ var users = {};
 
 function parseCommit(badges, commit, callback) {
     try {
-        if (commit.author.user && commit.author.user.username) {
-            if (!users[commit.author.user.username]) {
+        if(commit.author.user && commit.author.user.username) {
+            if(!users[commit.author.user.username]) {
                 users[commit.author.user.username] = 0;
             }
-            if (commit.message.toLowerCase().indexOf("merge") !== -1) {
+            if(commit.message.toLowerCase().indexOf("merge") !== -1) {
                 users[commit.author.user.username]++;
             }
-            if (users[commit.author.user.username] > threshold) {
+            if(users[commit.author.user.username] > threshold) {
                 badges.push({
                     "badge_img": "./img/merge-badge.svg",
                     "title": "Merge Master",
@@ -31,7 +31,7 @@ function parseCommit(badges, commit, callback) {
             }
         }
         callback();
-    } catch (error) {
+    } catch(error) {
         console.log(error);
     }
 }

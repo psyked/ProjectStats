@@ -1,7 +1,7 @@
 /* globals require, define */
-define([], function () {
+define([], function() {
     return function toTitleCase(str) {
-        return str.replace(/\b./g, function (m) {
+        return str.replace(/\b./g, function(m) {
             return m.toUpperCase();
         });
     }

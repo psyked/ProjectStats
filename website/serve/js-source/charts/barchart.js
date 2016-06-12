@@ -4,7 +4,9 @@ define(["d3", "history", "../utils/querystring", "../model/state"], function(d3,
     const columnPadding = 1;
 
     return function barChart(colWidth) {
-        if(!barChart.id) barChart.id = 0;
+        if(!barChart.id) {
+            barChart.id = 0;
+        }
 
         let margin = {
             top: 0,
@@ -99,7 +101,9 @@ define(["d3", "history", "../utils/querystring", "../model/state"], function(d3,
         brush.on("brush.chart", function() {
             const g = d3.select(this.parentNode);
             let extent = brush.extent();
-            if(round) g.select(".brush").call(brush.extent(extent = extent.map(round))).selectAll(".resize").style("display", null);
+            if(round) {
+                g.select(".brush").call(brush.extent(extent = extent.map(round))).selectAll(".resize").style("display", null);
+            }
             g.select(`#clip-${id} rect`).attr("x", x(extent[0])).attr("width", x(extent[1]) - x(extent[0]));
 
             if(extent[0] < 24) {
@@ -133,13 +137,17 @@ define(["d3", "history", "../utils/querystring", "../model/state"], function(d3,
         });
 
         chart.margin = function(_) {
-            if(!arguments.length) return margin;
+            if(!arguments.length) {
+                return margin;
+            }
             margin = _;
             return chart;
         };
 
         chart.x = function(_) {
-            if(!arguments.length) return x;
+            if(!arguments.length) {
+                return x;
+            }
             x = _;
             axis.scale(x);
             brush.x(x);
@@ -147,13 +155,17 @@ define(["d3", "history", "../utils/querystring", "../model/state"], function(d3,
         };
 
         chart.y = function(_) {
-            if(!arguments.length) return y;
+            if(!arguments.length) {
+                return y;
+            }
             y = _;
             return chart;
         };
 
         chart.dimension = function(_) {
-            if(!arguments.length) return dimension;
+            if(!arguments.length) {
+                return dimension;
+            }
             dimension = _;
             return chart;
         };
@@ -171,13 +183,17 @@ define(["d3", "history", "../utils/querystring", "../model/state"], function(d3,
         };
 
         chart.group = function(_) {
-            if(!arguments.length) return group;
+            if(!arguments.length) {
+                return group;
+            }
             group = _;
             return chart;
         };
 
         chart.round = function(_) {
-            if(!arguments.length) return round;
+            if(!arguments.length) {
+                return round;
+            }
             round = _;
             return chart;
         };

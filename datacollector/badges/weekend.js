@@ -7,7 +7,7 @@ function parseCommit(badges, commit, callback) {
         var commitDate = new Date(commit.date);
         var day = commitDate.getDay();
         var isWeekend = (day == 6) || (day == 0);
-        if (isWeekend && commit.author.user) {
+        if(isWeekend && commit.author.user) {
             badges.push({
                 "badge_img": "./img/weekend.jpg",
                 "title": "Weekend Coder",
@@ -23,7 +23,7 @@ function parseCommit(badges, commit, callback) {
             });
         }
         callback();
-    } catch (error) {
+    } catch(error) {
         console.log(error);
     }
 }

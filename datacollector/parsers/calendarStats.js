@@ -12,18 +12,18 @@ var teamMembers = [];
  */
 function parseCommit(commit) {
 
-    if (!results[commit.date]) {
+    if(!results[commit.date]) {
         results[commit.date] = 0;
     }
     results[commit.date]++;
 
     var rtn;
-    if (commit.author && commit.author.user && commit.author.user.display_name) {
-        if (teamMembers.indexOf(commit.author.user.username) !== -1) {
-            if (!userCommits[commit.author.user.display_name]) {
+    if(commit.author && commit.author.user && commit.author.user.display_name) {
+        if(teamMembers.indexOf(commit.author.user.username) !== -1) {
+            if(!userCommits[commit.author.user.display_name]) {
                 userCommits[commit.author.user.display_name] = {};
             }
-            if (!userCommits[commit.author.user.display_name][commit.date]) {
+            if(!userCommits[commit.author.user.display_name][commit.date]) {
                 userCommits[commit.author.user.display_name][commit.date] = 0;
             }
             userCommits[commit.author.user.display_name][commit.date]++;

@@ -1,15 +1,15 @@
-require(["d3", "c3", "moment", "jquery", "components/commits-timeline"], function (d3, c3, moment, $, commitsTimeline) {
+require(["d3", "c3", "moment", "jquery", "components/commits-timeline"], function(d3, c3, moment, $, commitsTimeline) {
     "use strict";
 
     // var host = "psyked.github.io";
     // if((host == window.location.host) && (window.location.protocol != "https:")) {
     //     window.location.protocol = "https";
     // }
-    
-    if ('serviceWorker' in navigator) {
+
+    if('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./serviceworker.js').then(function(registration) {
             // Registration was successful
-            console.log('ServiceWorker registration successful with scope: ',    registration.scope);
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
         }).catch(function(err) {
             // registration failed :(
             console.log('ServiceWorker registration failed: ', err);
@@ -22,34 +22,34 @@ require(["d3", "c3", "moment", "jquery", "components/commits-timeline"], functio
     function renderLeaderboard(commits, avatars, panel) {
         const units = d3.select(panel).attr('data-timeunit');
 
-        if (units) {
+        if(units) {
             var previousResults = d3.nest()
-                .key(function (d) {
+                .key(function(d) {
                     return d.author;
                 })
-                .rollup(function (leaves) {
+                .rollup(function(leaves) {
                     return leaves.length;
                 })
-                .entries(commits.filter(function (d) {
+                .entries(commits.filter(function(d) {
                     const startDate = moment().add(-2, units).startOf(units);
                     const endDate = moment().add(-1, units).startOf(units);
                     const theDate = new Date(d.date);
                     return !!(theDate > startDate && theDate < endDate);
                 }))
-                .sort(function (a, b) {
+                .sort(function(a, b) {
                     return d3.descending(a.values, b.values);
                 });
         }
 
         const results = d3.nest()
-            .key(function (d) {
+            .key(function(d) {
                 return d.author;
             })
-            .rollup(function (leaves) {
+            .rollup(function(leaves) {
                 return leaves.length;
             })
-            .entries(commits.filter(function (d) {
-                if (units) {
+            .entries(commits.filter(function(d) {
+                if(units) {
                     const startDate = moment().add(-1, units).startOf(units);
                     const endDate = moment().startOf(units);
                     const theDate = new Date(d.date);
@@ -58,24 +58,24 @@ require(["d3", "c3", "moment", "jquery", "components/commits-timeline"], functio
                     return true;
                 }
             }))
-            .sort(function (a, b) {
+            .sort(function(a, b) {
                 return d3.descending(a.values, b.values);
             })
             .splice(0, COUNT);
 
-        results.forEach(function (d, i) {
+        results.forEach(function(d, i) {
             let moveIndex = "";
-            if (units) {
+            if(units) {
                 let oldIndex = previousResults.length;
-                for (let j = 0; j < previousResults.length; j += 1) {
-                    if (previousResults[j]["key"] === d.key) {
+                for(let j = 0; j < previousResults.length; j += 1) {
+                    if(previousResults[j]["key"] === d.key) {
                         oldIndex = j;
                     }
                 }
                 moveIndex = '<i class="fa fa-minus move-icon"></i>';
-                if (oldIndex > i) {
+                if(oldIndex > i) {
                     moveIndex = '<i class="fa fa-arrow-up move-icon up"></i>';
-                } else if (oldIndex < i) {
+                } else if(oldIndex < i) {
                     moveIndex = '<i class="fa fa-arrow-down move-icon down"></i>';
                 }
             }
@@ -84,30 +84,30 @@ require(["d3", "c3", "moment", "jquery", "components/commits-timeline"], functio
 
         const dataToCheck = results;
 
-        if (dataToCheck[0]) {
+        if(dataToCheck[0]) {
             let firstImage = "";
-            avatars.forEach(function (d, i) {
-                if (d.key === dataToCheck[0].key) {
+            avatars.forEach(function(d, i) {
+                if(d.key === dataToCheck[0].key) {
                     firstImage = d.values[0].key;
                 }
             });
             d3.select(panel).select('.avatars-area .first').append('img').attr('src', firstImage);
         }
 
-        if (dataToCheck[1]) {
+        if(dataToCheck[1]) {
             let secondImage = "";
-            avatars.forEach(function (d, i) {
-                if (d.key === dataToCheck[1].key) {
+            avatars.forEach(function(d, i) {
+                if(d.key === dataToCheck[1].key) {
                     secondImage = d.values[0].key;
                 }
             });
             d3.select(panel).select('.avatars-area .second').append('img').attr('src', secondImage);
         }
 
-        if (dataToCheck[2]) {
+        if(dataToCheck[2]) {
             let thirdImage = "";
-            avatars.forEach(function (d, i) {
-                if (d.key === dataToCheck[2].key) {
+            avatars.forEach(function(d, i) {
+                if(d.key === dataToCheck[2].key) {
                     thirdImage = d.values[0].key;
                 }
             });
@@ -115,9 +115,9 @@ require(["d3", "c3", "moment", "jquery", "components/commits-timeline"], functio
         }
     }
 
-    d3.csv("output.json", function (error, commits) {
+    d3.csv("output.json", function(error, commits) {
         // exclude data from outside the last DAYS days
-        commits = commits.filter(function (d) {
+        commits = commits.filter(function(d) {
             const startDate = moment().add(-DAYS, 'day').startOf('day');
             const endDate = moment().startOf('day');
             const theDate = new Date(d.date);
@@ -125,18 +125,18 @@ require(["d3", "c3", "moment", "jquery", "components/commits-timeline"], functio
         });
 
         const avatars = d3.nest()
-            .key(function (d) {
+            .key(function(d) {
                 return d.author;
             })
-            .key(function (d) {
+            .key(function(d) {
                 return `https://bitbucket.org/account/${d.username}/avatar/32/`;
             })
-            .rollup(function (leaves) {
+            .rollup(function(leaves) {
                 return leaves.author;
             })
             .entries(commits);
 
-        d3.selectAll('.toplist .panel').each(function (d, i) {
+        d3.selectAll('.toplist .panel').each(function(d, i) {
             renderLeaderboard(commits, avatars, this);
         });
 

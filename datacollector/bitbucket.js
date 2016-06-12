@@ -58,7 +58,7 @@ var argv = require('minimist')(process.argv.slice(2), {
     }
 });
 
-if (!argv.owner) {
+if(!argv.owner) {
     console.error('\033[31mError:\033[39m No Bitbucket Account specified!');
     return;
 }
@@ -83,19 +83,19 @@ var allSlugs = [],
 // }
 
 function parseRepoInfoPage(body) {
-    for (var i = 0, l = body.values.length; i < l; i++) {
+    for(var i = 0, l = body.values.length; i < l; i++) {
         var repo = body.values[i];
 
         next();
 
         function next() {
-            if (Date.parse(repo.updated_on) > startDate) {
+            if(Date.parse(repo.updated_on) > startDate) {
                 allSlugs.push(repo.links.commits.href);
             }
         }
     }
 
-    if (body.next) {
+    if(body.next) {
         loadRepoInfoPage(body.next);
     } else {
         calendarStats.initOutput(finishedLoadingRepos);
@@ -120,7 +120,7 @@ function finishedLoadingAllData() {
 }
 
 function loadNextItemInQueue() {
-    if (allSlugs[requestsIndex]) {
+    if(allSlugs[requestsIndex]) {
         console.log("\033[36mInfo:\033[39m Loading request " + (requestsIndex + 1) + " of " + allSlugs.length);
         makeCachedRequest(allSlugs[requestsIndex], parseRepoCommitDetails, parseRepoCommitError);
         requestsIndex++;
@@ -130,43 +130,43 @@ function loadNextItemInQueue() {
 function parseRepoCommitDetails(body) {
     var lastCommitIsWithinDateRange = false;
 
-    for (var i = 0, l = body.values.length; i < l; i++) {
+    for(var i = 0, l = body.values.length; i < l; i++) {
         /** @type {Commit} */
         var commit = body.values[i];
         var commitDate = Date.parse(commit.date);
 
-        if (commitDate > startDate) {
+        if(commitDate > startDate) {
             lastCommitIsWithinDateRange = true;
 
             var rtn;
             rtn = calendarStats.parseCommit(commit);
             async.parallel([
-                function (callback) {
+                function(callback) {
                     weekend.parseCommit(allBadges, commit, callback);
                 },
-                function (callback) {
+                function(callback) {
                     afterhours.parseCommit(allBadges, commit, callback);
                 },
-                function (callback) {
+                function(callback) {
                     aftermidnight.parseCommit(allBadges, commit, callback);
                 },
-                function (callback) {
+                function(callback) {
                     mergemaster.parseCommit(allBadges, commit, callback);
                 }
             ], next);
 
             function next() {
-                if (rtn) {
+                if(rtn) {
                     fs.appendFileSync(outputFile, rtn);
                 }
             }
         }
     }
 
-    if (body.next && lastCommitIsWithinDateRange == true) {
+    if(body.next && lastCommitIsWithinDateRange == true) {
         allSlugs.push(body.next);
     } else {
-        if (requestsIndex == allSlugs.length) {
+        if(requestsIndex == allSlugs.length) {
             finishedLoadingAllData();
         }
     }
@@ -180,7 +180,7 @@ function parseRepoCommitError() {
 
 // make a request to fetch the team membership listing
 require('./parsers/teamMembership')(owner)
-    .then(function (userlist) {
+    .then(function(userlist) {
         // console.log(userlist);
         calendarStats.setTeamMembers(userlist);
         loadRepoInfoPage(url);
