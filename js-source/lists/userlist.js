@@ -1,6 +1,6 @@
-define(["d3"], function (d3) {
+define(["d3"], function(d3) {
 
-    const nestByUser = d3.nest().key(function (d) {
+    const nestByUser = d3.nest().key(function(d) {
         return d.author;
     });
 
@@ -13,27 +13,27 @@ define(["d3"], function (d3) {
     function userList(div) {
         const commitsByUser = nestByUser.entries(date.top(100000));
 
-        div.each(function () {
+        div.each(function() {
 
-            commitsByUser.sort(function (a, b) {
+            commitsByUser.sort(function(a, b) {
                 return b.values.length > a.values.length ? 1 : -1;
             });
 
-            const userList = d3.select(this).selectAll(".user-info").data(commitsByUser, function (d) {
+            const userList = d3.select(this).selectAll(".user-info").data(commitsByUser, function(d) {
                 return d.key;
             });
 
-            userList.select(".commit-count").text(function (d) {
+            userList.select(".commit-count").text(function(d) {
                 return `${d.values.length.toLocaleString()} commits`;
             });
 
-            userList.enter().append("div").attr("class", "user-info").attr("data-user", function (d) {
+            userList.enter().append("div").attr("class", "user-info").attr("data-user", function(d) {
                 return d.values[0].author;
-            }).attr("onclick", function (d) {
+            }).attr("onclick", function(d) {
                 return `javascript:filterUser('${d.values[0].author}')`;
-            }).append("div").attr("class", "user-name").append("span").text(function (d) {
+            }).append("div").attr("class", "user-name").append("span").text(function(d) {
                 return d.values[0].author;
-            }).append("span").attr("class", "commit-count").text(function (d) {
+            }).append("span").attr("class", "commit-count").text(function(d) {
                 return `${d.values.length.toLocaleString()} commits`;
             });
 

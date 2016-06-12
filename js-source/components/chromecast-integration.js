@@ -1,11 +1,11 @@
-define(["jquery"], function ($) {
-    return function () {
+define(["jquery"], function($) {
+    return function() {
         const applicationID = '67584AFB';
         const namespace = 'urn:x-cast:couk.psyked.projectstats';
         let session = null;
 
         const chromecastLaunchButton = $('.chromecast-link');
-        if (chromecastLaunchButton.length) {
+        if(chromecastLaunchButton.length) {
             chromecastLaunchButton.on('click', startChromeCast);
 
             function startChromeCast() {
@@ -19,7 +19,7 @@ define(["jquery"], function ($) {
             /**
              * Call initialization for Cast
              */
-            if (!chrome.cast || !chrome.cast.isAvailable) {
+            if(!chrome.cast || !chrome.cast.isAvailable) {
                 setTimeout(initializeCastApi, 1000);
             } else {
                 initializeCastApi();
@@ -86,7 +86,7 @@ define(["jquery"], function ($) {
             let message = isAlive ? 'Session Updated' : 'Session Removed';
             message += `: ${session.sessionId}`;
             appendMessage(message);
-            if (!isAlive) {
+            if(!isAlive) {
                 session = null;
             }
         }
@@ -104,7 +104,7 @@ define(["jquery"], function ($) {
          * receiver listener during initialization
          */
         function receiverListener(e) {
-            if (e === 'available') {
+            if(e === 'available') {
                 appendMessage("receiver found");
             }
             else {
@@ -126,11 +126,11 @@ define(["jquery"], function ($) {
          * @param {string} message A message string
          */
         function sendMessage(message) {
-            if (session != null) {
+            if(session != null) {
                 session.sendMessage(namespace, message, onSuccess.bind(this, `Message sent: ${message}`), onError);
             }
             else {
-                chrome.cast.requestSession(function (e) {
+                chrome.cast.requestSession(function(e) {
                     session = e;
                     session.sendMessage(namespace, message, onSuccess.bind(this, `Message sent: ${message}`), onError);
                 }, onError);
