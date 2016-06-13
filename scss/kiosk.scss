@@ -38,13 +38,12 @@
             height: 100px;
             line-height: 100px;
             align-items: center;
-            //float: left;
-            padding: 0px 20px 0px 0px;
+            padding: 0;
             position: absolute;
             left: 50%;
             transform: translateY(-50%) translateX(-50%);
             border-radius: 50%;
-            border: 1rem solid white;
+            border: .5rem solid white;
 
             img {
                 vertical-align: middle;
