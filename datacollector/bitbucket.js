@@ -69,7 +69,8 @@ var url = "https://bitbucket.org/api/2.0/repositories/" + owner + "?pagelen=100"
     outputFile = "./website/serve/output.json",
     badgesFile = "./website/serve/badges.json";
 
-var startDate = Date.parse(moment().utc().subtract(90, 'day').startOf('day').toString());
+var startDate = Date.parse(moment().utc().subtract(90, 'day').startOf('day').toString()),
+    badgesStartDate = Date.parse(moment().utc().subtract(7, 'day').startOf('day').toString());
 
 var allSlugs = [],
     requestsIndex = 0,
@@ -140,20 +141,25 @@ function parseRepoCommitDetails(body) {
 
             var rtn;
             rtn = calendarStats.parseCommit(commit);
-            async.parallel([
-                function(callback) {
-                    weekend.parseCommit(allBadges, commit, callback);
-                },
-                function(callback) {
-                    afterhours.parseCommit(allBadges, commit, callback);
-                },
-                function(callback) {
-                    aftermidnight.parseCommit(allBadges, commit, callback);
-                },
-                function(callback) {
-                    mergemaster.parseCommit(allBadges, commit, callback);
-                }
-            ], next);
+
+            if(commitDate > badgesStartDate) {
+                async.parallel([
+                    function(callback) {
+                        weekend.parseCommit(allBadges, commit, callback);
+                    },
+                    function(callback) {
+                        afterhours.parseCommit(allBadges, commit, callback);
+                    },
+                    function(callback) {
+                        aftermidnight.parseCommit(allBadges, commit, callback);
+                    },
+                    function(callback) {
+                        mergemaster.parseCommit(allBadges, commit, callback);
+                    }
+                ], next);
+            } else {
+                next();
+            }
 
             function next() {
                 if(rtn) {
