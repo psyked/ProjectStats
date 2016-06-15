@@ -88,11 +88,11 @@ var allSlugs = [],
     requestsIndex = 0,
     allBadges = [];
 
-var todaysDate = moment().utc().startOf('day');
-var lastRunFile = './datacollector/cache-' + todaysDate.format('YYYY-MM-DD') + '/lastRun';
-if(fs.existsSync(lastRunFile)) {
-    startDate = Date.parse(fs.readFileSync(lastRunFile));
-}
+// var todaysDate = moment().utc().startOf('day');
+// var lastRunFile = './datacollector/cache-' + todaysDate.format('YYYY-MM-DD') + '/lastRun';
+// if(fs.existsSync(lastRunFile)) {
+//     startDate = Date.parse(fs.readFileSync(lastRunFile));
+// }
 
 function parseRepoInfoPage(body) {
     for(var i = 0, l = body.values.length; i < l; i++) {
