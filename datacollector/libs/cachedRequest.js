@@ -16,7 +16,6 @@ function makeCachedRequest(url, headers, callback, errorCallback) {
         var cacheFile = dir + filename;
 
         fs.exists(cacheFile, function(exists) {
-            console.log('exists = ', exists, headers);
             if(exists) {
                 console.log("\033[33mInfo:\033[39m Loading " + url + " from local cache");
                 fs.readFile(cacheFile, function(err, contents) {
@@ -37,7 +36,6 @@ function makeCachedRequest(url, headers, callback, errorCallback) {
                     json: true,
                     headers: headers
                 }, function(error, response, body) {
-                    console.log(response.statusCode);
                     if(!error && response.statusCode === 200) {
                         fs.writeFileSync(cacheFile, JSON.stringify(body));
                         callback(body);

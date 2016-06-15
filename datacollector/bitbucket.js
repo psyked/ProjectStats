@@ -49,6 +49,7 @@ var aftermidnight = require('./libs/badges/aftermidnight');
 var mergemaster = require('./libs/badges/merge-master');
 var afterhours = require('./libs/badges/afterhours');
 var makeCachedRequest = require('./libs/cachedRequest');
+var cacheCommit = require('./libs/cacheCommit');
 
 var argv = require('minimist')(process.argv.slice(2), {
     alias: {
@@ -87,12 +88,11 @@ var allSlugs = [],
     requestsIndex = 0,
     allBadges = [];
 
-// var todaysDate = moment().utc().startOf('day');
-// var dir = './datacollector/cache-' + todaysDate.format('YYYY-MM-DD') + '/';
-//
-// if (!fs.existsSync(dir)) {
-//     fs.mkdirSync(dir);
-// }
+var todaysDate = moment().utc().startOf('day');
+var lastRunFile = './datacollector/cache-' + todaysDate.format('YYYY-MM-DD') + '/lastRun';
+if(fs.existsSync(lastRunFile)) {
+    startDate = Date.parse(fs.readFileSync(lastRunFile));
+}
 
 function parseRepoInfoPage(body) {
     for(var i = 0, l = body.values.length; i < l; i++) {
@@ -111,6 +111,7 @@ function parseRepoInfoPage(body) {
         loadRepoInfoPage(body.next);
     } else {
         calendarStats.initOutput(finishedLoadingRepos);
+        fs.writeFileSync(lastRunFile, new Date().toUTCString());
     }
 }
 
@@ -146,6 +147,8 @@ function parseRepoCommitDetails(body) {
         /** @type {Commit} */
         var commit = body.values[i];
         var commitDate = Date.parse(commit.date);
+
+        //cacheCommit(commit);
 
         if(commitDate > startDate) {
             lastCommitIsWithinDateRange = true;
@@ -193,7 +196,6 @@ function parseRepoCommitDetails(body) {
 function parseRepoCommitError() {
     loadNextItemInQueue();
 }
-
 
 // make a request to fetch the team membership listing
 require('./libs/parsers/teamMembership')(owner, authHeaders)
