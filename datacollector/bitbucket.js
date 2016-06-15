@@ -43,12 +43,12 @@
 var fs = require('fs');
 var moment = require("moment");
 var async = require("async");
-var calendarStats = require("./parsers/calendarStats");
-var weekend = require('./badges/weekend');
-var aftermidnight = require('./badges/aftermidnight');
-var mergemaster = require('./badges/merge-master');
-var afterhours = require('./badges/afterhours');
-var makeCachedRequest = require('./cachedRequest');
+var calendarStats = require("./libs/parsers/calendarStats");
+var weekend = require('./libs/badges/weekend');
+var aftermidnight = require('./libs/badges/aftermidnight');
+var mergemaster = require('./libs/badges/merge-master');
+var afterhours = require('./libs/badges/afterhours');
+var makeCachedRequest = require('./libs/cachedRequest');
 
 var argv = require('minimist')(process.argv.slice(2), {
     alias: {
@@ -62,6 +62,17 @@ if(!argv.owner) {
     console.error('\033[31mError:\033[39m No Bitbucket Account specified!');
     return;
 }
+
+var username = argv.username,
+    password = argv.password;
+
+var auth = "Basic " + new Buffer(username + ":" + password).toString("base64");
+
+console.log(username, password, auth);
+
+var authHeaders = {
+    "Authorization": auth
+};
 
 var owner = argv.owner;
 
@@ -104,7 +115,7 @@ function parseRepoInfoPage(body) {
 }
 
 function loadRepoInfoPage(url) {
-    makeCachedRequest(url, parseRepoInfoPage, parseRepoInfoError);
+    makeCachedRequest(url, authHeaders, parseRepoInfoPage, parseRepoInfoError);
 }
 
 function parseRepoInfoError() {
@@ -123,7 +134,7 @@ function finishedLoadingAllData() {
 function loadNextItemInQueue() {
     if(allSlugs[requestsIndex]) {
         console.log("\033[36mInfo:\033[39m Loading request " + (requestsIndex + 1) + " of " + allSlugs.length);
-        makeCachedRequest(allSlugs[requestsIndex], parseRepoCommitDetails, parseRepoCommitError);
+        makeCachedRequest(allSlugs[requestsIndex], authHeaders, parseRepoCommitDetails, parseRepoCommitError);
         requestsIndex++;
     }
 }
@@ -185,7 +196,7 @@ function parseRepoCommitError() {
 
 
 // make a request to fetch the team membership listing
-require('./parsers/teamMembership')(owner)
+require('./libs/parsers/teamMembership')(owner, authHeaders)
     .then(function(userlist) {
         // console.log(userlist);
         calendarStats.setTeamMembers(userlist);

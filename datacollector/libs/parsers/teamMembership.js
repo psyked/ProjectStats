@@ -1,9 +1,9 @@
 var Promise = require('promise');
 var makeCachedRequest = require('../cachedRequest');
 
-module.exports = function(team) {
+module.exports = function(team, headers) {
     var promise = new Promise(function(resolve, reject) {
-        makeCachedRequest('https://api.bitbucket.org/2.0/teams/' + team + '/members?pagelen=100', success, fail);
+        makeCachedRequest('https://api.bitbucket.org/2.0/teams/' + team + '/members?pagelen=100', headers, success, fail);
 
         function success(response) {
             //console.log(response);
