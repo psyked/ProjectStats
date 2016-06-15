@@ -30,9 +30,21 @@ function parseCommit(commit) {
 
             rtn = commit.date + ",\"" + commit.author.user.display_name + "\",\"" + commit.author.user.username + "\"\n";
         }
+    } else {
+        // console.warn(commit.author.raw);
+        var parsedName = parseRawNameValue(commit.author.raw);
+        if(userCommits[parsedName]) {
+            userCommits[parsedName][commit.date]++;
+            rtn = commit.date + ",\"" + parsedName + "\",\"\"\n";
+        }
     }
 
     return rtn;
+}
+
+function parseRawNameValue(input) {
+    var name = input.split('<')[0].trim();
+    return name;
 }
 
 function initOutput(callback) {
