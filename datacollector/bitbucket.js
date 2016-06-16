@@ -55,7 +55,8 @@ var argv = require('minimist')(process.argv.slice(2), {
     alias: {
         'owner': 'o',
         'username': 'u',
-        'password': 'p'
+        'password': 'p',
+        'usecache': 'c'
     }
 });
 
@@ -65,11 +66,10 @@ if(!argv.owner) {
 }
 
 var username = argv.username,
-    password = argv.password;
+    password = argv.password,
+    useCache = Boolean(argv.usecache);
 
 var auth = "Basic " + new Buffer(username + ":" + password).toString("base64");
-
-console.log(username, password, auth);
 
 var authHeaders = {
     "Authorization": auth
@@ -116,7 +116,7 @@ function parseRepoInfoPage(body) {
 }
 
 function loadRepoInfoPage(url) {
-    makeCachedRequest(url, authHeaders, parseRepoInfoPage, parseRepoInfoError);
+    makeCachedRequest(url, authHeaders, useCache, parseRepoInfoPage, parseRepoInfoError);
 }
 
 function parseRepoInfoError() {
@@ -135,7 +135,7 @@ function finishedLoadingAllData() {
 function loadNextItemInQueue() {
     if(allSlugs[requestsIndex]) {
         console.log("\033[36mInfo:\033[39m Loading request " + (requestsIndex + 1) + " of " + allSlugs.length);
-        makeCachedRequest(allSlugs[requestsIndex], authHeaders, parseRepoCommitDetails, parseRepoCommitError);
+        makeCachedRequest(allSlugs[requestsIndex], authHeaders, useCache, parseRepoCommitDetails, parseRepoCommitError);
         requestsIndex++;
     }
 }
