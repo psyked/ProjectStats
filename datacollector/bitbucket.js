@@ -111,7 +111,7 @@ function parseRepoInfoPage(body) {
         loadRepoInfoPage(body.next);
     } else {
         calendarStats.initOutput(finishedLoadingRepos);
-        fs.writeFileSync(lastRunFile, new Date().toUTCString());
+        // fs.writeFileSync(lastRunFile, new Date().toUTCString());
     }
 }
 
