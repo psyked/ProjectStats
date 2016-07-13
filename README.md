@@ -17,4 +17,4 @@ The script doesn't really output anything until the very end, so if you've got l
 ### Viewing the static website
 To quickly view your generated static website locally, use the command below, which will serve your files on http://localhost:8080 by default.
 
-```node local-webserver.js```
+```node website/local-webserver.js```
