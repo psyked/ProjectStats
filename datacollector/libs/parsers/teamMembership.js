@@ -14,8 +14,8 @@ module.exports = function(team, headers) {
             resolve(users);
         }
 
-        function fail() {
-            console.error('Oh noes! It broked.');
+        function fail(err) {
+            console.error('Oh noes! It broked.', err);
             reject('Oh noes! It broked.');
         }
     });

@@ -13,7 +13,11 @@ function makeRealRequest(url, headers, cacheFile, callback, errorCallback) {
             fs.writeFileSync(cacheFile, JSON.stringify(body));
             callback(body);
         } else {
-            errorCallback();
+          if(error){
+            errorCallback(error);
+          } else {
+            errorCallback('Status Code: ' + response.statusCode);
+          }
         }
     });
 }
@@ -39,13 +43,13 @@ function makeCachedRequest(url, headers, useCache, callback, errorCallback) {
                     console.log("\033[33mInfo:\033[39m Loading " + url + " from local cache");
                     fs.readFile(cacheFile, function(err, contents) {
                         if(err) {
-                            errorCallback();
+                            errorCallback(err);
                             return console.log(err);
                         }
                         try {
                             callback(JSON.parse(contents));
                         } catch(e) {
-                            errorCallback();
+                            errorCallback(e);
                         }
                     });
                 } else {
@@ -54,7 +58,7 @@ function makeCachedRequest(url, headers, useCache, callback, errorCallback) {
             });
         }
     } else {
-        errorCallback();
+        errorCallback('No URL specified');
     }
 }
 
