@@ -27,7 +27,7 @@ function parseCommit(commit) {
             if(!userCommits[commit.author.user.display_name][commit.date]) {
                 userCommits[commit.author.user.display_name][commit.date] = 0;
             }
-            if(!shadowbannedMembers.includes(commit.author.user.display_name)) {
+            if(!contains(shadowbannedMembers, commit.author.user.display_name)) {
                 userCommits[commit.author.user.display_name][commit.date]++;
             }
 
@@ -74,3 +74,12 @@ module.exports = {
     getUserResults: getUserResults,
     setTeamMembers: setTeamMembers
 };
+
+function contains(a, obj) {
+    for (var i = 0; i < a.length; i++) {
+        if (a[i] === obj) {
+            return true;
+        }
+    }
+    return false;
+}
