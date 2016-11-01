@@ -29,9 +29,8 @@ function parseCommit(commit) {
             }
             if(!contains(shadowbannedMembers, commit.author.user.display_name)) {
                 userCommits[commit.author.user.display_name][commit.date]++;
+                rtn = commit.date + ",\"" + commit.author.user.display_name + "\",\"" + commit.author.user.username + "\"\n";
             }
-
-            rtn = commit.date + ",\"" + commit.author.user.display_name + "\",\"" + commit.author.user.username + "\"\n";
         }
     } else {
         // console.warn(commit.author.raw);
