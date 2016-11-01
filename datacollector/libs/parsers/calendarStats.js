@@ -27,7 +27,13 @@ function parseCommit(commit) {
             if(!userCommits[commit.author.user.display_name][commit.date]) {
                 userCommits[commit.author.user.display_name][commit.date] = 0;
             }
-            if(!contains(shadowbannedMembers, commit.author.user.display_name)) {
+            var allowed = true;
+            for(var i = 0, l = shadowbannedMembers.length; i < l; i++) {
+            	if(contains(shadowbannedMembers[i], commit.author.user.display_name)) {
+            		allowed = false;
+            	}
+            }
+            if(allowed) {
                 userCommits[commit.author.user.display_name][commit.date]++;
             }
 
