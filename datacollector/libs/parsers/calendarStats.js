@@ -6,6 +6,7 @@ var moment = require("moment"),
 var results = {};
 var userCommits = {};
 var teamMembers = [];
+var shadowbannedMembers = ['Ashley Warner'];
 
 /**
  * @param {Commit} commit
@@ -26,7 +27,9 @@ function parseCommit(commit) {
             if(!userCommits[commit.author.user.display_name][commit.date]) {
                 userCommits[commit.author.user.display_name][commit.date] = 0;
             }
-            userCommits[commit.author.user.display_name][commit.date]++;
+            if(!shadowbannedMembers.includes(commit.author.user.display_name)) {
+                userCommits[commit.author.user.display_name][commit.date]++;
+            }
 
             rtn = commit.date + ",\"" + commit.author.user.display_name + "\",\"" + commit.author.user.username + "\"\n";
         }
