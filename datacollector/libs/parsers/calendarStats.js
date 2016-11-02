@@ -27,15 +27,12 @@ function parseCommit(commit) {
             if(!userCommits[commit.author.user.display_name][commit.date]) {
                 userCommits[commit.author.user.display_name][commit.date] = 0;
             }
-            var allowed = true;
-            for(var i = 0, l = shadowbannedMembers.length; i < l; i++) {
-            	if(contains(shadowbannedMembers[i], commit.author.user.display_name)) {
-            		allowed = false;
-            	}
-            }
+            var allowed = !contains(shadowbannedMembers, commit.author.user.display_name);
             if(allowed) {
                 userCommits[commit.author.user.display_name][commit.date]++;
                 rtn = commit.date + ",\"" + commit.author.user.display_name + "\",\"" + commit.author.user.username + "\"\n";
+            } else {
+            	console.log('Ignoring commit from ' + commit.author.user.display_name);
             }
         }
     } else {
