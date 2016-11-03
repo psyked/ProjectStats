@@ -1,5 +1,5 @@
 html, body {
-    background: $flat-midnight-blue;
+    background: $gray-darker;//$flat-midnight-blue;
     height: 100%;
     margin: 0;
     padding: 0;
@@ -77,11 +77,11 @@ aside {
 
 .graph,
 .panel {
-    background: $flat-wet-asphalt;
+    background: $gray-dark;//$flat-wet-asphalt;
     order: 0;
     flex: 1 1 auto;
     align-self: auto;
-    border: 5px solid $flat-midnight-blue;
+    border: 5px solid $gray-darker;//$flat-midnight-blue;
     border-radius: 10px;
     overflow: hidden;
 
