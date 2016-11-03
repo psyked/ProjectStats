@@ -129,7 +129,7 @@ require(["d3", "c3", "moment", "jquery", "components/commits-timeline"], functio
                 return d.author;
             })
             .key(function(d) {
-                return `https://bitbucket.org/account/${d.username}/avatar/32/`;
+                return `https://bitbucket.org/account/${d.username}/avatar`;
             })
             .rollup(function(leaves) {
                 return leaves.author;
