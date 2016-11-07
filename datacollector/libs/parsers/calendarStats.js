@@ -6,7 +6,7 @@ var moment = require("moment"),
 var results = {};
 var userCommits = {};
 var teamMembers = [];
-var shadowbannedMembers = ['Ashley Warner'];
+var shadowbannedMembers = [];
 
 /**
  * @param {Commit} commit
