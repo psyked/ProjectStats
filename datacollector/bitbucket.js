@@ -45,12 +45,8 @@
 const fs                = require('fs');
 const chalk             = require('chalk');
 const moment            = require("moment");
-const async             = require("async");
 const calendarStats     = require("./libs/parsers/calendarStats");
-const weekend           = require('./libs/badges/weekend');
-const aftermidnight     = require('./libs/badges/aftermidnight');
-const mergemaster       = require('./libs/badges/merge-master');
-const afterhours        = require('./libs/badges/afterhours');
+const processBadges     = require('./libs/badges/all');
 const makeCachedRequest = require('./libs/cachedRequest');
 const cacheCommit       = require('./libs/cacheCommit');
 
@@ -156,20 +152,7 @@ function parseRepoCommitDetails(body) {
             rtn = calendarStats.parseCommit(commit);
 
             if (commitDate > badgesStartDate) {
-                async.parallel([
-                    function (callback) {
-                        weekend.parseCommit(allBadges, commit, callback);
-                    },
-                    function (callback) {
-                        afterhours.parseCommit(allBadges, commit, callback);
-                    },
-                    function (callback) {
-                        aftermidnight.parseCommit(allBadges, commit, callback);
-                    },
-                    function (callback) {
-                        mergemaster.parseCommit(allBadges, commit, callback);
-                    }
-                ], next);
+                processBadges(allBadges, commit, next);
             } else {
                 next();
             }
