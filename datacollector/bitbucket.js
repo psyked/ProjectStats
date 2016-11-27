@@ -40,53 +40,53 @@
  * @property {string} type
  */
 
-var fs = require('fs');
-var moment = require("moment");
-var async = require("async");
-var calendarStats = require("./libs/parsers/calendarStats");
-var weekend = require('./libs/badges/weekend');
-var aftermidnight = require('./libs/badges/aftermidnight');
-var mergemaster = require('./libs/badges/merge-master');
-var afterhours = require('./libs/badges/afterhours');
-var makeCachedRequest = require('./libs/cachedRequest');
-var cacheCommit = require('./libs/cacheCommit');
+'use strict';
 
-var argv = require('minimist')(process.argv.slice(2), {
+const fs                = require('fs');
+const chalk             = require('chalk');
+const moment            = require("moment");
+const async             = require("async");
+const calendarStats     = require("./libs/parsers/calendarStats");
+const weekend           = require('./libs/badges/weekend');
+const aftermidnight     = require('./libs/badges/aftermidnight');
+const mergemaster       = require('./libs/badges/merge-master');
+const afterhours        = requirnpe('./libs/badges/afterhours');
+const makeCachedRequest = require('./libs/cachedRequest');
+const cacheCommit       = require('./libs/cacheCommit');
+
+const argv = require('minimist')(process.argv.slice(2), {
     alias: {
-        'owner': 'o',
+        'owner'   : 'o',
         'username': 'u',
         'password': 'p',
         'usecache': 'c'
     }
 });
 
-if(!argv.owner) {
-    console.error('\033[31mError:\033[39m No Bitbucket Account specified!');
-    return;
+if (!argv.owner) {
+    throw new Error(chalk.red('Error:'), 'No Bitbucket Account specified!');
 }
 
-var username = argv.username,
-    password = argv.password,
-    useCache = Boolean(argv.usecache);
+const username = argv.username;
+const password = argv.password;
+const useCache = Boolean(argv.usecache);
 
-var auth = "Basic " + new Buffer(username + ":" + password).toString("base64");
+const auth = `Basic ${new Buffer(`${username}:${password}`).toString("base64")}`;
 
-var authHeaders = {
+const authHeaders = {
     "Authorization": auth
 };
 
 var owner = argv.owner;
 
-var url = "https://bitbucket.org/api/2.0/repositories/" + owner + "?pagelen=100",
-    outputFile = "./website/serve/output.json",
-    badgesFile = "./website/serve/badges.json";
-
-var startDate = Date.parse(moment().utc().subtract(90, 'day').startOf('day').toString()),
-    badgesStartDate = Date.parse(moment().utc().subtract(7, 'day').startOf('day').toString());
-
-var allSlugs = [],
-    requestsIndex = 0,
-    allBadges = [];
+const url        = `https://bitbucket.org/api/2.0/repositories/${owner}?pagelen=100`;
+const outputFile = "./website/serve/output.json";
+const badgesFile = "./website/serve/badges.json";
+const startDate       = Date.parse(moment().utc().subtract(90, 'day').startOf('day').toString());
+const badgesStartDate = Date.parse(moment().utc().subtract(7, 'day').startOf('day').toString());
+const allSlugs      = [];
+let requestsIndex = 0;
+const allBadges     = [];
 
 // var todaysDate = moment().utc().startOf('day');
 // var lastRunFile = './datacollector/cache-' + todaysDate.format('YYYY-MM-DD') + '/lastRun';
@@ -95,19 +95,19 @@ var allSlugs = [],
 // }
 
 function parseRepoInfoPage(body) {
-    for(var i = 0, l = body.values.length; i < l; i++) {
+    for (let i = 0, l = body.values.length; i < l; i++) {
         var repo = body.values[i];
 
         next();
 
         function next() {
-            if(Date.parse(repo.updated_on) > startDate) {
+            if (Date.parse(repo.updated_on) > startDate) {
                 allSlugs.push(repo.links.commits.href);
             }
         }
     }
 
-    if(body.next) {
+    if (body.next) {
         loadRepoInfoPage(body.next);
     } else {
         calendarStats.initOutput(finishedLoadingRepos);
@@ -128,46 +128,46 @@ function finishedLoadingRepos() {
 }
 
 function finishedLoadingAllData() {
-    console.log("\033[32mSuccess:\033[39m Finished Loading all commits!");
+    console.log(chalk.green('Success:'), "Finished Loading all commits!");
     fs.writeFileSync(badgesFile, JSON.stringify(allBadges));
 }
 
 function loadNextItemInQueue() {
-    if(allSlugs[requestsIndex]) {
-        console.log("\033[36mInfo:\033[39m Loading request " + (requestsIndex + 1) + " of " + allSlugs.length);
+    if (allSlugs[requestsIndex]) {
+        console.log(chalk.cyan("Info:"), `Loading request ${requestsIndex + 1} of ${allSlugs.length}`);
         makeCachedRequest(allSlugs[requestsIndex], authHeaders, useCache, parseRepoCommitDetails, parseRepoCommitError);
         requestsIndex++;
     }
 }
 
 function parseRepoCommitDetails(body) {
-    var lastCommitIsWithinDateRange = false;
+    let lastCommitIsWithinDateRange = false;
 
-    for(var i = 0, l = body.values.length; i < l; i++) {
+    for (let i = 0, l = body.values.length; i < l; i++) {
         /** @type {Commit} */
-        var commit = body.values[i];
-        var commitDate = Date.parse(commit.date);
+        var commit     = body.values[i];
+        const commitDate = Date.parse(commit.date);
 
         //cacheCommit(commit);
 
-        if(commitDate > startDate) {
+        if (commitDate > startDate) {
             lastCommitIsWithinDateRange = true;
 
             var rtn;
             rtn = calendarStats.parseCommit(commit);
 
-            if(commitDate > badgesStartDate) {
+            if (commitDate > badgesStartDate) {
                 async.parallel([
-                    function(callback) {
+                    function (callback) {
                         weekend.parseCommit(allBadges, commit, callback);
                     },
-                    function(callback) {
+                    function (callback) {
                         afterhours.parseCommit(allBadges, commit, callback);
                     },
-                    function(callback) {
+                    function (callback) {
                         aftermidnight.parseCommit(allBadges, commit, callback);
                     },
-                    function(callback) {
+                    function (callback) {
                         mergemaster.parseCommit(allBadges, commit, callback);
                     }
                 ], next);
@@ -176,17 +176,17 @@ function parseRepoCommitDetails(body) {
             }
 
             function next() {
-                if(rtn) {
+                if (rtn) {
                     fs.appendFileSync(outputFile, rtn);
                 }
             }
         }
     }
 
-    if(body.next && lastCommitIsWithinDateRange == true) {
+    if (body.next && lastCommitIsWithinDateRange == true) {
         allSlugs.push(body.next);
     } else {
-        if(requestsIndex == allSlugs.length) {
+        if (requestsIndex == allSlugs.length) {
             finishedLoadingAllData();
         }
     }
@@ -199,7 +199,7 @@ function parseRepoCommitError() {
 
 // make a request to fetch the team membership listing
 require('./libs/parsers/teamMembership')(owner, authHeaders)
-    .then(function(userlist) {
+    .then(function (userlist) {
         // console.log(userlist);
         calendarStats.setTeamMembers(userlist);
         loadRepoInfoPage(url);

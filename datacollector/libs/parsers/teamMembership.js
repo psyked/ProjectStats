@@ -1,13 +1,14 @@
-var Promise = require('promise');
-var makeCachedRequest = require('../cachedRequest');
+'use strict';
+const Promise           = require('promise');
+const makeCachedRequest = require('../cachedRequest');
 
-module.exports = function(team, headers) {
-    var promise = new Promise(function(resolve, reject) {
-        makeCachedRequest('https://api.bitbucket.org/2.0/teams/' + team + '/members?pagelen=100', headers, false, success, fail);
+module.exports = function (team, headers) {
+    const promise = new Promise(function (resolve, reject) {
+        makeCachedRequest(`https://api.bitbucket.org/2.0/teams/${team}/members?pagelen=100`, headers, false, success, fail);
 
         function success(response) {
             //console.log(response);
-            var users = response.values.map(function(data) {
+            const users = response.values.map(function (data) {
                 return data.username;
             });
             //console.log(users);
