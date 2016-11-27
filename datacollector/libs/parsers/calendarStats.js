@@ -1,13 +1,10 @@
 "use strict";
 
-const moment = require("moment");
-const fs = require('fs');
-
 const results             = {};
 const userCommits         = {};
 const shadowbannedMembers = [];
 
-let teamMembers           = [];
+let teamMembers = [];
 
 /**
  * @param {Commit} commit
@@ -19,7 +16,6 @@ function parseCommit(commit) {
     }
     results[commit.date]++;
 
-    let rtn;
     if (commit.author && commit.author.user && commit.author.user.display_name) {
         if (teamMembers.indexOf(commit.author.user.username) !== -1) {
             if (!userCommits[commit.author.user.display_name]) {
@@ -31,31 +27,25 @@ function parseCommit(commit) {
             const allowed = !contains(shadowbannedMembers, commit.author.user.display_name);
             if (allowed) {
                 userCommits[commit.author.user.display_name][commit.date]++;
-                rtn = `${commit.date},\"${commit.author.user.display_name}\",\"${commit.author.user.username}\"\n`;
+                return true;
             } else {
                 console.log(`Ignoring commit from ${commit.author.user.display_name}`);
             }
         }
     } else {
-        // console.warn(commit.author.raw);
         const parsedName = parseRawNameValue(commit.author.raw);
         if (userCommits[parsedName]) {
             userCommits[parsedName][commit.date]++;
-            rtn = `${commit.date},\"${parsedName}\",\"\"\n`;
+            return true;
         }
     }
 
-    return rtn;
+    return false;
 }
 
 function parseRawNameValue(input) {
     const name = input.split('<')[0].trim();
     return name;
-}
-
-function initOutput(callback) {
-    fs.writeFileSync("./website/serve/output.json", "date,author,username\n");
-    callback();
 }
 
 function getResults() {
@@ -71,7 +61,6 @@ function setTeamMembers(value) {
 }
 
 module.exports = {
-    initOutput    : initOutput,
     parseCommit   : parseCommit,
     getResults    : getResults,
     getUserResults: getUserResults,

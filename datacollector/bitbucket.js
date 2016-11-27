@@ -82,6 +82,7 @@ const badgesStartDate = Date.parse(moment().utc().subtract(7, 'day').startOf('da
 const allSlugs        = [];
 let requestsIndex     = 0;
 const allBadges       = [];
+let allCommits        = [];
 
 // var todaysDate = moment().utc().startOf('day');
 // var lastRunFile = './datacollector/cache-' + todaysDate.format('YYYY-MM-DD') + '/lastRun';
@@ -105,7 +106,8 @@ function parseRepoInfoPage(body) {
     if (body.next) {
         loadRepoInfoPage(body.next);
     } else {
-        calendarStats.initOutput(finishedLoadingRepos);
+        // calendarStats.initOutput(finishedLoadingRepos);
+        finishedLoadingRepos();
         // fs.writeFileSync(lastRunFile, new Date().toUTCString());
     }
 }
@@ -124,6 +126,39 @@ function finishedLoadingRepos() {
 
 function finishedLoadingAllData() {
     console.log(chalk.green('Success:'), "Finished Loading all commits!");
+    const json2csv = require('json2csv');
+
+    try {
+        var result = json2csv({
+            data  : allCommits,
+            fields: [{
+                label: 'date',
+                value: 'date'
+            }, {
+                label: 'author',
+                value: 'author.user.display_name'
+            }, {
+                label: 'username',
+                value: 'author.user.username'
+                // }, {
+                //     label: 'message',
+                //     value: 'message'
+            }]
+        });
+        console.log(result);
+
+        fs.writeFile(outputFile, result, function (err, data) {
+            if (err) {
+                console.error(chalk.red(err))
+            }
+            console.log('output file written');
+        });
+    } catch (err) {
+        // Errors are thrown for bad options, or if the data is empty and no fields are provided.
+        // Be sure to provide fields if it is possible that your data array will be empty.
+        console.error(err);
+    }
+
     fs.writeFileSync(badgesFile, JSON.stringify(allBadges));
 }
 
@@ -148,8 +183,12 @@ function parseRepoCommitDetails(body) {
         if (commitDate > startDate) {
             lastCommitIsWithinDateRange = true;
 
-            var rtn;
-            rtn = calendarStats.parseCommit(commit);
+            // var rtn;
+            // rtn = calendarStats.parseCommit(commit);
+            let shouldInclude = calendarStats.parseCommit(commit);
+            if (shouldInclude) {
+                allCommits.push(commit);
+            }
 
             if (commitDate > badgesStartDate) {
                 processBadges(allBadges, commit, next);
@@ -158,9 +197,9 @@ function parseRepoCommitDetails(body) {
             }
 
             function next() {
-                if (rtn) {
-                    fs.appendFileSync(outputFile, rtn);
-                }
+                // if (rtn) {
+                //     fs.appendFileSync(outputFile, rtn);
+                // }
             }
         }
     }

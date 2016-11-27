@@ -31,6 +31,7 @@
     "grunt-contrib-uglify": "^0.10.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-criticalcss": "^0.6.0",
+    "json2csv": "^3.7.2",
     "load-grunt-tasks": "^3.3.0",
     "node-bourbon": "^4.2.3",
     "promise": "^7.1.1",
