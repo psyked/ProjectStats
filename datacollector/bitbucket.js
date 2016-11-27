@@ -42,13 +42,14 @@
 
 'use strict';
 
-const fs                = require('fs');
-const chalk             = require('chalk');
-const moment            = require("moment");
-const calendarStats     = require("./libs/parsers/calendarStats");
-const processBadges     = require('./libs/badges/all');
-const makeCachedRequest = require('./libs/cachedRequest');
-const cacheCommit       = require('./libs/cacheCommit');
+const fs                  = require('fs');
+const chalk               = require('chalk');
+const moment              = require("moment");
+const calendarStats       = require("./libs/parsers/calendarStats");
+const processBadges       = require('./libs/badges/all');
+const makeCachedRequest   = require('./libs/cachedRequest');
+const cacheCommit         = require('./libs/cacheCommit');
+const parseUserDailyStats = require('./libs/parsers/userDailyStats');
 
 const argv = require('minimist')(process.argv.slice(2), {
     alias: {
@@ -83,6 +84,7 @@ const allSlugs        = [];
 let requestsIndex     = 0;
 const allBadges       = [];
 let allCommits        = [];
+let allUsers          = [];
 
 // var todaysDate = moment().utc().startOf('day');
 // var lastRunFile = './datacollector/cache-' + todaysDate.format('YYYY-MM-DD') + '/lastRun';
@@ -145,7 +147,8 @@ function finishedLoadingAllData() {
                 //     value: 'message'
             }]
         });
-        console.log(result);
+
+        parseUserDailyStats(allUsers, allCommits);
 
         fs.writeFile(outputFile, result, function (err, data) {
             if (err) {
@@ -222,6 +225,7 @@ function parseRepoCommitError() {
 require('./libs/parsers/teamMembership')(owner, authHeaders)
     .then(function (userlist) {
         // console.log(userlist);
+        allUsers = userlist;
         calendarStats.setTeamMembers(userlist);
         loadRepoInfoPage(url);
     });
