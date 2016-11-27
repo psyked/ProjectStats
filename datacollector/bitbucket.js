@@ -50,7 +50,7 @@ const calendarStats     = require("./libs/parsers/calendarStats");
 const weekend           = require('./libs/badges/weekend');
 const aftermidnight     = require('./libs/badges/aftermidnight');
 const mergemaster       = require('./libs/badges/merge-master');
-const afterhours        = requirnpe('./libs/badges/afterhours');
+const afterhours        = require('./libs/badges/afterhours');
 const makeCachedRequest = require('./libs/cachedRequest');
 const cacheCommit       = require('./libs/cacheCommit');
 
@@ -64,11 +64,12 @@ const argv = require('minimist')(process.argv.slice(2), {
 });
 
 if (!argv.owner) {
-    throw new Error(chalk.red('Error:'), 'No Bitbucket Account specified!');
+    throw new Error(chalk.red('Error: No Bitbucket Account specified!'));
 }
 
 const username = argv.username;
 const password = argv.password;
+const owner    = argv.owner;
 const useCache = Boolean(argv.usecache);
 
 const auth = `Basic ${new Buffer(`${username}:${password}`).toString("base64")}`;
@@ -77,16 +78,14 @@ const authHeaders = {
     "Authorization": auth
 };
 
-var owner = argv.owner;
-
-const url        = `https://bitbucket.org/api/2.0/repositories/${owner}?pagelen=100`;
-const outputFile = "./website/serve/output.json";
-const badgesFile = "./website/serve/badges.json";
+const url             = `https://bitbucket.org/api/2.0/repositories/${owner}?pagelen=100`;
+const outputFile      = "./website/serve/output.json";
+const badgesFile      = "./website/serve/badges.json";
 const startDate       = Date.parse(moment().utc().subtract(90, 'day').startOf('day').toString());
 const badgesStartDate = Date.parse(moment().utc().subtract(7, 'day').startOf('day').toString());
-const allSlugs      = [];
-let requestsIndex = 0;
-const allBadges     = [];
+const allSlugs        = [];
+let requestsIndex     = 0;
+const allBadges       = [];
 
 // var todaysDate = moment().utc().startOf('day');
 // var lastRunFile = './datacollector/cache-' + todaysDate.format('YYYY-MM-DD') + '/lastRun';
@@ -145,7 +144,7 @@ function parseRepoCommitDetails(body) {
 
     for (let i = 0, l = body.values.length; i < l; i++) {
         /** @type {Commit} */
-        var commit     = body.values[i];
+        var commit       = body.values[i];
         const commitDate = Date.parse(commit.date);
 
         //cacheCommit(commit);
