@@ -1,8 +1,7 @@
 'use strict';
-const request = require("request");
-const fs      = require('fs');
-const moment  = require("moment");
-const chalk   = require('chalk');
+
+const fs    = require('fs');
+const chalk = require('chalk');
 
 function cacheCommit(commit) {
 
