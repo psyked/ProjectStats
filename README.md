@@ -1,3 +1,5 @@
+[![CodeFactor](https://www.codefactor.io/repository/github/psyked/projectstats/badge)](https://www.codefactor.io/repository/github/psyked/projectstats)
+
 # ProjectStats
 This repository is a Node.js project which interacts with the Bitbucket API to retrieve Key Statistics about users and repositories. It recursively retrieves JSON data from the official Bitbucket APIs and collates it, before outputting a JSON file of its own.
 
