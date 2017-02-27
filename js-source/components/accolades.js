@@ -1,21 +1,39 @@
-define(["jquery", "velocity", "handlebars", "nprogress"], function($, velocity, Handlebars, NProgress) {
+define(["jquery", "velocity", "handlebars", "nprogress"], function ($, velocity, Handlebars, NProgress) {
     "use strict";
 
-    return function() {
+    return function () {
         const source = $("#accolade-template").html();
         const badgeTemplate = Handlebars.compile(source);
         let badgeData;
 
-        const EASING_PROPS = [0.645, 0.045, 0.355, 1];
-        const EASING_TIME = 500;
-        const HOLD_CARD_TIME = 10000;
+        // Set the name of the hidden property and the change event for visibility
+        var hidden, visibilityChange;
+        if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support 
+            hidden = "hidden";
+            visibilityChange = "visibilitychange";
+        } else if (typeof document.msHidden !== "undefined") {
+            hidden = "msHidden";
+            visibilityChange = "msvisibilitychange";
+        } else if (typeof document.webkitHidden !== "undefined") {
+            hidden = "webkitHidden";
+            visibilityChange = "webkitvisibilitychange";
+        }
 
-        NProgress.configure({
-            minimum: 0,
-            trickle: false,
-            showSpinner: false,
-            parent: '.kiosk-container'
-        });
+        // If the page is hidden, pause the video;
+        // if the page is shown, play the video
+        function handleVisibilityChange() {
+            if (document[hidden]) {
+                displayNewCard();
+            }
+        }
+
+        // Warn if the browser doesn't support addEventListener or the Page Visibility API
+        if (typeof document.addEventListener === "undefined" || typeof document[hidden] === "undefined") {
+            console.log("This demo requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.");
+        } else {
+            // Handle page visibility change   
+            document.addEventListener(visibilityChange, handleVisibilityChange, false);
+        }
 
         $.ajax({
             url: './badges.json',
@@ -27,64 +45,25 @@ define(["jquery", "velocity", "handlebars", "nprogress"], function($, velocity, 
             badgeData = jsonBadgeData;
 
             const tile = $(badgeTemplate(findABadge()));
-            tile.css('margin-top', '50%');
-
-            $('.kiosk-container').append(tile);
-
-            showCard(tile);
+            $('.kiosk-container').empty().append(tile);
         }
 
         function displayError() {
 
         }
 
-        function showCard(tile) {
-            tile.velocity({
-                marginTop: '0%'
-            }, {
-                duration: EASING_TIME,
-                easing: EASING_PROPS,
-                complete() {
-                    NProgress.set(0.0);
-                    let i = 0;
-                    const countDown = setInterval(function() {
-                        i++;
-                        NProgress.set(i / (HOLD_CARD_TIME / 1000));
-                    }, 1000);
-
-                    setTimeout(function() {
-                        clearInterval(countDown);
-                        NProgress.set(1.0);
-                        hideCard(tile);
-                    }, HOLD_CARD_TIME);
-                }
-            });
-        }
-
         function hideCard(tile) {
-            tile.velocity({
-                marginTop: '-50%'
-            }, {
-                duration: EASING_TIME,
-                easing: EASING_PROPS,
-                complete() {
-                    tile.remove();
-                    displayNewCard();
-                }
-            })
+            tile.remove();
+            displayNewCard();
         }
 
         function displayNewCard() {
             const tile = $(badgeTemplate(findABadge()));
-            tile.css('margin-top', '50%');
-
-            $('.kiosk-container').append(tile);
-
-            showCard(tile);
+            $('.kiosk-container').empty().append(tile);
         }
 
         function findABadge() {
-            if(badgeData.length) {
+            if (badgeData.length) {
                 const indexToReturn = Math.floor(Math.random() * badgeData.length);
                 return badgeData[indexToReturn];
             } else {
