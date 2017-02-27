@@ -3,3 +3,4 @@ node_modules
 cache
 .sass-cache
 website/serve/js-source-es5
+datacollector/cache*
